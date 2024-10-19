@@ -66,9 +66,7 @@ public class PlayerTracker{
 
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerLoggedInEvent event){
-		if (hasAA(event.player)){
 			AMNetHandler.INSTANCE.requestClientAuras((EntityPlayerMP)event.player);
-		}
 
 		int[] disabledSkills = SkillTreeManager.instance.getDisabledSkillIDs();
 
@@ -272,21 +270,5 @@ public class PlayerTracker{
 			spellKnowledgeStorage_dimension.put(player.getUniqueID(), spellKnowledge);
 		}
 		//================================================================================
-	}
-
-
-
-	public boolean hasAA(EntityPlayer entity){
-		return getAAL(entity) > 0;
-	}
-
-	public int getAAL(EntityPlayer thePlayer){
-		if (thePlayer == null) return 0;
-		try{
-			thePlayer.getDisplayName();
-		}catch (Throwable t){
-			return 0;
-		}
-		return thePlayer.getDisplayName().equalsIgnoreCase("Nlghtwing") ? 5 : 0;
 	}
 }

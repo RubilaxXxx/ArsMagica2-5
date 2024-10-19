@@ -90,9 +90,8 @@ public class AMKeyBindings{
 				AMNetHandler.INSTANCE.sendSpellbookSlotChange(player, player.inventory.currentItem, ItemSpellBook.ID_PREV_SPELL);
 			}
 		}else if (AuraCustomizationKey.isPressed()){
-			if (AMCore.proxy.playerTracker.hasAA(clientPlayer)){
 				Minecraft.getMinecraft().displayGuiScreen(new AuraCustomizationMenu());
-			}
+
 		}else if (AffinityActivationKey.isPressed()){
 			if (AffinityData.For(clientPlayer).isAbilityReady()){
 				//send packet to the server to process the ability

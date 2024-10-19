@@ -344,8 +344,6 @@ public class AMPacketProcessorServer{
 
 		if (player == null || entity == null || !(entity instanceof EntityPlayer)) return;
 
-		if (!AMCore.proxy.playerTracker.hasAA((EntityPlayer)entity)) return;
-
 		byte[] expropData = ExtendedProperties.For(entity).getAuraData();
 
 		AMDataWriter writer = new AMDataWriter();
@@ -373,7 +371,7 @@ public class AMPacketProcessorServer{
 	private void handleSyncBetaParticles(byte[] data, EntityPlayerMP player){
 		AMDataReader rdr = new AMDataReader(data, false);
 
-		if (player == null || !AMCore.proxy.playerTracker.hasAA(player)){
+		if (player == null){
 			return;
 		}
 

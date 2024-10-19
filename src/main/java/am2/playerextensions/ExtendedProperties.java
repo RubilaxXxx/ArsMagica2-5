@@ -422,7 +422,7 @@ public class ExtendedProperties implements IExtendedProperties, IExtendedEntityP
 		if ((this.updateFlags & UPD_NUM_SUMMONS) == UPD_NUM_SUMMONS){
 			writer.add(this.numSummons);
 		}
-		if ((this.updateFlags & UPD_BETA_PARTICLES) == UPD_BETA_PARTICLES && entity instanceof EntityPlayer && AMCore.proxy.playerTracker.hasAA((EntityPlayer)entity)){
+		if ((this.updateFlags & UPD_BETA_PARTICLES) == UPD_BETA_PARTICLES && entity instanceof EntityPlayer){
 			writer.add(this.getAuraIndex());
 			writer.add(this.getAuraBehaviour());
 			writer.add(this.getAuraScale());
@@ -897,7 +897,7 @@ public class ExtendedProperties implements IExtendedProperties, IExtendedEntityP
 			}
 		}
 
-		if (entity.worldObj != null && entity.worldObj.isRemote && entity instanceof EntityPlayer && AMCore.proxy.playerTracker.hasAA((EntityPlayer)entity)){
+		if (entity.worldObj != null && entity.worldObj.isRemote && entity instanceof EntityPlayer){
 			EntityLivingBase localPlayer = AMCore.instance.proxy.getLocalPlayer();
 			if (entity != localPlayer)
 				AMNetHandler.INSTANCE.requestAuras((EntityPlayer)entity);
@@ -961,7 +961,7 @@ public class ExtendedProperties implements IExtendedProperties, IExtendedEntityP
 	}
 
 	public void setSyncAuras(){
-		if (entity instanceof EntityPlayer && AMCore.proxy.playerTracker.hasAA((EntityPlayer)entity))
+		if (entity instanceof EntityPlayer)
 			this.setUpdateFlag(UPD_BETA_PARTICLES);
 	}
 
@@ -1014,7 +1014,7 @@ public class ExtendedProperties implements IExtendedProperties, IExtendedEntityP
 		if ((flags & UPD_NUM_SUMMONS) == UPD_NUM_SUMMONS){
 			this.numSummons = rdr.getInt();
 		}
-		if ((flags & UPD_BETA_PARTICLES) == UPD_BETA_PARTICLES && entity instanceof EntityPlayer && AMCore.proxy.playerTracker.hasAA((EntityPlayer)entity)){
+		if ((flags & UPD_BETA_PARTICLES) == UPD_BETA_PARTICLES && entity instanceof EntityPlayer){
 			this.AuraIndex = rdr.getInt();
 			this.AuraBehaviour = rdr.getInt();
 			this.AuraScale = rdr.getFloat();

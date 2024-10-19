@@ -442,7 +442,7 @@ public class ParticleManagerClient extends ParticleManagerServer{
 		if (particleIndex == 31) //fix radiant particle's scaling issues...
 			particleScale /= 10;
 
-		if (ent.worldObj.isRemote && ent instanceof EntityPlayer && AMCore.proxy.playerTracker.hasAA((EntityPlayer)ent)){
+		if (ent.worldObj.isRemote){
 			if (Minecraft.getMinecraft().thePlayer != ent || Minecraft.getMinecraft().gameSettings.thirdPersonView > 0){
 				if (AMParticle.particleTypes[particleIndex].startsWith("lightning_bolts")){
 					int type = Integer.parseInt(new String(new char[]{AMParticle.particleTypes[particleIndex].charAt(AMParticle.particleTypes[particleIndex].length() - 1)}));

@@ -550,8 +550,6 @@ public class AMPacketProcessorClient extends AMPacketProcessorServer{
 
 	private void handleSyncBetaParticles(byte[] data){
 		EntityPlayer localPlayer = Minecraft.getMinecraft().thePlayer;
-		if (!AMCore.proxy.playerTracker.hasAA(localPlayer))
-			return;
 
 		ExtendedProperties e = ExtendedProperties.For(localPlayer);
 
