@@ -1,6 +1,7 @@
 package am2.bosses;
 
 import am2.AMCore;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.ai.*;
 import am2.buffs.BuffEffectFrostSlowed;
 import am2.damage.DamageSourceFire;
@@ -39,7 +40,7 @@ public class EntityWinterGuardian extends AM2Boss{
 
 	@Override
 	protected void initSpecificAI(){
-		this.tasks.addTask(1, new EntityAICastSpell(this, NPCSpells.instance.dispel, 16, 23, 50, BossActions.CASTING, new ISpellCastCallback<EntityWinterGuardian>(){
+		this.tasks.addTask(1, new EntityAICastSpell(this, NPCSpells.instance.dispel, 16, 23, 50, BossActionsAPI.CASTING, new ISpellCastCallback<EntityWinterGuardian>(){
 			@Override
 			public boolean shouldCast(EntityWinterGuardian host, ItemStack spell){
 				return host.getActivePotionEffects().size() > 0;
@@ -129,7 +130,7 @@ public class EntityWinterGuardian extends AM2Boss{
 	}
 
 	@Override
-	public void setCurrentAction(BossActions action){
+	public void setCurrentAction(BossActionsAPI action){
 		super.setCurrentAction(action);
 
 		if (!worldObj.isRemote){

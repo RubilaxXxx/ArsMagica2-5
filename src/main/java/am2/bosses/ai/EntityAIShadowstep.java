@@ -1,8 +1,8 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
 import am2.bosses.EntityEnderGuardian;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.BossActionsAPI;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.Vec3;
 import thehippomaster.AnimationAPI.AIAnimation;
@@ -18,7 +18,7 @@ public class EntityAIShadowstep extends AIAnimation{
 
 	@Override
 	public int getAnimID(){
-		return BossActions.SPINNING.ordinal();
+		return BossActionsAPI.SPINNING.ordinal();
 	}
 
 	@Override

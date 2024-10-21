@@ -1,6 +1,6 @@
 package am2.bosses.models;
 
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityFireGuardian;
 import am2.entities.renderers.AM2ModelRenderer;
 import net.minecraft.client.model.ModelBase;
@@ -205,7 +205,7 @@ public class ModelFireGuardian extends ModelBase{
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5){
 
 		if (entity instanceof EntityFireGuardian){
-			if (((EntityFireGuardian)entity).getIsUnderground() && ((EntityFireGuardian)entity).getCurrentAction() != BossActions.SPINNING)
+			if (((EntityFireGuardian)entity).getIsUnderground() && ((EntityFireGuardian)entity).getCurrentAction() != BossActionsAPI.SPINNING)
 				return;
 			GL11.glPushMatrix();
 			setHeadRotations(f3, f4);

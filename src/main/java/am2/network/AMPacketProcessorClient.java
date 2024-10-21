@@ -7,8 +7,8 @@ import am2.api.power.PowerTypes;
 import am2.api.spell.component.interfaces.ISpellModifier;
 import am2.api.spell.enums.SpellModifiers;
 import am2.blocks.tileentities.*;
-import am2.bosses.BossActions;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.BossActionsAPI;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import am2.buffs.BuffList;
 import am2.containers.ContainerMagiciansWorkbench;
 import am2.customdata.CustomWorldData;
@@ -466,7 +466,7 @@ public class AMPacketProcessorClient extends AMPacketProcessorServer{
 
 		Entity ent = player.worldObj.getEntityByID(entityID);
 		if (ent == null || ent.isDead || !(ent instanceof IArsMagicaBoss)) return;
-		((IArsMagicaBoss)ent).setCurrentAction(BossActions.values()[actionOrdinal]);
+		((IArsMagicaBoss)ent).setCurrentAction(BossActionsAPI.values()[actionOrdinal]);
 	}
 
 	private void openUICustomization(){

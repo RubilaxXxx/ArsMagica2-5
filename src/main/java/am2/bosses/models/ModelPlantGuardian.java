@@ -1,6 +1,6 @@
 package am2.bosses.models;
 
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityNatureGuardian;
 import am2.entities.renderers.AM2ModelRenderer;
 import net.minecraft.client.model.ModelBase;
@@ -288,7 +288,7 @@ public class ModelPlantGuardian extends ModelBase{
 		GL11.glPushMatrix();
 
 		EntityNatureGuardian guardian = (EntityNatureGuardian)entity;
-		if (guardian.getCurrentAction() == BossActions.SPINNING){
+		if (guardian.getCurrentAction() == BossActionsAPI.SPINNING){
 			GL11.glRotatef(guardian.spinRotation + (f2 - guardian.ticksExisted) * -40f, 0, 1, 0);
 		}
 		setHeadRotation(f3, f4);

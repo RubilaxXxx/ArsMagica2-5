@@ -1,7 +1,7 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.BossActionsAPI;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import am2.entities.EntityThrownRock;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,7 +21,7 @@ public class EntityAIThrowRock extends EntityAIBase{
 
 	@Override
 	public boolean shouldExecute(){
-		if (cooldownTicks-- > 0 || ((IArsMagicaBoss)host).getCurrentAction() != BossActions.IDLE) return false;
+		if (cooldownTicks-- > 0 || ((IArsMagicaBoss)host).getCurrentAction() != BossActionsAPI.IDLE) return false;
 		EntityLivingBase AITarget = host.getAttackTarget();
 		if (AITarget == null || AITarget.isDead) return false;
 		this.target = AITarget;
@@ -31,8 +31,8 @@ public class EntityAIThrowRock extends EntityAIBase{
 	@Override
 	public boolean continueExecuting(){
 		EntityLivingBase AITarget = host.getAttackTarget();
-		if (AITarget == null || AITarget.isDead || (((IArsMagicaBoss)host).getCurrentAction() == BossActions.THROWING_ROCK && ((IArsMagicaBoss)host).getTicksInCurrentAction() > ((IArsMagicaBoss)host).getCurrentAction().getMaxActionTime())){
-			((IArsMagicaBoss)host).setCurrentAction(BossActions.IDLE);
+		if (AITarget == null || AITarget.isDead || (((IArsMagicaBoss)host).getCurrentAction() == BossActionsAPI.THROWING_ROCK && ((IArsMagicaBoss)host).getTicksInCurrentAction() > ((IArsMagicaBoss)host).getCurrentAction().getMaxActionTime())){
+			((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.IDLE);
 			cooldownTicks = 50;
 			return false;
 		}
@@ -46,8 +46,8 @@ public class EntityAIThrowRock extends EntityAIBase{
 			host.getNavigator().tryMoveToEntityLiving(target, moveSpeed);
 		}else{
 			host.getNavigator().clearPathEntity();
-			if (((IArsMagicaBoss)host).getCurrentAction() != BossActions.THROWING_ROCK)
-				((IArsMagicaBoss)host).setCurrentAction(BossActions.THROWING_ROCK);
+			if (((IArsMagicaBoss)host).getCurrentAction() != BossActionsAPI.THROWING_ROCK)
+				((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.THROWING_ROCK);
 
 			if (((IArsMagicaBoss)host).getTicksInCurrentAction() == 27){
 

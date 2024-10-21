@@ -1,6 +1,6 @@
 package am2.bosses.models;
 
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityEnderGuardian;
 import am2.entities.renderers.AM2ModelRenderer;
 import net.minecraft.client.model.ModelBase;
@@ -331,7 +331,7 @@ public class ModelEnderGuardian extends ModelBase{
 		float angle = 0;
 		float angle2 = 0;
 
-		animator.setAnim(BossActions.CASTING.ordinal()); //hands of the dead
+		animator.setAnim(BossActionsAPI.CASTING.ordinal()); //hands of the dead
 		animator.startPhase(10);
 		{
 			angle = -Angles.RADS_20;
@@ -361,7 +361,7 @@ public class ModelEnderGuardian extends ModelBase{
 		animator.setStationaryPhase(40);
 		animator.resetPhase(10);
 
-		animator.setAnim(BossActions.STRIKE.ordinal()); //ender wave
+		animator.setAnim(BossActionsAPI.STRIKE.ordinal()); //ender wave
 		animator.startPhase(7);
 		{
 			animator.rotate(LeftArmUpper, -Angles.RADS_30, 0, 0);
@@ -383,7 +383,7 @@ public class ModelEnderGuardian extends ModelBase{
 		animator.setStationaryPhase(6);
 		animator.resetPhase(10);
 
-		animator.setAnim(BossActions.SMASH.ordinal()); //ender beam
+		animator.setAnim(BossActionsAPI.SMASH.ordinal()); //ender beam
 		animator.startPhase(10);
 		{
 			angle = -Angles.RADS_145;
@@ -413,7 +413,7 @@ public class ModelEnderGuardian extends ModelBase{
 		animator.setStationaryPhase(120);
 		animator.resetPhase(20);
 
-		animator.setAnim(BossActions.SPINNING.ordinal()); //shadowstep
+		animator.setAnim(BossActionsAPI.SPINNING.ordinal()); //shadowstep
 		animator.startPhase(15);
 		{
 			angle = -Angles.RADS_145;
@@ -425,7 +425,7 @@ public class ModelEnderGuardian extends ModelBase{
 		animator.endPhase();
 		animator.resetPhase(0);
 
-		animator.setAnim(BossActions.LONG_CASTING.ordinal()); //otherworldly roar
+		animator.setAnim(BossActionsAPI.LONG_CASTING.ordinal()); //otherworldly roar
 		animator.startPhase(30);
 		{
 			animator.rotate(Body, Angles.RADS_30, 0, 0);
@@ -459,7 +459,7 @@ public class ModelEnderGuardian extends ModelBase{
 		animator.setStationaryPhase(20);
 		animator.resetPhase(10);
 
-		animator.setAnim(BossActions.SHIELD_BASH.ordinal()); //protect
+		animator.setAnim(BossActionsAPI.SHIELD_BASH.ordinal()); //protect
 		animator.startPhase(5);
 		{
 			animator.rotate(Body, Angles.RADS_30, 0, 0);
@@ -478,7 +478,7 @@ public class ModelEnderGuardian extends ModelBase{
 		animator.setStationaryPhase(20);
 		animator.resetPhase(10);
 
-		animator.setAnim(BossActions.LAUNCHING.ordinal()); //ender grip
+		animator.setAnim(BossActionsAPI.LAUNCHING.ordinal()); //ender grip
 		animator.startPhase(4);
 		{
 			animator.rotate(LeftArmUpper, -Angles.RADS_30, 0, 0);
@@ -500,7 +500,7 @@ public class ModelEnderGuardian extends ModelBase{
 		animator.setStationaryPhase(10);
 		animator.resetPhase(10);
 
-		animator.setAnim(BossActions.CHARGE.ordinal()); //ender rush
+		animator.setAnim(BossActionsAPI.CHARGE.ordinal()); //ender rush
 		animator.startPhase(15);
 		{
 			animator.rotate(Body, Angles.RADS_30, 0, 0);

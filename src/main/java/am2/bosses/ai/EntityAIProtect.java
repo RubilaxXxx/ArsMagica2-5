@@ -1,6 +1,6 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityEnderGuardian;
 import am2.spell.SpellHelper;
 import am2.utility.NPCSpells;
@@ -18,7 +18,7 @@ public class EntityAIProtect extends AIAnimation{
 
 	@Override
 	public int getAnimID(){
-		return BossActions.SHIELD_BASH.ordinal();
+		return BossActionsAPI.SHIELD_BASH.ordinal();
 	}
 
 	@Override

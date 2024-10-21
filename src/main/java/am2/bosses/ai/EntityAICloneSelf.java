@@ -1,6 +1,6 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityWaterGuardian;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -16,7 +16,7 @@ public class EntityAICloneSelf extends EntityAIBase{
 
 	@Override
 	public boolean shouldExecute(){
-		if (cooldownTicks-- > 0 || host.getCurrentAction() != BossActions.IDLE || !host.isActionValid(BossActions.CLONE))
+		if (cooldownTicks-- > 0 || host.getCurrentAction() != BossActionsAPI.IDLE || !host.isActionValid(BossActionsAPI.CLONE))
 			return false;
 		EntityLivingBase AITarget = host.getAttackTarget();
 		if (AITarget == null || AITarget.isDead) return false;
@@ -25,8 +25,8 @@ public class EntityAICloneSelf extends EntityAIBase{
 
 	@Override
 	public boolean continueExecuting(){
-		if (host.getCurrentAction() == BossActions.CLONE && host.getTicksInCurrentAction() > host.getCurrentAction().getMaxActionTime()){
-			host.setCurrentAction(BossActions.IDLE);
+		if (host.getCurrentAction() == BossActionsAPI.CLONE && host.getTicksInCurrentAction() > host.getCurrentAction().getMaxActionTime()){
+			host.setCurrentAction(BossActionsAPI.IDLE);
 			cooldownTicks = 200;
 			return false;
 		}
@@ -35,10 +35,10 @@ public class EntityAICloneSelf extends EntityAIBase{
 
 	@Override
 	public void updateTask(){
-		if (host.getCurrentAction() != BossActions.CLONE)
-			host.setCurrentAction(BossActions.CLONE);
+		if (host.getCurrentAction() != BossActionsAPI.CLONE)
+			host.setCurrentAction(BossActionsAPI.CLONE);
 
-		if (!host.worldObj.isRemote && host.getCurrentAction() == BossActions.CLONE && host.getTicksInCurrentAction() == 30){
+		if (!host.worldObj.isRemote && host.getCurrentAction() == BossActionsAPI.CLONE && host.getTicksInCurrentAction() == 30){
 			EntityWaterGuardian clone1 = spawnClone();
 			EntityWaterGuardian clone2 = spawnClone();
 

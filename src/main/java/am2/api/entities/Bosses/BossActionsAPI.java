@@ -1,6 +1,6 @@
-package am2.bosses;
+package am2.api.entities.Bosses;
 
-public enum BossActions{
+public enum BossActionsAPI{
 	IDLE(-1),
 	STRIKE(15),
 	SMASH(20),
@@ -16,7 +16,7 @@ public enum BossActions{
 
 	private final int maxActionTime;
 
-	private BossActions(int maxTime){
+	private BossActionsAPI(int maxTime){
 		maxActionTime = maxTime;
 	}
 

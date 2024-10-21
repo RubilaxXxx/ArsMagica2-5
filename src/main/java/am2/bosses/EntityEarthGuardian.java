@@ -1,10 +1,10 @@
 package am2.bosses;
 
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.ai.EntityAIDispel;
 import am2.bosses.ai.EntityAISmash;
 import am2.bosses.ai.EntityAIStrikeAttack;
 import am2.bosses.ai.EntityAIThrowRock;
-import am2.damage.DamageSourceFire;
 import am2.damage.DamageSourceFrost;
 import am2.damage.DamageSourceLightning;
 import am2.damage.DamageSources;
@@ -59,14 +59,14 @@ public class EntityEarthGuardian extends AM2Boss{
 	}
 
 	public boolean shouldRenderRock(){
-		return this.currentAction == BossActions.THROWING_ROCK && ticksInCurrentAction > 5 && ticksInCurrentAction < 27;
+		return this.currentAction == BossActionsAPI.THROWING_ROCK && ticksInCurrentAction > 5 && ticksInCurrentAction < 27;
 	}
 
 	@Override
-	public void setCurrentAction(BossActions action){
+	public void setCurrentAction(BossActionsAPI action){
 		super.setCurrentAction(action);
 
-		if (currentAction != action && action == BossActions.STRIKE && worldObj.isRemote)
+		if (currentAction != action && action == BossActionsAPI.STRIKE && worldObj.isRemote)
 			this.leftArm = !this.leftArm;
 
 		if (!worldObj.isRemote){
@@ -81,7 +81,7 @@ public class EntityEarthGuardian extends AM2Boss{
 	@Override
 	public void onUpdate(){
 		if (ticksInCurrentAction > 40 && !worldObj.isRemote){
-			setCurrentAction(BossActions.IDLE);
+			setCurrentAction(BossActionsAPI.IDLE);
 		}
 
 		if (worldObj.isRemote){

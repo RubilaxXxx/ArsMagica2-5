@@ -1,7 +1,7 @@
 package am2.bosses.ai;
 
 import am2.AMCore;
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityLightningGuardian;
 import am2.damage.DamageSources;
 import net.minecraft.entity.EntityLiving;
@@ -32,7 +32,7 @@ public class EntityAILightningBolt extends AIAnimation{
 
 	@Override
 	public int getAnimID(){
-		return BossActions.STRIKE.ordinal();
+		return BossActionsAPI.STRIKE.ordinal();
 	}
 
 	@Override

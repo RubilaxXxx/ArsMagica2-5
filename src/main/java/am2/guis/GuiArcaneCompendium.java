@@ -12,7 +12,7 @@ import am2.api.spell.component.interfaces.ISpellPart;
 import am2.api.spell.enums.SpellModifiers;
 import am2.blocks.BlocksCommonProxy;
 import am2.blocks.RecipesEssenceRefiner;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import am2.entities.EntityFlicker;
 import am2.guis.AMGuiHelper.CompendiumBreadcrumb;
 import am2.guis.controls.GuiButtonCompendiumNext;

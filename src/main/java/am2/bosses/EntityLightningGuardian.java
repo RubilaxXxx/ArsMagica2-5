@@ -1,10 +1,8 @@
 package am2.bosses;
 
 import am2.AMCore;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.ai.*;
-import am2.damage.DamageSourceFire;
-import am2.damage.DamageSourceFrost;
-import am2.damage.DamageSourceLightning;
 import am2.items.ItemsCommonProxy;
 import am2.particles.AMParticle;
 import am2.particles.ParticleHoldPosition;
@@ -39,8 +37,8 @@ public class EntityLightningGuardian extends AM2Boss implements IAnimatedEntity{
 		this.tasks.addTask(1, new EntityAIDispel(this));
 		this.tasks.addTask(2, new EntityAILightningRod(this));
 		this.tasks.addTask(3, new EntityAIStatic(this));
-		this.tasks.addTask(3, new EntityAICastSpell(this, NPCSpells.instance.lightningRune, 22, 27, 200, BossActions.CASTING));
-		this.tasks.addTask(3, new EntityAICastSpell(this, NPCSpells.instance.scrambleSynapses, 45, 60, 300, BossActions.SMASH));
+		this.tasks.addTask(3, new EntityAICastSpell(this, NPCSpells.instance.lightningRune, 22, 27, 200, BossActionsAPI.CASTING));
+		this.tasks.addTask(3, new EntityAICastSpell(this, NPCSpells.instance.scrambleSynapses, 45, 60, 300, BossActionsAPI.SMASH));
 		this.tasks.addTask(5, new EntityAILightningBolt(this));
 	}
 
@@ -75,11 +73,11 @@ public class EntityLightningGuardian extends AM2Boss implements IAnimatedEntity{
 		super.onUpdate();
 
 		if (this.getAttackTarget() != null){
-			if (this.getCurrentAction() != BossActions.LONG_CASTING){
+			if (this.getCurrentAction() != BossActionsAPI.LONG_CASTING){
 				ExtendedProperties.For(getAttackTarget()).setDisableGravity(false);
 			}
 
-			if (!this.worldObj.isRemote && this.getDistanceSqToEntity(getAttackTarget()) > 64D && this.getCurrentAction() == BossActions.IDLE){
+			if (!this.worldObj.isRemote && this.getDistanceSqToEntity(getAttackTarget()) > 64D && this.getCurrentAction() == BossActionsAPI.IDLE){
 				this.getNavigator().tryMoveToEntityLiving(getAttackTarget(), 0.5f);
 			}
 		}
@@ -87,7 +85,7 @@ public class EntityLightningGuardian extends AM2Boss implements IAnimatedEntity{
 		if (worldObj.isRemote){
 			int halfDist = 8;
 			int dist = 16;
-			if (this.getCurrentAction() == BossActions.CHARGE){
+			if (this.getCurrentAction() == BossActionsAPI.CHARGE){
 				if (ticksInCurrentAction > 50){
 					for (int i = 0; i < 2 * AMCore.config.getGFXLevel(); ++i){
 						AMParticle smoke = (AMParticle)AMCore.proxy.particleManager.spawn(worldObj, "smoke", posX, posY + 4, posZ);
@@ -111,7 +109,7 @@ public class EntityLightningGuardian extends AM2Boss implements IAnimatedEntity{
 							posY + rand.nextDouble() * dist - halfDist,
 							posZ + rand.nextDouble() * dist - halfDist);
 				}
-			}else if (this.getCurrentAction() == BossActions.LONG_CASTING){
+			}else if (this.getCurrentAction() == BossActionsAPI.LONG_CASTING){
 				if (ticksInCurrentAction > 25 && ticksInCurrentAction < 150){
 					for (int i = 0; i < 2 * AMCore.config.getGFXLevel(); ++i){
 						AMParticle smoke = (AMParticle)AMCore.proxy.particleManager.spawn(worldObj, "smoke", posX, posY + 4, posZ);
@@ -188,7 +186,7 @@ public class EntityLightningGuardian extends AM2Boss implements IAnimatedEntity{
 
 	@Override
 	public void setAnimID(int id){
-		setCurrentAction(BossActions.values()[id]);
+		setCurrentAction(BossActionsAPI.values()[id]);
 	}
 
 

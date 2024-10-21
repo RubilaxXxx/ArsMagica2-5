@@ -2,7 +2,7 @@ package am2.bosses.ai;
 
 import am2.AMCore;
 import am2.api.math.AMVector3;
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityLightningGuardian;
 import am2.damage.DamageSources;
 import am2.playerextensions.ExtendedProperties;
@@ -28,7 +28,7 @@ public class EntityAILightningRod extends AIAnimation{
 
 	@Override
 	public int getAnimID(){
-		return BossActions.LONG_CASTING.ordinal();
+		return BossActionsAPI.LONG_CASTING.ordinal();
 	}
 
 	@Override

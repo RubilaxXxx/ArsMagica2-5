@@ -1,7 +1,7 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.BossActionsAPI;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -26,19 +26,19 @@ public class EntityAISpinAttack<T> extends EntityAIBase{
 
 	@Override
 	public boolean shouldExecute(){
-		if (cooldownTicks-- > 0 || ((IArsMagicaBoss)host).getCurrentAction() != BossActions.IDLE || !((IArsMagicaBoss)host).isActionValid(BossActions.SPINNING))
+		if (cooldownTicks-- > 0 || ((IArsMagicaBoss)host).getCurrentAction() != BossActionsAPI.IDLE || !((IArsMagicaBoss)host).isActionValid(BossActionsAPI.SPINNING))
 			return false;
 		EntityLivingBase AITarget = host.getAttackTarget();
 		if (AITarget == null || AITarget.isDead || AITarget.getDistanceSqToEntity(host) > 25) return false;
 		this.target = AITarget;
-		((IArsMagicaBoss)host).setCurrentAction(BossActions.SPINNING);
+		((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.SPINNING);
 		return true;
 	}
 
 	@Override
 	public boolean continueExecuting(){
 		EntityLivingBase AITarget = host.getAttackTarget();
-		if (AITarget == null || AITarget.isDead || ((IArsMagicaBoss)host).getTicksInCurrentAction() > BossActions.SPINNING.getMaxActionTime()){
+		if (AITarget == null || AITarget.isDead || ((IArsMagicaBoss)host).getTicksInCurrentAction() > BossActionsAPI.SPINNING.getMaxActionTime()){
 			resetTask();
 			return false;
 		}
@@ -47,7 +47,7 @@ public class EntityAISpinAttack<T> extends EntityAIBase{
 
 	@Override
 	public void resetTask(){
-		((IArsMagicaBoss)host).setCurrentAction(BossActions.IDLE);
+		((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.IDLE);
 		cooldownTicks = 150;
 		
 		/*if (host.worldObj.isRemote)

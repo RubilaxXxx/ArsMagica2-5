@@ -1,6 +1,6 @@
 package am2.bosses.models;
 
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityAirGuardian;
 import am2.entities.renderers.AM2ModelRenderer;
 import net.minecraft.client.model.ModelBase;
@@ -88,7 +88,7 @@ public class ModelAirGuardian extends ModelBase{
 			setHeadRotations(f3, f4);
 
 			EntityAirGuardian guardian = (EntityAirGuardian)entity;
-			if (guardian.getCurrentAction() == BossActions.SPINNING){
+			if (guardian.getCurrentAction() == BossActionsAPI.SPINNING){
 				GL11.glRotatef(guardian.spinRotation - (f2 - guardian.ticksExisted) * 40, 0, 1, 0);
 			}
 

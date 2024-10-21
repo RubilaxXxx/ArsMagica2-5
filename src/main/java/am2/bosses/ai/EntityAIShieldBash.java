@@ -1,7 +1,7 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.BossActionsAPI;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import am2.network.AMNetHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,7 +25,7 @@ public class EntityAIShieldBash extends EntityAIBase{
 
 	@Override
 	public boolean shouldExecute(){
-		if (cooldownTicks-- > 0 || ((IArsMagicaBoss)host).getCurrentAction() != BossActions.IDLE || !((IArsMagicaBoss)host).isActionValid(BossActions.SHIELD_BASH))
+		if (cooldownTicks-- > 0 || ((IArsMagicaBoss)host).getCurrentAction() != BossActionsAPI.IDLE || !((IArsMagicaBoss)host).isActionValid(BossActionsAPI.SHIELD_BASH))
 			return false;
 		EntityLivingBase AITarget = host.getAttackTarget();
 		if (AITarget == null || AITarget.isDead) return false;
@@ -36,8 +36,8 @@ public class EntityAIShieldBash extends EntityAIBase{
 	@Override
 	public boolean continueExecuting(){
 		EntityLivingBase AITarget = host.getAttackTarget();
-		if (AITarget == null || AITarget.isDead || (((IArsMagicaBoss)host).getCurrentAction() == BossActions.SHIELD_BASH && ((IArsMagicaBoss)host).getTicksInCurrentAction() > ((IArsMagicaBoss)host).getCurrentAction().getMaxActionTime())){
-			((IArsMagicaBoss)host).setCurrentAction(BossActions.IDLE);
+		if (AITarget == null || AITarget.isDead || (((IArsMagicaBoss)host).getCurrentAction() == BossActionsAPI.SHIELD_BASH && ((IArsMagicaBoss)host).getTicksInCurrentAction() > ((IArsMagicaBoss)host).getCurrentAction().getMaxActionTime())){
+			((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.IDLE);
 			cooldownTicks = 10;
 			return false;
 		}
@@ -50,10 +50,10 @@ public class EntityAIShieldBash extends EntityAIBase{
 		host.getNavigator().tryMoveToEntityLiving(target, moveSpeed);
 
 		if (host.getDistanceSqToEntity(target) < 16)
-			if (((IArsMagicaBoss)host).getCurrentAction() != BossActions.SHIELD_BASH)
-				((IArsMagicaBoss)host).setCurrentAction(BossActions.SHIELD_BASH);
+			if (((IArsMagicaBoss)host).getCurrentAction() != BossActionsAPI.SHIELD_BASH)
+				((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.SHIELD_BASH);
 
-		if (((IArsMagicaBoss)host).getCurrentAction() == BossActions.SHIELD_BASH && ((IArsMagicaBoss)host).getTicksInCurrentAction() > 12){
+		if (((IArsMagicaBoss)host).getCurrentAction() == BossActionsAPI.SHIELD_BASH && ((IArsMagicaBoss)host).getTicksInCurrentAction() > 12){
 			if (!host.worldObj.isRemote)
 				host.worldObj.playSoundAtEntity(host, ((IArsMagicaBoss)host).getAttackSound(), 1.0f, 1.0f);
 

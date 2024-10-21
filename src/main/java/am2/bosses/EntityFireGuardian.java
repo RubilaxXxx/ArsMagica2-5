@@ -1,8 +1,8 @@
 package am2.bosses;
 
 import am2.AMCore;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.ai.*;
-import am2.damage.DamageSourceFire;
 import am2.damage.DamageSourceFrost;
 import am2.damage.DamageSources;
 import am2.items.ItemsCommonProxy;
@@ -63,9 +63,9 @@ public class EntityFireGuardian extends AM2Boss{
 		this.tasks.addTask(1, new EntityAIFireRain(this));
 		this.tasks.addTask(1, new EntityAIDispel(this));
 		this.tasks.addTask(2, new EntityAIDive(this));
-		this.tasks.addTask(2, new EntityAICastSpell(this, NPCSpells.instance.meltArmor, 12, 23, 40, BossActions.CASTING));
+		this.tasks.addTask(2, new EntityAICastSpell(this, NPCSpells.instance.meltArmor, 12, 23, 40, BossActionsAPI.CASTING));
 		this.tasks.addTask(3, new EntityAIFlamethrower(this));
-		this.tasks.addTask(4, new EntityAICastSpell(this, NPCSpells.instance.fireBolt, 12, 23, 5, BossActions.CASTING));
+		this.tasks.addTask(4, new EntityAICastSpell(this, NPCSpells.instance.fireBolt, 12, 23, 5, BossActionsAPI.CASTING));
 	}
 
 	public boolean getIsUnderground(){
@@ -74,10 +74,10 @@ public class EntityFireGuardian extends AM2Boss{
 
 
 	@Override
-	public void setCurrentAction(BossActions action){
+	public void setCurrentAction(BossActionsAPI action){
 		super.setCurrentAction(action);
 
-		if (action == BossActions.SPINNING){
+		if (action == BossActionsAPI.SPINNING){
 			this.addVelocity(0, 1.5, 0);
 		}else{
 			hitCount = 0;
@@ -155,11 +155,11 @@ public class EntityFireGuardian extends AM2Boss{
 	@Override
 	public void onUpdate(){
 
-		if (ticksInCurrentAction == 30 && currentAction == BossActions.SPINNING){
+		if (ticksInCurrentAction == 30 && currentAction == BossActionsAPI.SPINNING){
 			nova();
 		}
 
-		if (ticksInCurrentAction > 13 && currentAction == BossActions.LONG_CASTING){
+		if (ticksInCurrentAction > 13 && currentAction == BossActionsAPI.LONG_CASTING){
 			if (this.getAttackTarget() != null)
 				this.faceEntity(this.getAttackTarget(), 10, 10);
 			flamethrower();
@@ -172,7 +172,7 @@ public class EntityFireGuardian extends AM2Boss{
 
 	@Override
 	protected void fall(float par1){
-		if (this.getCurrentAction() == BossActions.SPINNING){
+		if (this.getCurrentAction() == BossActionsAPI.SPINNING){
 			this.isUnderground = true;
 			return;
 		}
@@ -198,10 +198,10 @@ public class EntityFireGuardian extends AM2Boss{
 			return false;
 		}
 
-		if (this.isUnderground && this.getCurrentAction() != BossActions.SPINNING){
+		if (this.isUnderground && this.getCurrentAction() != BossActionsAPI.SPINNING){
 			return false;
 		}else{
-			if (this.getCurrentAction() == BossActions.SPINNING)
+			if (this.getCurrentAction() == BossActionsAPI.SPINNING)
 				++hitCount;
 		}
 

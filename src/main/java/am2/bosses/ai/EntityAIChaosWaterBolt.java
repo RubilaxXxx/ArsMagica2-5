@@ -1,14 +1,12 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityWaterGuardian;
 import am2.items.ItemsCommonProxy;
 import am2.spell.SpellHelper;
 import am2.spell.SpellUtils;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.item.ItemStack;
-
-import java.util.Random;
 
 public class EntityAIChaosWaterBolt extends EntityAIBase{
 	private final EntityWaterGuardian host;
@@ -29,14 +27,14 @@ public class EntityAIChaosWaterBolt extends EntityAIBase{
 
 	@Override
 	public boolean shouldExecute(){
-		if (host.getCurrentAction() == BossActions.IDLE && host.isActionValid(BossActions.CASTING)) return true;
+		if (host.getCurrentAction() == BossActionsAPI.IDLE && host.isActionValid(BossActionsAPI.CASTING)) return true;
 		return false;
 	}
 
 	@Override
 	public boolean continueExecuting(){
-		if (host.getCurrentAction() == BossActions.CASTING && host.getTicksInCurrentAction() > 100){
-			host.setCurrentAction(BossActions.IDLE);
+		if (host.getCurrentAction() == BossActionsAPI.CASTING && host.getTicksInCurrentAction() > 100){
+			host.setCurrentAction(BossActionsAPI.IDLE);
 			cooldownTicks = 0;
 			return false;
 		}
@@ -45,10 +43,10 @@ public class EntityAIChaosWaterBolt extends EntityAIBase{
 
 	@Override
 	public void updateTask(){
-		if (host.getCurrentAction() != BossActions.CASTING)
-			host.setCurrentAction(BossActions.CASTING);
+		if (host.getCurrentAction() != BossActionsAPI.CASTING)
+			host.setCurrentAction(BossActionsAPI.CASTING);
 
-		if (!host.worldObj.isRemote && host.getCurrentAction() == BossActions.CASTING){
+		if (!host.worldObj.isRemote && host.getCurrentAction() == BossActionsAPI.CASTING){
 			float yaw = host.worldObj.rand.nextFloat() * 360;
 			host.rotationYaw = yaw;
 			host.prevRotationYaw = yaw;

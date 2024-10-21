@@ -1,9 +1,9 @@
 package am2.bosses.ai;
 
 import am2.api.math.AMVector3;
-import am2.bosses.BossActions;
 import am2.bosses.EntityEnderGuardian;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.BossActionsAPI;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import am2.utility.MathUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.DamageSource;
@@ -19,7 +19,7 @@ public class EntityAIEnderRush extends AIAnimation{
 
 	@Override
 	public int getAnimID(){
-		return BossActions.CHARGE.ordinal();
+		return BossActionsAPI.CHARGE.ordinal();
 	}
 
 	@Override

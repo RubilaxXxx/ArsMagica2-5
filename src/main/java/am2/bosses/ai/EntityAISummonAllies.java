@@ -1,8 +1,8 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
 import am2.bosses.EntityLifeGuardian;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.BossActionsAPI;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import am2.buffs.BuffEffectMagicShield;
 import am2.buffs.BuffEffectShrink;
 import am2.utility.EntityUtilities;
@@ -30,7 +30,7 @@ public class EntityAISummonAllies extends EntityAIBase{
 	@Override
 	public boolean shouldExecute(){
 		cooldownTicks--;
-		boolean execute = ((IArsMagicaBoss)host).getCurrentAction() != BossActions.CASTING && cooldownTicks <= 0;
+		boolean execute = ((IArsMagicaBoss)host).getCurrentAction() != BossActionsAPI.CASTING && cooldownTicks <= 0;
 		if (execute) hasCasted = false;
 		return execute;
 	}
@@ -42,7 +42,7 @@ public class EntityAISummonAllies extends EntityAIBase{
 
 	@Override
 	public void resetTask(){
-		((IArsMagicaBoss)host).setCurrentAction(BossActions.IDLE);
+		((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.IDLE);
 		cooldownTicks = 200;
 		hasCasted = true;
 		actionTicks = 0;
@@ -50,8 +50,8 @@ public class EntityAISummonAllies extends EntityAIBase{
 
 	@Override
 	public void updateTask(){
-		if (((IArsMagicaBoss)host).getCurrentAction() != BossActions.CASTING)
-			((IArsMagicaBoss)host).setCurrentAction(BossActions.CASTING);
+		if (((IArsMagicaBoss)host).getCurrentAction() != BossActionsAPI.CASTING)
+			((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.CASTING);
 
 		actionTicks++;
 		if (actionTicks == 16){

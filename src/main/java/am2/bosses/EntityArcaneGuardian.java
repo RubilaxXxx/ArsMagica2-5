@@ -1,5 +1,6 @@
 package am2.bosses;
 
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.ai.EntityAICastSpell;
 import am2.bosses.ai.EntityAIDispel;
 import am2.bosses.ai.ISpellCastCallback;
@@ -200,18 +201,18 @@ public class EntityArcaneGuardian extends AM2Boss{
 	@Override
 	protected void initSpecificAI(){
 		this.tasks.addTask(1, new EntityAIDispel(this));
-		this.tasks.addTask(1, new EntityAICastSpell(this, NPCSpells.instance.healSelf, 16, 23, 60, BossActions.CASTING, new ISpellCastCallback<EntityArcaneGuardian>(){
+		this.tasks.addTask(1, new EntityAICastSpell(this, NPCSpells.instance.healSelf, 16, 23, 60, BossActionsAPI.CASTING, new ISpellCastCallback<EntityArcaneGuardian>(){
 			@Override
 			public boolean shouldCast(EntityArcaneGuardian host, ItemStack spell){
 				return host.getHealth() < host.getMaxHealth();
 			}
 		}));
-		this.tasks.addTask(2, new EntityAICastSpell(this, NPCSpells.instance.blink, 16, 23, 20, BossActions.CASTING));
-		this.tasks.addTask(3, new EntityAICastSpell(this, NPCSpells.instance.arcaneBolt, 12, 23, 5, BossActions.CASTING));
+		this.tasks.addTask(2, new EntityAICastSpell(this, NPCSpells.instance.blink, 16, 23, 20, BossActionsAPI.CASTING));
+		this.tasks.addTask(3, new EntityAICastSpell(this, NPCSpells.instance.arcaneBolt, 12, 23, 5, BossActionsAPI.CASTING));
 	}
 
 	@Override
-	public void setCurrentAction(BossActions action){
+	public void setCurrentAction(BossActionsAPI action){
 		super.setCurrentAction(action);
 		if (!worldObj.isRemote){
 			AMNetHandler.INSTANCE.sendActionUpdateToAllAround(this);

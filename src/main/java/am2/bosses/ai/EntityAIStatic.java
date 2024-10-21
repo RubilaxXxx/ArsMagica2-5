@@ -1,6 +1,6 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityLightningGuardian;
 import am2.damage.DamageSources;
 import net.minecraft.entity.EntityLiving;
@@ -36,7 +36,7 @@ public class EntityAIStatic extends AIAnimation{
 
 	@Override
 	public int getAnimID(){
-		return BossActions.CHARGE.ordinal();
+		return BossActionsAPI.CHARGE.ordinal();
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.BossActionsAPI;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import am2.spell.SpellHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -18,10 +18,10 @@ public class EntityAICastSpell extends EntityAIBase{
 	private int castPoint;
 	private int duration;
 	private int cooldown;
-	private BossActions activeAction;
+	private BossActionsAPI activeAction;
 	private ISpellCastCallback callback;
 
-	public EntityAICastSpell(IArsMagicaBoss host, ItemStack spell, int castPoint, int duration, int cooldown, BossActions activeAction){
+	public EntityAICastSpell(IArsMagicaBoss host, ItemStack spell, int castPoint, int duration, int cooldown, BossActionsAPI activeAction){
 		this.host = (EntityLiving)host;
 		this.stack = spell;
 		this.castPoint = castPoint;
@@ -32,7 +32,7 @@ public class EntityAICastSpell extends EntityAIBase{
 		this.setMutexBits(3);
 	}
 
-	public EntityAICastSpell(IArsMagicaBoss host, ItemStack spell, int castPoint, int duration, int cooldown, BossActions activeAction, ISpellCastCallback callback){
+	public EntityAICastSpell(IArsMagicaBoss host, ItemStack spell, int castPoint, int duration, int cooldown, BossActionsAPI activeAction, ISpellCastCallback callback){
 		this.host = (EntityLiving)host;
 		this.stack = spell;
 		this.castPoint = castPoint;
@@ -45,7 +45,7 @@ public class EntityAICastSpell extends EntityAIBase{
 	@Override
 	public boolean shouldExecute(){
 		cooldownTicks--;
-		boolean execute = ((IArsMagicaBoss)host).getCurrentAction() == BossActions.IDLE && host.getAttackTarget() != null && cooldownTicks <= 0;
+		boolean execute = ((IArsMagicaBoss)host).getCurrentAction() == BossActionsAPI.IDLE && host.getAttackTarget() != null && cooldownTicks <= 0;
 		if (execute){
 			if (callback == null || callback.shouldCast(host, stack))
 				hasCasted = false;
@@ -62,7 +62,7 @@ public class EntityAICastSpell extends EntityAIBase{
 
 	@Override
 	public void resetTask(){
-		((IArsMagicaBoss)host).setCurrentAction(BossActions.IDLE);
+		((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.IDLE);
 		cooldownTicks = cooldown;
 		hasCasted = true;
 		castTicks = 0;

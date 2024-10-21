@@ -6,7 +6,7 @@ import am2.api.power.IPowerNode;
 import am2.blocks.tileentities.TileEntityArmorImbuer;
 import am2.blocks.tileentities.TileEntityCalefactor;
 import am2.blocks.tileentities.TileEntityObelisk;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import am2.buffs.BuffList;
 import am2.entities.EntityHecate;
 import am2.items.ItemsCommonProxy;

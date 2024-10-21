@@ -1,12 +1,11 @@
 package am2.bosses;
 
 import am2.AMCore;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.ai.EntityAICastSpell;
 import am2.bosses.ai.EntityAIDispel;
 import am2.bosses.ai.EntityAISummonAllies;
 import am2.bosses.ai.ISpellCastCallback;
-import am2.damage.DamageSourceFire;
-import am2.damage.DamageSourceFrost;
 import am2.entities.EntityDarkling;
 import am2.entities.EntityEarthElemental;
 import am2.entities.EntityFireElemental;
@@ -64,13 +63,13 @@ public class EntityLifeGuardian extends AM2Boss{
 	@Override
 	protected void initSpecificAI(){
 		this.tasks.addTask(1, new EntityAIDispel(this));
-		this.tasks.addTask(1, new EntityAICastSpell(this, NPCSpells.instance.healSelf, 16, 23, 100, BossActions.CASTING, new ISpellCastCallback<EntityLifeGuardian>(){
+		this.tasks.addTask(1, new EntityAICastSpell(this, NPCSpells.instance.healSelf, 16, 23, 100, BossActionsAPI.CASTING, new ISpellCastCallback<EntityLifeGuardian>(){
 			@Override
 			public boolean shouldCast(EntityLifeGuardian host, ItemStack spell){
 				return host.getHealth() < host.getMaxHealth();
 			}
 		}));
-		this.tasks.addTask(2, new EntityAICastSpell(this, NPCSpells.instance.nauseate, 16, 23, 20, BossActions.CASTING, new ISpellCastCallback<EntityLifeGuardian>(){
+		this.tasks.addTask(2, new EntityAICastSpell(this, NPCSpells.instance.nauseate, 16, 23, 20, BossActionsAPI.CASTING, new ISpellCastCallback<EntityLifeGuardian>(){
 			@Override
 			public boolean shouldCast(EntityLifeGuardian host, ItemStack spell){
 				return minions.size() == 0;

@@ -1,7 +1,7 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.BossActionsAPI;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import am2.spell.SpellHelper;
 import am2.utility.NPCSpells;
 import net.minecraft.entity.EntityLiving;
@@ -21,7 +21,7 @@ public class EntityAIDispel extends EntityAIBase{
 	@Override
 	public boolean shouldExecute(){
 		cooldownTicks--;
-		boolean execute = ((IArsMagicaBoss)host).getCurrentAction() == BossActions.IDLE && host.getActivePotionEffects().size() > 0 && cooldownTicks <= 0;
+		boolean execute = ((IArsMagicaBoss)host).getCurrentAction() == BossActionsAPI.IDLE && host.getActivePotionEffects().size() > 0 && cooldownTicks <= 0;
 		if (execute) hasCasted = false;
 		return execute;
 	}
@@ -33,7 +33,7 @@ public class EntityAIDispel extends EntityAIBase{
 
 	@Override
 	public void resetTask(){
-		((IArsMagicaBoss)host).setCurrentAction(BossActions.IDLE);
+		((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.IDLE);
 		cooldownTicks = 50;
 		hasCasted = true;
 		boltTicks = 0;
@@ -41,8 +41,8 @@ public class EntityAIDispel extends EntityAIBase{
 
 	@Override
 	public void updateTask(){
-		if (((IArsMagicaBoss)host).getCurrentAction() != BossActions.CASTING)
-			((IArsMagicaBoss)host).setCurrentAction(BossActions.CASTING);
+		if (((IArsMagicaBoss)host).getCurrentAction() != BossActionsAPI.CASTING)
+			((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.CASTING);
 
 		boltTicks++;
 		if (boltTicks == 16){

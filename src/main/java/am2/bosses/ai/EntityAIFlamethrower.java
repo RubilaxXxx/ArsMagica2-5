@@ -1,7 +1,7 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.BossActionsAPI;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 
@@ -17,7 +17,7 @@ public class EntityAIFlamethrower extends EntityAIBase{
 
 	@Override
 	public boolean shouldExecute(){
-		boolean execute = ((IArsMagicaBoss)host).getCurrentAction() == BossActions.IDLE && host.getAttackTarget() != null && cooldownTicks-- <= 0;
+		boolean execute = ((IArsMagicaBoss)host).getCurrentAction() == BossActionsAPI.IDLE && host.getAttackTarget() != null && cooldownTicks-- <= 0;
 		return execute;
 	}
 
@@ -25,7 +25,7 @@ public class EntityAIFlamethrower extends EntityAIBase{
 	public boolean continueExecuting(){
 		if (host.getAttackTarget() == null || host.getAttackTarget().isDead || ((IArsMagicaBoss)host).getTicksInCurrentAction() > 80){
 			this.cooldownTicks = 40;
-			((IArsMagicaBoss)host).setCurrentAction(BossActions.IDLE);
+			((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.IDLE);
 			return false;
 		}
 		return true;
@@ -34,8 +34,8 @@ public class EntityAIFlamethrower extends EntityAIBase{
 	@Override
 	public void updateTask(){
 		if (host.getDistanceSqToEntity(host.getAttackTarget()) < 64){
-			if (((IArsMagicaBoss)host).getCurrentAction() != BossActions.LONG_CASTING)
-				((IArsMagicaBoss)host).setCurrentAction(BossActions.LONG_CASTING);
+			if (((IArsMagicaBoss)host).getCurrentAction() != BossActionsAPI.LONG_CASTING)
+				((IArsMagicaBoss)host).setCurrentAction(BossActionsAPI.LONG_CASTING);
 			host.getLookHelper().setLookPositionWithEntity(host.getAttackTarget(), 10, 10);
 			host.getNavigator().clearPathEntity();
 		}else{

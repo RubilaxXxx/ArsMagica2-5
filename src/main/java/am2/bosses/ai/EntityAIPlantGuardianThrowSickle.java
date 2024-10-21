@@ -1,6 +1,6 @@
 package am2.bosses.ai;
 
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityNatureGuardian;
 import am2.entities.EntityThrownSickle;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,7 +20,7 @@ public class EntityAIPlantGuardianThrowSickle extends EntityAIBase{
 
 	@Override
 	public boolean shouldExecute(){
-		if (cooldownTicks-- > 0 || host.getCurrentAction() != BossActions.IDLE) return false;
+		if (cooldownTicks-- > 0 || host.getCurrentAction() != BossActionsAPI.IDLE) return false;
 		EntityLivingBase AITarget = host.getAttackTarget();
 		if (AITarget == null || AITarget.isDead) return false;
 		this.target = AITarget;
@@ -30,8 +30,8 @@ public class EntityAIPlantGuardianThrowSickle extends EntityAIBase{
 	@Override
 	public boolean continueExecuting(){
 		EntityLivingBase AITarget = host.getAttackTarget();
-		if (AITarget == null || AITarget.isDead || (host.getCurrentAction() == BossActions.THROWING_SICKLE && host.getTicksInCurrentAction() > host.getCurrentAction().getMaxActionTime())){
-			host.setCurrentAction(BossActions.IDLE);
+		if (AITarget == null || AITarget.isDead || (host.getCurrentAction() == BossActionsAPI.THROWING_SICKLE && host.getTicksInCurrentAction() > host.getCurrentAction().getMaxActionTime())){
+			host.setCurrentAction(BossActionsAPI.IDLE);
 			cooldownTicks = 50;
 			return false;
 		}
@@ -45,8 +45,8 @@ public class EntityAIPlantGuardianThrowSickle extends EntityAIBase{
 			host.getNavigator().tryMoveToEntityLiving(target, moveSpeed);
 		}else{
 			host.getNavigator().clearPathEntity();
-			if (host.getCurrentAction() != BossActions.THROWING_SICKLE)
-				host.setCurrentAction(BossActions.THROWING_SICKLE);
+			if (host.getCurrentAction() != BossActionsAPI.THROWING_SICKLE)
+				host.setCurrentAction(BossActionsAPI.THROWING_SICKLE);
 
 			if (host.getTicksInCurrentAction() == 12){
 				host.faceEntity(target, 180, 180);

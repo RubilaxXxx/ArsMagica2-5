@@ -1,10 +1,10 @@
 package am2.bosses;
 
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.ai.EntityAICastSpell;
 import am2.bosses.ai.EntityAIChaosWaterBolt;
 import am2.bosses.ai.EntityAICloneSelf;
 import am2.bosses.ai.EntityAISpinAttack;
-import am2.damage.DamageSourceFire;
 import am2.damage.DamageSourceFrost;
 import am2.damage.DamageSourceLightning;
 import am2.items.ItemsCommonProxy;
@@ -33,7 +33,7 @@ public class EntityWaterGuardian extends AM2Boss{
 
 	public EntityWaterGuardian(World par1World){
 		super(par1World);
-		currentAction = BossActions.IDLE;
+		currentAction = BossActionsAPI.IDLE;
 		master = null;
 		clones = new EntityWaterGuardian[2];
 		this.setSize(1.0f, 2.0f);
@@ -101,19 +101,19 @@ public class EntityWaterGuardian extends AM2Boss{
 	protected void initSpecificAI(){
 		this.tasks.addTask(2, new EntityAIChaosWaterBolt(this));
 		this.tasks.addTask(3, new EntityAICloneSelf(this));
-		this.tasks.addTask(4, new EntityAICastSpell(this, NPCSpells.instance.waterBolt, 12, 23, 5, BossActions.CASTING));
+		this.tasks.addTask(4, new EntityAICastSpell(this, NPCSpells.instance.waterBolt, 12, 23, 5, BossActionsAPI.CASTING));
 		this.tasks.addTask(3, new EntityAISpinAttack(this, 0.5f, 4));
 	}
 
 	@Override
 	public void onUpdate(){
 
-		if (currentAction == BossActions.CASTING){
+		if (currentAction == BossActionsAPI.CASTING){
 			uberSpinAvailable = false;
 		}
 
-		if (!worldObj.isRemote && uberSpinAvailable && currentAction != BossActions.CASTING && currentAction != BossActions.IDLE){
-			setCurrentAction(BossActions.IDLE);
+		if (!worldObj.isRemote && uberSpinAvailable && currentAction != BossActionsAPI.CASTING && currentAction != BossActionsAPI.IDLE){
+			setCurrentAction(BossActionsAPI.IDLE);
 		}
 
 		if (!worldObj.isRemote && isClone() && (master == null || ticksExisted > 400)){
@@ -140,7 +140,7 @@ public class EntityWaterGuardian extends AM2Boss{
 			orbitRotation -= 2f;
 		orbitRotation %= 360;
 
-		if (this.getCurrentAction() == BossActions.SPINNING || this.getCurrentAction() == BossActions.CASTING){
+		if (this.getCurrentAction() == BossActionsAPI.SPINNING || this.getCurrentAction() == BossActionsAPI.CASTING){
 			this.spinRotation = (this.spinRotation - 30) % 360;
 		}
 	}
@@ -150,7 +150,7 @@ public class EntityWaterGuardian extends AM2Boss{
 	}
 
 	@Override
-	public void setCurrentAction(BossActions action){
+	public void setCurrentAction(BossActionsAPI action){
 		super.setCurrentAction(action);
 		this.spinRotation = 0;
 
@@ -197,12 +197,12 @@ public class EntityWaterGuardian extends AM2Boss{
 		return Hurttime;
 	}
 	@Override
-	public boolean isActionValid(BossActions action){
-		if (uberSpinAvailable && action != BossActions.CASTING) return false;
-		if (action == BossActions.CASTING){
+	public boolean isActionValid(BossActionsAPI action){
+		if (uberSpinAvailable && action != BossActionsAPI.CASTING) return false;
+		if (action == BossActionsAPI.CASTING){
 			return uberSpinAvailable;
 		}
-		if (action == BossActions.CLONE){
+		if (action == BossActionsAPI.CLONE){
 			return !isClone();
 		}
 		return true;

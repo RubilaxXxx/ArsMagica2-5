@@ -1,11 +1,10 @@
 package am2.bosses;
 
 import am2.AMCore;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.api.math.AMVector3;
 import am2.bosses.ai.*;
 import am2.buffs.BuffList;
-import am2.damage.DamageSourceFire;
-import am2.damage.DamageSourceFrost;
 import am2.damage.DamageSources;
 import am2.items.ItemsCommonProxy;
 import am2.playerextensions.ExtendedProperties;
@@ -163,7 +162,7 @@ public class EntityEnderGuardian extends AM2Boss implements IAnimatedEntity{
 		if (par1DamageSource.damageType.equals("outOfWorld")){
 			if (spawn != null){
 				this.setPosition(spawn.x, spawn.y, spawn.z);
-				this.setCurrentAction(BossActions.IDLE);
+				this.setCurrentAction(BossActionsAPI.IDLE);
 				if (!this.worldObj.isRemote)
 					AMCore.proxy.addDeferredTargetSet(this, null);
 			}else{
@@ -198,9 +197,9 @@ public class EntityEnderGuardian extends AM2Boss implements IAnimatedEntity{
 	}
 
 	@Override
-	public void setCurrentAction(BossActions action){
+	public void setCurrentAction(BossActionsAPI action){
 		this.currentAction = action;
-		if (action == BossActions.LONG_CASTING)
+		if (action == BossActionsAPI.LONG_CASTING)
 			wingFlapTime = 0;
 	}
 
@@ -224,23 +223,23 @@ public class EntityEnderGuardian extends AM2Boss implements IAnimatedEntity{
 	}
 
 	public boolean shouldFlapWings(){
-		return currentAction != BossActions.LONG_CASTING && currentAction != BossActions.SHIELD_BASH;
+		return currentAction != BossActionsAPI.LONG_CASTING && currentAction != BossActionsAPI.SHIELD_BASH;
 	}
 
 	@Override
 	public boolean isPotionActive(int par1){
-		if (par1 == BuffList.spellReflect.id && (currentAction == BossActions.SHIELD_BASH || currentAction == BossActions.LONG_CASTING))
+		if (par1 == BuffList.spellReflect.id && (currentAction == BossActionsAPI.SHIELD_BASH || currentAction == BossActionsAPI.LONG_CASTING))
 			return true;
-		if (par1 == BuffList.magicShield.id && (currentAction == BossActions.SHIELD_BASH || currentAction == BossActions.LONG_CASTING))
+		if (par1 == BuffList.magicShield.id && (currentAction == BossActionsAPI.SHIELD_BASH || currentAction == BossActionsAPI.LONG_CASTING))
 			return true;
 		return super.isPotionActive(par1);
 	}
 
 	@Override
 	public boolean isPotionActive(Potion par1Potion){
-		if (par1Potion == BuffList.spellReflect && (currentAction == BossActions.SHIELD_BASH || currentAction == BossActions.LONG_CASTING))
+		if (par1Potion == BuffList.spellReflect && (currentAction == BossActionsAPI.SHIELD_BASH || currentAction == BossActionsAPI.LONG_CASTING))
 			return true;
-		if (par1Potion == BuffList.magicShield && (currentAction == BossActions.SHIELD_BASH || currentAction == BossActions.LONG_CASTING))
+		if (par1Potion == BuffList.magicShield && (currentAction == BossActionsAPI.SHIELD_BASH || currentAction == BossActionsAPI.LONG_CASTING))
 			return true;
 		return super.isPotionActive(par1Potion);
 	}
@@ -285,7 +284,7 @@ public class EntityEnderGuardian extends AM2Boss implements IAnimatedEntity{
 
 	@Override
 	public void setAnimID(int id){
-		setCurrentAction(BossActions.values()[id]);
+		setCurrentAction(BossActionsAPI.values()[id]);
 		ticksInCurrentAction = 0;
 	}
 

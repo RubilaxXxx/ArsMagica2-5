@@ -1,6 +1,6 @@
 package am2.bosses.models;
 
-import am2.bosses.BossActions;
+import am2.api.entities.Bosses.BossActionsAPI;
 import am2.bosses.EntityWaterGuardian;
 import am2.entities.renderers.AM2ModelRenderer;
 import net.minecraft.client.model.ModelBase;
@@ -379,7 +379,7 @@ public class ModelWaterGuardian extends ModelBase{
 				degrees = maxAngle * (ticks / 10f);
 			else if (ticks < 18)
 				degrees = maxAngle;
-			else if (guardian.getCurrentAction() == BossActions.CASTING)
+			else if (guardian.getCurrentAction() == BossActionsAPI.CASTING)
 				degrees = maxAngle * ((23 - ticks)/ 5f);
 			else if (ticks < 150)
 				degrees = maxAngle;

@@ -1,9 +1,9 @@
 package am2.bosses.ai;
 
 import am2.api.math.AMVector3;
-import am2.bosses.BossActions;
 import am2.bosses.EntityEnderGuardian;
-import am2.bosses.IArsMagicaBoss;
+import am2.api.entities.Bosses.BossActionsAPI;
+import am2.api.entities.Bosses.IArsMagicaBoss;
 import am2.spell.SpellHelper;
 import am2.utility.NPCSpells;
 import net.minecraft.entity.EntityLiving;
@@ -20,7 +20,7 @@ public class EntityAIEnderwave extends AIAnimation{
 
 	@Override
 	public int getAnimID(){
-		return BossActions.STRIKE.ordinal();
+		return BossActionsAPI.STRIKE.ordinal();
 	}
 
 	@Override
