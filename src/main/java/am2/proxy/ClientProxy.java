@@ -6,7 +6,7 @@ import am2.AMKeyBindings;
 import am2.api.events.RegisterCompendiumEntries;
 import am2.api.events.RegisterSkillTreeIcons;
 import am2.api.math.AMVector3;
-import am2.api.power.IPowerNode;
+import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import am2.api.spell.ItemSpellBase;
 import am2.api.spell.component.interfaces.ISpellComponent;
@@ -56,7 +56,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -288,8 +287,8 @@ public class ClientProxy extends CommonProxy{
 	}
 
 	@Override
-	public void requestPowerPathVisuals(IPowerNode node, EntityPlayerMP player){
-		AMNetHandler.INSTANCE.syncPowerPaths(node, player);
+	public void requestPowerPathVisuals(IManaPower node, EntityPlayerMP player){
+		//AMNetHandler.INSTANCE.syncPowerPaths(node, player);
 	}
 
 	@Override
@@ -315,6 +314,10 @@ public class ClientProxy extends CommonProxy{
 	@Override
 	public void setTrackedPowerCompound(NBTTagCompound compound){
 		clientTickHandler.setTrackData(compound);
+	}
+	@Override
+	public AMVector3 getTrackLocation(){
+		return clientTickHandler.getTrackLocation();
 	}
 
 	@Override
@@ -354,7 +357,7 @@ public class ClientProxy extends CommonProxy{
 				){
 
 			TileEntity te = player.worldObj.getTileEntity(target.blockX, target.blockY, target.blockZ);
-			if (te != null && te instanceof IPowerNode){
+			if (te != null && te instanceof IManaPower){
 				AMCore.proxy.setTrackedLocation(new AMVector3(target.blockX, target.blockY, target.blockZ));
 			}else{
 				AMCore.proxy.setTrackedLocation(AMVector3.zero());
@@ -366,9 +369,9 @@ public class ClientProxy extends CommonProxy{
 				float yOff = 0.5f;
 				if (data != null){
 					GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_LIGHTING_BIT);
-					for (PowerTypes type : ((IPowerNode)te).getValidPowerTypes()){
+					for (PowerTypes type : ((IManaPower)te).getValidPowerTypes()){
 						float pwr = data.getPower(type);
-						float pct = pwr / ((IPowerNode)te).getCapacity() * 100;
+						float pct = pwr / ((IManaPower)te).getCapacity() * 100;
 						RenderUtilities.drawTextInWorldAtOffset(String.format("%s%.2f (%.2f%%)", type.chatColor(), pwr, pct),
 								target.blockX - (player.prevPosX - (player.prevPosX - player.posX) * partialTicks) + 0.5f,
 								target.blockY + yOff - (player.prevPosY - (player.prevPosY - player.posY) * partialTicks) + block.getBlockBoundsMaxY() * 0.8f,

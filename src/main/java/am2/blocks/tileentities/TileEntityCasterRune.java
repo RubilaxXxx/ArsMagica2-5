@@ -27,11 +27,11 @@ public class TileEntityCasterRune extends TileEntityBlockCaster {
       PowerTypes highestValid = PowerTypes.NONE;
       float amt = 0;
       for (PowerTypes type1 : PowerTypes.all()){
-         float tmpAmt = PowerNodeRegistry.For(worldObj).getPower(this, type1);
+         float tmpAmt = PowerNodeRegistry.instance.getPower(this, type1);
          if (tmpAmt > amt)
             highestValid = type1;
       }
-      ExtendedProperties.For(this.dummyCaster).setCurrentMana(PowerNodeRegistry.For(this.worldObj).getPower(this, highestValid));
+      ExtendedProperties.For(this.dummyCaster).setCurrentMana(PowerNodeRegistry.instance.getPower(this, highestValid));
    }
 
    protected void tryCastSpell(ItemStack castingStack, int focusLevel) {

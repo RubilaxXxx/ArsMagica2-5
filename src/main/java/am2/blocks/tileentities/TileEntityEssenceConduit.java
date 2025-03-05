@@ -2,9 +2,7 @@ package am2.blocks.tileentities;
 
 import am2.api.power.PowerTypes;
 
-import java.util.Random;
-
-public class TileEntityEssenceConduit extends TileEntityAMPower{
+public class TileEntityEssenceConduit extends TileEntityAMManaPower{
 
 	private float rotationX;
 	private float rotationY;
@@ -127,12 +125,17 @@ public class TileEntityEssenceConduit extends TileEntityAMPower{
 	}
 
 	@Override
-	public boolean canRequestPower(){
+	public boolean canReceivePower(){
 		return !this.redstonePowered;
 	}
 
 	@Override
-	public boolean canProvidePower(PowerTypes type){
+	public int getCharge(){
+		return 0;
+	}
+
+	@Override
+	public boolean canSendPower(PowerTypes type){
 		return false;
 	}
 

@@ -85,7 +85,7 @@ public class GuiFlickerHabitat extends GuiContainer{
 
 		yPos += 12;
 
-		boolean powered = PowerNodeRegistry.For(flickerHabitat.getWorldObj()).checkPower(flickerHabitat, func.PowerPerOperation());
+		boolean powered = PowerNodeRegistry.instance.checkPower(flickerHabitat, func.PowerPerOperation());
 
 		if (yPos > 40)
 			yPos += 27;

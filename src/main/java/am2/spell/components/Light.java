@@ -3,7 +3,7 @@ package am2.spell.components;
 import am2.AMCore;
 import am2.RitualShapeHelper;
 import am2.api.blocks.MultiblockStructureDefinition;
-import am2.api.power.IPowerNode;
+import am2.api.power.IManaPower;
 import am2.api.spell.component.interfaces.IRitualInteraction;
 import am2.api.spell.component.interfaces.ISpellComponent;
 import am2.api.spell.component.interfaces.ISpellModifier;
@@ -40,11 +40,8 @@ public class Light implements ISpellComponent, IRitualInteraction{
 					RitualShapeHelper.instance.consumeRitualReagents(this, world, blockx, blocky, blockz);
 					RitualShapeHelper.instance.consumeRitualShape(this, world, blockx, blocky, blockz);
 					world.setBlock(blockx, blocky, blockz, BlocksCommonProxy.celestialPrism);
-					PowerNodeRegistry.For(world).registerPowerNode((IPowerNode)world.getTileEntity(blockx, blocky, blockz));
-				}else{
 
 				}
-
 				return true;
 			}
 		}

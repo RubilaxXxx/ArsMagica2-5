@@ -22,7 +22,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntitySummoner extends TileEntityAMPower implements IInventory, IKeystoneLockable{
+public class TileEntitySummoner extends TileEntityAMManaPower implements IInventory, IKeystoneLockable{
 
 	private static final float summonCost = 2000;
 	private static final float maintainCost = 7.5f;
@@ -63,12 +63,12 @@ public class TileEntitySummoner extends TileEntityAMPower implements IInventory,
 				summonEntityID = -1;
 			}
 			if (isRedstonePowered() && inventory[SUMMON_SLOT] != null){
-				if (PowerNodeRegistry.For(this.worldObj).checkPower(this, maintainCost)){
+				if (PowerNodeRegistry.instance.checkPower(this, maintainCost)){
 					if (ent == null && canSummon()){
 						summonCreature();
 					}else{
 						if (ent != null){
-							PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerNodeRegistry.For(this.worldObj).getHighestPowerType(this), maintainCost);
+							PowerNodeRegistry.instance.consumePower(this, PowerNodeRegistry.instance.getHighestPowerType(this), maintainCost);
 						}
 					}
 				}else{
@@ -77,7 +77,7 @@ public class TileEntitySummoner extends TileEntityAMPower implements IInventory,
 			}else{
 				if (ent != null){
 					unsummonCreature();
-					PowerNodeRegistry.For(this.worldObj).insertPower(this, PowerTypes.NEUTRAL, summonCost / 2);
+					PowerNodeRegistry.instance.insertPower(this, PowerTypes.NEUTRAL, summonCost / 2);
 				}
 			}
 		}
@@ -96,7 +96,7 @@ public class TileEntitySummoner extends TileEntityAMPower implements IInventory,
 	public boolean canSummon(){
 		if (this.worldObj == null)
 			return false;
-		return summonCooldown == 0 && PowerNodeRegistry.For(this.worldObj).checkPower(this, getSummonCost() + powerPadding);
+		return summonCooldown == 0 && PowerNodeRegistry.instance.checkPower(this, getSummonCost() + powerPadding);
 	}
 
 	public boolean hasSummon(){
@@ -113,7 +113,7 @@ public class TileEntitySummoner extends TileEntityAMPower implements IInventory,
 			if (summon instanceof EntityCreature)
 				EntityUtilities.setGuardSpawnLocation((EntityCreature)summon, xCoord, yCoord, zCoord);
 			this.summonEntityID = summon.getEntityId();
-			PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerNodeRegistry.For(this.worldObj).getHighestPowerType(this), summonCost);
+			PowerNodeRegistry.instance.consumePower(this, PowerNodeRegistry.instance.getHighestPowerType(this), summonCost);
 			this.summonCooldown = this.maxSummonCooldown;
 			EntityUtilities.setTileSpawned(summon, this);
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -298,6 +298,11 @@ public class TileEntitySummoner extends TileEntityAMPower implements IInventory,
 	public int getChargeRate(){
 		int numChargeFoci = numFociOfType(ItemFocusCharge.class);
 		return 100 + (50 * numChargeFoci);
+	}
+
+	@Override
+	public int getCharge(){
+		return 0;
 	}
 
 	@Override

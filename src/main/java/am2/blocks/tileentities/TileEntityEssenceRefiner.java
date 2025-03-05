@@ -15,7 +15,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntityEssenceRefiner extends TileEntityAMPower implements IInventory, IKeystoneLockable, ISidedInventory{
+public class TileEntityEssenceRefiner extends TileEntityAMManaPower implements IInventory, IKeystoneLockable, ISidedInventory{
 
 	public static final float REFINE_TIME = 400;
 	private static final int OUTPUT_INDEX = 5;
@@ -164,7 +164,7 @@ public class TileEntityEssenceRefiner extends TileEntityAMPower implements IInve
 
 			if (isRefining()){
 				setActiveTexture();
-				if (PowerNodeRegistry.For(this.worldObj).checkPower(this, TICK_REFINE_COST)){
+				if (PowerNodeRegistry.instance.checkPower(this, TICK_REFINE_COST)){
 					remainingRefineTime--;
 					if (remainingRefineTime % 10 == 0)
 						worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -176,7 +176,7 @@ public class TileEntityEssenceRefiner extends TileEntityAMPower implements IInve
 						wasEssenceRefined = true;
 					}
 
-					PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerNodeRegistry.For(this.worldObj).getHighestPowerType(this), TICK_REFINE_COST);
+					PowerNodeRegistry.instance.consumePower(this, PowerNodeRegistry.instance.getHighestPowerType(this), TICK_REFINE_COST);
 				}
 			}else{
 				setActiveTexture();
@@ -295,6 +295,11 @@ public class TileEntityEssenceRefiner extends TileEntityAMPower implements IInve
 	@Override
 	public int getChargeRate(){
 		return 500;
+	}
+
+	@Override
+	public int getCharge(){
+		return 0;
 	}
 
 	@Override

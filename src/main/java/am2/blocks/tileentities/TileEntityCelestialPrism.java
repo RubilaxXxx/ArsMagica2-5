@@ -3,7 +3,9 @@ package am2.blocks.tileentities;
 import am2.AMCore;
 import am2.api.blocks.MultiblockStructureDefinition;
 import am2.api.blocks.MultiblockStructureDefinition.StructureGroup;
+import am2.api.power.IPowerSource;
 import am2.api.power.PowerTypes;
+import am2.blocks.BlockAMOre;
 import am2.blocks.BlocksCommonProxy;
 import am2.buffs.BuffEffectManaRegen;
 import am2.buffs.BuffList;
@@ -11,23 +13,28 @@ import am2.multiblock.IMultiblockStructureController;
 import am2.power.PowerNodeRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TileEntityCelestialPrism extends TileEntityObelisk implements IMultiblockStructureController{
+public class TileEntityCelestialPrism extends TileEntityPowerSources implements IMultiblockStructureController, IPowerSource{
 
 	private StructureGroup moonstone;
 	private int particleCounter = 0;
+	private TileEntity Binded = null;
+
+
 
 	private boolean onlyChargeAtNight = false;
 
 	public TileEntityCelestialPrism(){
-		super(2500);
+		super(2500, PowerTypes.LIGHT);
 
-		powerBase = 1.0f;
+		powerBase = 1;
 
 		structure = new MultiblockStructureDefinition("celestialprism_structure");
 
@@ -52,7 +59,7 @@ public class TileEntityCelestialPrism extends TileEntityObelisk implements IMult
 		structure.addAllowedBlock(glass, -2, 2, -2, Blocks.glass);
 		structure.addAllowedBlock(gold, -2, 2, -2, Blocks.gold_block);
 		structure.addAllowedBlock(diamond, -2, 2, -2, Blocks.diamond_block);
-		structure.addAllowedBlock(moonstone, -2, 2, -2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_MOONSTONE_BLOCK);
+		structure.addAllowedBlock(moonstone, -2, 2, -2, BlocksCommonProxy.AMOres, BlockAMOre.META_MOONSTONE_BLOCK);
 
 		structure.addAllowedBlock(pillars, 2, 0, -2, Blocks.quartz_block);
 		structure.addAllowedBlock(pillars, 2, 1, -2, Blocks.quartz_block);
@@ -60,7 +67,7 @@ public class TileEntityCelestialPrism extends TileEntityObelisk implements IMult
 		structure.addAllowedBlock(glass, 2, 2, -2, Blocks.glass);
 		structure.addAllowedBlock(gold, 2, 2, -2, Blocks.gold_block);
 		structure.addAllowedBlock(diamond, 2, 2, -2, Blocks.diamond_block);
-		structure.addAllowedBlock(moonstone, 2, 2, -2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_MOONSTONE_BLOCK);
+		structure.addAllowedBlock(moonstone, 2, 2, -2, BlocksCommonProxy.AMOres, BlockAMOre.META_MOONSTONE_BLOCK);
 
 		structure.addAllowedBlock(pillars, -2, 0, 2, Blocks.quartz_block);
 		structure.addAllowedBlock(pillars, -2, 1, 2, Blocks.quartz_block);
@@ -68,7 +75,7 @@ public class TileEntityCelestialPrism extends TileEntityObelisk implements IMult
 		structure.addAllowedBlock(glass, -2, 2, 2, Blocks.glass);
 		structure.addAllowedBlock(gold, -2, 2, 2, Blocks.gold_block);
 		structure.addAllowedBlock(diamond, -2, 2, 2, Blocks.diamond_block);
-		structure.addAllowedBlock(moonstone, -2, 2, 2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_MOONSTONE_BLOCK);
+		structure.addAllowedBlock(moonstone, -2, 2, 2, BlocksCommonProxy.AMOres, BlockAMOre.META_MOONSTONE_BLOCK);
 
 		structure.addAllowedBlock(pillars, 2, 0, 2, Blocks.quartz_block);
 		structure.addAllowedBlock(pillars, 2, 1, 2, Blocks.quartz_block);
@@ -76,12 +83,11 @@ public class TileEntityCelestialPrism extends TileEntityObelisk implements IMult
 		structure.addAllowedBlock(glass, 2, 2, 2, Blocks.glass);
 		structure.addAllowedBlock(gold, 2, 2, 2, Blocks.gold_block);
 		structure.addAllowedBlock(diamond, 2, 2, 2, Blocks.diamond_block);
-		structure.addAllowedBlock(moonstone, 2, 2, 2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_MOONSTONE_BLOCK);
+		structure.addAllowedBlock(moonstone, 2, 2, 2, BlocksCommonProxy.AMOres, BlockAMOre.META_MOONSTONE_BLOCK);
 
-		wizardChalkCircle = addWizChalkGroupToStructure(structure, 1);
+		wizardChalkCircle = structure.addWizChalkGroupToStructure(1);
 	}
 
-	@Override
 	protected void checkNearbyBlockState(){
 		ArrayList<StructureGroup> groups = structure.getMatchedGroups(7, worldObj, xCoord, yCoord, zCoord);
 
@@ -127,7 +133,7 @@ public class TileEntityCelestialPrism extends TileEntityObelisk implements IMult
 		if (surroundingCheckTicks++ % 100 == 0){
 			checkNearbyBlockState();
 			surroundingCheckTicks = 1;
-			if (!worldObj.isRemote && PowerNodeRegistry.For(this.worldObj).checkPower(this, this.capacity * 0.1f)){
+			if (!worldObj.isRemote && this.getCharge() >= this.capacity * 0.1f){
 				List<EntityPlayer> nearbyPlayers = worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 2, this.yCoord, this.zCoord - 2, this.xCoord + 2, this.yCoord + 3, this.zCoord + 2));
 				for (EntityPlayer p : nearbyPlayers){
 					if (p.isPotionActive(BuffList.manaRegen.id)) continue;
@@ -137,7 +143,7 @@ public class TileEntityCelestialPrism extends TileEntityObelisk implements IMult
 		}
 
 		if (onlyChargeAtNight == isNight()){
-			PowerNodeRegistry.For(this.worldObj).insertPower(this, PowerTypes.LIGHT, 0.25f * powerMultiplier);
+			PowerNodeRegistry.instance.insertPower(this, PowerTypes.LIGHT, 0.25f * powerMultiplier);
 			if (worldObj.isRemote){
 
 				if (particleCounter++ % 180 == 0){
@@ -146,7 +152,6 @@ public class TileEntityCelestialPrism extends TileEntityObelisk implements IMult
 				}
 			}
 		}
-		super.callSuperUpdate();
 	}
 
 	@Override
@@ -155,12 +160,12 @@ public class TileEntityCelestialPrism extends TileEntityObelisk implements IMult
 	}
 
 	@Override
-	public boolean canRequestPower(){
+	public boolean canReceivePower(){
 		return false;
 	}
 
 	@Override
-	public boolean canProvidePower(PowerTypes type){
+	public boolean canSendPower(PowerTypes type){
 		return type == PowerTypes.LIGHT;
 	}
 
@@ -172,7 +177,7 @@ public class TileEntityCelestialPrism extends TileEntityObelisk implements IMult
 	}
 
 	@Override
-	public int getSizeInventory(){
-		return 0;
+	public void setCharge(int amount){
+
 	}
 }

@@ -4,10 +4,15 @@ import am2.api.power.PowerTypes;
 import am2.entities.EntityFlicker;
 import am2.power.PowerNodeRegistry;
 
-public class TileEntityFlickerLure extends TileEntityAMPower{
+public class TileEntityFlickerLure extends TileEntityAMManaPower{
 
 	public TileEntityFlickerLure(){
 		super(200);
+	}
+
+	@Override
+	public int getCharge(){
+		return 0;
 	}
 
 	@Override
@@ -28,11 +33,11 @@ public class TileEntityFlickerLure extends TileEntityAMPower{
 			return;
 
 		if (worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)){
-			if (worldObj.rand.nextDouble() < 0.005f && PowerNodeRegistry.For(worldObj).checkPower(this, 100)){
+			if (worldObj.rand.nextDouble() < 0.005f && PowerNodeRegistry.instance.checkPower(this, 100)){
 				EntityFlicker flicker = new EntityFlicker(worldObj);
 				flicker.setPosition(xCoord + 0.5f, yCoord + 1.5f, zCoord + 0.5f);
 				worldObj.spawnEntityInWorld(flicker);
-				PowerNodeRegistry.For(worldObj).consumePower(this, PowerNodeRegistry.For(worldObj).getHighestPowerType(this), 100);
+				PowerNodeRegistry.instance.consumePower(this, PowerNodeRegistry.instance.getHighestPowerType(this), 100);
 			}
 		}
 	}

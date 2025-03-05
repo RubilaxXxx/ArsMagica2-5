@@ -372,6 +372,12 @@ public class InventoryUtilities{
 		return adjacent;
 	}
 
+	/**
+	 * return an item with same data as  original one .
+	 * @param originalStack the itemstack in player inv.
+	 * @param newItem the new item to replace it.
+	 * @return new itemstack with data from original stack.
+	 */
 	public static ItemStack replaceItem(ItemStack originalStack, Item newItem){
 		ItemStack stack = new ItemStack(newItem, originalStack.stackSize, originalStack.getItemDamage());
 		if (originalStack.hasTagCompound())

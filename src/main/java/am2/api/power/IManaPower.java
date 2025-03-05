@@ -1,24 +1,28 @@
 package am2.api.power;
 
-import net.minecraft.tileentity.TileEntity;
 
 /**
  * @author Mithion
  *         This will eventually allow you to interface with the AM power network - currently it is not fully working.
  */
-public interface IPowerNode<T extends TileEntity>{
+public interface IManaPower{
 
 	/**
-	 * Gets the current capacity in the power block
+	 * Gets the total capacity of the power block
 	 */
-	float getCapacity();
+	int getCapacity();
 
+	/**
+	 * Get Stored Charge in block.
+	 */
+
+	int getCharge();
 	/**
 	 * Can this block provide power?
 	 *
 	 * @param type The power type we are checking for
 	 */
-	boolean canProvidePower(PowerTypes type);
+	boolean canSendPower(PowerTypes type);
 
 	/**
 	 * Can this block relay power?
@@ -30,10 +34,10 @@ public interface IPowerNode<T extends TileEntity>{
 	/**
 	 * Can this block request power?
 	 */
-	boolean canRequestPower();
+	boolean canReceivePower();
 
 	/**
-	 * Is this block a nexus?
+	 * Is this block a Source block (obelisk, prism, dark aurem) ?
 	 */
 	boolean isSource();
 

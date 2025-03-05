@@ -31,7 +31,7 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
 
-public class TileEntityArcaneDeconstructor extends TileEntityAMPower implements IInventory, ISidedInventory, IKeystoneLockable{
+public class TileEntityArcaneDeconstructor extends TileEntityAMManaPower implements IInventory, ISidedInventory, IKeystoneLockable{
 
 	private int particleCounter;
 	private static final float DECONSTRUCTION_POWER_COST = 1.25f; //power cost per tick
@@ -50,6 +50,11 @@ public class TileEntityArcaneDeconstructor extends TileEntityAMPower implements 
 	public TileEntityArcaneDeconstructor(){
 		super(500);
 		inventory = new ItemStack[getSizeInventory()];
+	}
+
+	@Override
+	public int getCharge(){
+		return 0;
 	}
 
 	@Override
@@ -87,7 +92,7 @@ public class TileEntityArcaneDeconstructor extends TileEntityAMPower implements 
 					deconstructionRecipe = null;
 					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				}else{
-					if (PowerNodeRegistry.For(worldObj).checkPower(this, PowerTypes.DARK, DECONSTRUCTION_POWER_COST)){
+					if (PowerNodeRegistry.instance.checkPower(this, PowerTypes.DARK, DECONSTRUCTION_POWER_COST)){
 						if (deconstructionRecipe == null){
 							if (!getDeconstructionRecipe()){
 								transferOrEjectItem(inventory[0]);
@@ -107,7 +112,7 @@ public class TileEntityArcaneDeconstructor extends TileEntityAMPower implements 
 							if (current_deconstruction_time % 10 == 0)
 								worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 						}
-						PowerNodeRegistry.For(worldObj).consumePower(this, PowerTypes.DARK, DECONSTRUCTION_POWER_COST);
+						PowerNodeRegistry.instance.consumePower(this, PowerTypes.DARK, DECONSTRUCTION_POWER_COST);
 					}
 				}
 			}

@@ -2,7 +2,6 @@ package am2.blocks.tileentities;
 
 import am2.api.power.PowerTypes;
 import am2.items.ItemCrystalPhylactery;
-import am2.items.ItemsCommonProxy;
 import am2.power.PowerNodeRegistry;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -17,7 +16,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityInertSpawner extends TileEntityAMPower implements IInventory, ISidedInventory {
+public class TileEntityInertSpawner extends TileEntityAMManaPower implements IInventory, ISidedInventory {
 
 	private ItemStack phylactery;
 	private float powerConsumed = 0.0f;
@@ -28,6 +27,11 @@ public class TileEntityInertSpawner extends TileEntityAMPower implements IInvent
 
 	public TileEntityInertSpawner() {
 		super(500);
+	}
+
+	@Override
+	public int getCharge(){
+		return 0;
 	}
 
 	@Override
@@ -182,7 +186,7 @@ public class TileEntityInertSpawner extends TileEntityAMPower implements IInvent
 		        ((ItemCrystalPhylactery)phylactery.getItem()).isFull(phylactery)
 		        && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
 			if (this.powerConsumed < this.SUMMON_REQ) {
-				this.powerConsumed += PowerNodeRegistry.For(worldObj).consumePower(
+				this.powerConsumed += PowerNodeRegistry.instance.consumePower(
 						this,
 						PowerTypes.DARK,
 						Math.min(this.getCapacity(), this.SUMMON_REQ - this.powerConsumed)

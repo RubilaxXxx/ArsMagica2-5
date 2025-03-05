@@ -26,7 +26,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntityArcaneReconstructor extends TileEntityAMPower implements IInventory, ISidedInventory, IKeystoneLockable{
+public class TileEntityArcaneReconstructor extends TileEntityAMManaPower implements IInventory, ISidedInventory, IKeystoneLockable{
 
 	private ItemStack[] inventory;
 	private boolean active;
@@ -89,11 +89,11 @@ public class TileEntityArcaneReconstructor extends TileEntityAMPower implements 
 			isFirstTick = false;
 		}
 
-		if (PowerNodeRegistry.For(this.worldObj).checkPower(this, this.getRepairCost())) {// has enough power
+		if (PowerNodeRegistry.instance.checkPower(this, this.getRepairCost())) {// has enough power
 			if ((repairCounter++ % getRepairRate() == 0) && (!queueRepairableItem())) {// has ticked and already has item queued
 				if (performRepair()){// something to repair
 					if (!worldObj.isRemote){
-						PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerNodeRegistry.For(worldObj).getHighestPowerType(this), this.getRepairCost());
+						PowerNodeRegistry.instance.consumePower(this, PowerNodeRegistry.instance.getHighestPowerType(this), this.getRepairCost());
 					}
 				}
 			}
@@ -452,7 +452,12 @@ public class TileEntityArcaneReconstructor extends TileEntityAMPower implements 
 	}
 
 	@Override
-	public boolean canProvidePower(PowerTypes type){
+	public int getCharge(){
+		return 0;
+	}
+
+	@Override
+	public boolean canSendPower(PowerTypes type){
 		return false;
 	}
 

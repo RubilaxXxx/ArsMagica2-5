@@ -3,7 +3,7 @@ package am2.network;
 import am2.AMCore;
 import am2.LogHelper;
 import am2.api.math.AMVector3;
-import am2.api.power.IPowerNode;
+import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import am2.blocks.tileentities.*;
 import am2.containers.ContainerMagiciansWorkbench;
@@ -184,14 +184,14 @@ public class AMPacketProcessorServer{
 		World world = player.worldObj;
 		AMDataReader rdr = new AMDataReader(data, false);
 		TileEntity te = world.getTileEntity(rdr.getInt(), rdr.getInt(), rdr.getInt());
-		if (te == null || !(te instanceof TileEntityBlockCaster)) return;
+		if (!(te instanceof TileEntityBlockCaster)) return;
 		AMDataWriter writer = new AMDataWriter();
 		writer.add(te.xCoord);
 		writer.add(te.yCoord);
 		writer.add(te.zCoord);
-		writer.add(PowerNodeRegistry.For(world).getPower(((TileEntityBlockCaster)te), PowerTypes.LIGHT));
-		writer.add(PowerNodeRegistry.For(world).getPower(((TileEntityBlockCaster)te), PowerTypes.NEUTRAL));
-		writer.add(PowerNodeRegistry.For(world).getPower(((TileEntityBlockCaster)te), PowerTypes.DARK));
+		writer.add(PowerNodeRegistry.instance.getPower(((TileEntityBlockCaster)te), PowerTypes.LIGHT));
+		writer.add(PowerNodeRegistry.instance.getPower(((TileEntityBlockCaster)te), PowerTypes.NEUTRAL));
+		writer.add(PowerNodeRegistry.instance.getPower(((TileEntityBlockCaster)te), PowerTypes.DARK));
 		AMNetHandler.INSTANCE.sendPacketToClientPlayer(player, AMPacketIDs.CASTER_BLOCK_UPDATE, writer.generate());
 
 	}
@@ -205,21 +205,22 @@ public class AMPacketProcessorServer{
 	}
 
 	private void handlePowerPathSync(byte[] data, EntityPlayerMP player){
-		AMDataReader rdr = new AMDataReader(data, false);
+	/*	AMDataReader rdr = new AMDataReader(data, false);
 		byte nom = rdr.getByte();
 		if (nom == 1){
 			AMVector3 loc = new AMVector3(rdr.getFloat(), rdr.getFloat(), rdr.getFloat());
 			TileEntity te = player.worldObj.getTileEntity((int)loc.x, (int)loc.y, (int)loc.z);
-			if (te != null && te instanceof IPowerNode){
-				AMNetHandler.INSTANCE.sendPowerResponseToClient(PowerNodeRegistry.For(player.worldObj).getDataCompoundForNode((IPowerNode)te), player, te);
+			if (te instanceof IManaPower){
+				AMNetHandler.INSTANCE.sendPowerResponseToClient(PowerNodeRegistry.instance.getDataCompoundForNode((IManaPower)te), player, te);
 			}
 		}
+		 */
 	}
 
 	private void handleImbueArmor(byte[] data, EntityPlayerMP player){
 		AMDataReader rdr = new AMDataReader(data, false);
 		TileEntity te = player.worldObj.getTileEntity(rdr.getInt(), rdr.getInt(), rdr.getInt());
-		if (te != null && te instanceof TileEntityArmorImbuer){
+		if (te instanceof TileEntityArmorImbuer){
 			((TileEntityArmorImbuer)te).imbueCurrentArmor(rdr.getString());
 		}
 	}
@@ -231,7 +232,7 @@ public class AMPacketProcessorServer{
 		int z = rdr.getInt();
 
 		TileEntity te = player.worldObj.getTileEntity(x, y, z);
-		if (te != null && te instanceof TileEntityMagiciansWorkbench){
+		if (te instanceof TileEntityMagiciansWorkbench){
 			((TileEntityMagiciansWorkbench)te).setRecipeLocked(rdr.getInt(), rdr.getBoolean());
 			te.getWorldObj().markBlockForUpdate(te.xCoord, te.yCoord, te.zCoord);
 		}
@@ -250,7 +251,7 @@ public class AMPacketProcessorServer{
 	}
 
 	private void handleSetMagiciansWorkbenchRecipe(byte[] data, EntityPlayerMP player){
-		if (player.openContainer != null && player.openContainer instanceof ContainerMagiciansWorkbench){
+		if (player.openContainer instanceof ContainerMagiciansWorkbench){
 			((ContainerMagiciansWorkbench)player.openContainer).moveRecipeToCraftingGrid(new AMDataReader(data, false).getInt());
 		}
 	}
@@ -279,7 +280,7 @@ public class AMPacketProcessorServer{
 		World world = player.worldObj;
 		AMDataReader rdr = new AMDataReader(data, false);
 		TileEntity te = world.getTileEntity(rdr.getInt(), rdr.getInt(), rdr.getInt());
-		if (te == null || !(te instanceof TileEntityInscriptionTable)) return;
+		if (!(te instanceof TileEntityInscriptionTable)) return;
 		((TileEntityInscriptionTable)te).HandleUpdatePacket(rdr.getRemainingBytes());
 
 		world.markBlockForUpdate(te.xCoord, te.yCoord, te.zCoord);
@@ -289,7 +290,7 @@ public class AMPacketProcessorServer{
 		World world = player.worldObj;
 		AMDataReader rdr = new AMDataReader(data, false);
 		TileEntity te = world.getTileEntity(rdr.getInt(), rdr.getInt(), rdr.getInt());
-		if (te == null || !(te instanceof TileEntityParticleEmitter)) return;
+		if (!(te instanceof TileEntityParticleEmitter)) return;
 		((TileEntityParticleEmitter)te).readFromNBT(rdr.getNBTTagCompound());
 
 		world.markBlockForUpdate(te.xCoord, te.yCoord, te.zCoord);
@@ -342,7 +343,7 @@ public class AMPacketProcessorServer{
 		int entityID = rdr.getInt();
 		EntityLivingBase entity = getEntityByID(entityID);
 
-		if (player == null || entity == null || !(entity instanceof EntityPlayer)) return;
+		if (player == null || !(entity instanceof EntityPlayer)) return;
 
 		if (!AMCore.proxy.playerTracker.hasAA((EntityPlayer)entity)) return;
 
@@ -361,7 +362,7 @@ public class AMPacketProcessorServer{
 
 		EntityLivingBase e = getEntityByID(entityID);
 
-		if (e != null && e instanceof EntityPlayer){
+		if (e instanceof EntityPlayer){
 			ExtendedProperties props = ExtendedProperties.For(e);
 			if (!props.detectPossibleDesync()){
 				props.setFullSync();

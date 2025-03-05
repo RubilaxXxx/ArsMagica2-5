@@ -6,7 +6,7 @@ import am2.api.blocks.MultiblockStructureDefinition.BlockCoord;
 import am2.api.blocks.MultiblockStructureDefinition.BlockDec;
 import am2.api.blocks.MultiblockStructureDefinition.StructureGroup;
 import am2.api.math.AMVector3;
-import am2.api.power.IPowerNode;
+import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import am2.api.spell.component.interfaces.ISkillTreeEntry;
 import am2.api.spell.component.interfaces.ISpellModifier;
@@ -31,7 +31,6 @@ import am2.particles.ParticleFadeOut;
 import am2.particles.ParticleMoveOnHeading;
 import am2.playerextensions.ExtendedProperties;
 import am2.power.PowerNodeRegistry;
-import am2.proxy.CommonProxy;
 import am2.spell.SkillManager;
 import am2.spell.SpellRecipeManager;
 import am2.spell.SpellUtils;
@@ -39,7 +38,6 @@ import am2.spell.components.Summon;
 import am2.spell.shapes.Binding;
 import am2.utility.KeyValuePair;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFire;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityItem;
@@ -54,12 +52,13 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
-public class TileEntityCraftingAltar extends TileEntityAMPower implements IMultiblockStructureController{
+public class TileEntityCraftingAltar extends TileEntityAMManaPower implements IMultiblockStructureController{
 
 	private MultiblockStructureDefinition primary;
 	private MultiblockStructureDefinition secondary;
@@ -606,11 +605,11 @@ public class TileEntityCraftingAltar extends TileEntityAMPower implements IMulti
 				int flags = stack.getItemDamage() - ItemEssence.META_MAX;
 				setPowerRequests();
 				pickPowerType(stack);
-				if (this.currentMainPowerTypes != PowerTypes.NONE && PowerNodeRegistry.For(this.worldObj).checkPower(this, this.currentMainPowerTypes, 100)){
-					currentConsumedPower += PowerNodeRegistry.For(worldObj).consumePower(this, this.currentMainPowerTypes, Math.min(100, stack.stackSize - currentConsumedPower));
+				if (this.currentMainPowerTypes != PowerTypes.NONE && PowerNodeRegistry.instance.checkPower(this, this.currentMainPowerTypes, 100)){
+					currentConsumedPower += PowerNodeRegistry.instance.consumePower(this, this.currentMainPowerTypes, Math.min(100, stack.stackSize - currentConsumedPower));
 				}
 				if (currentConsumedPower >= stack.stackSize){
-					PowerNodeRegistry.For(this.worldObj).setPower(this, this.currentMainPowerTypes, 0);
+					PowerNodeRegistry.instance.setPower(this, this.currentMainPowerTypes, 0);
 					if (!worldObj.isRemote)
 						addItemToRecipe(new ItemStack(ItemsCommonProxy.essence, stack.stackSize, ItemEssence.META_MAX + flags));
 					currentConsumedPower = 0;
@@ -641,7 +640,7 @@ public class TileEntityCraftingAltar extends TileEntityAMPower implements IMulti
 		PowerTypes highestValid = PowerTypes.NONE;
 		float amt = 0;
 		for (PowerTypes type : PowerTypes.all()){
-			float tmpAmt = PowerNodeRegistry.For(worldObj).getPower(this, type);
+			float tmpAmt = PowerNodeRegistry.instance.getPower(this, type);
 			if (tmpAmt > amt)
 				highestValid = type;
 		}
@@ -1082,8 +1081,9 @@ public class TileEntityCraftingAltar extends TileEntityAMPower implements IMulti
 				groups.clear();
 
 			//find otherworld auras
-			IPowerNode[] nodes = PowerNodeRegistry.For(worldObj).getAllNearbyNodes(worldObj, new AMVector3(this), PowerTypes.DARK);
-			for (IPowerNode node : nodes){
+			ChunkCoordinates coords = new ChunkCoordinates(this.xCoord, this.yCoord, this.zCoord);
+			List<IManaPower> nodes = PowerNodeRegistry.instance.getAllNearbyNodes(worldObj,coords);
+			for (IManaPower node : nodes){
 				if (node instanceof TileEntityOtherworldAura){
 					((TileEntityOtherworldAura)node).setActive(true, this);
 					break;
@@ -1114,7 +1114,12 @@ public class TileEntityCraftingAltar extends TileEntityAMPower implements IMulti
 	}
 
 	@Override
-	public boolean canProvidePower(PowerTypes type){
+	public int getCharge(){
+		return 0;
+	}
+
+	@Override
+	public boolean canSendPower(PowerTypes type){
 		return false;
 	}
 

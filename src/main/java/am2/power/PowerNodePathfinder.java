@@ -1,9 +1,10 @@
 package am2.power;
 
 import am2.api.math.AMVector3;
-import am2.api.power.IPowerNode;
+import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class PowerNodePathfinder extends AStar<AMVector3>{
 
-	private World world;
+	private  World world;
 	private AMVector3 start;
 	private AMVector3 end;
 	private PowerTypes powerType;
@@ -24,13 +25,13 @@ public class PowerNodePathfinder extends AStar<AMVector3>{
 		this.powerType = type;
 	}
 
-	private IPowerNode getPowerNode(World world, AMVector3 location){
+	private IManaPower getPowerNode(World world, AMVector3 location){
 		if (world.checkChunksExist((int)location.x, (int)location.y, (int)location.z, (int)location.x, (int)location.y, (int)location.z)){
 			Chunk chunk = world.getChunkFromBlockCoords((int)location.x, (int)location.z);
 			if (chunk.isChunkLoaded){
 				TileEntity te = world.getTileEntity((int)location.x, (int)location.y, (int)location.z);
-				if (te instanceof IPowerNode)
-					return (IPowerNode)te;
+				if (te instanceof IManaPower)
+					return (IManaPower)te;
 			}
 		}
 		return null;
@@ -53,14 +54,14 @@ public class PowerNodePathfinder extends AStar<AMVector3>{
 
 	@Override
 	protected List<AMVector3> generateSuccessors(AMVector3 node){
-		IPowerNode powerNode = getPowerNode(world, node);
+		IManaPower powerNode = getPowerNode(world, node);
 		if (powerNode == null)
 			return new ArrayList<AMVector3>();
-
-		IPowerNode[] candidates = PowerNodeRegistry.For(world).getAllNearbyNodes(world, node, powerType);
+		ChunkCoordinates chunk = new ChunkCoordinates((int)node.x, (int)node.y, (int)node.z);
+		List<IManaPower> candidates = PowerNodeRegistry.instance.getAllNearbyNodes(world, chunk);
 
 		ArrayList<AMVector3> prunedCandidates = new ArrayList<AMVector3>();
-		for (IPowerNode candidate : candidates){
+		for (IManaPower candidate : candidates){
 			if (verifyCandidate(candidate)){
 				prunedCandidates.add(new AMVector3((TileEntity)candidate));
 			}
@@ -69,7 +70,7 @@ public class PowerNodePathfinder extends AStar<AMVector3>{
 		return prunedCandidates;
 	}
 
-	private boolean verifyCandidate(IPowerNode powerNode){
+	private boolean verifyCandidate(IManaPower powerNode){
 		if (new AMVector3((TileEntity)powerNode).equals(end)){
 			for (PowerTypes type : powerNode.getValidPowerTypes())
 				if (type == powerType)

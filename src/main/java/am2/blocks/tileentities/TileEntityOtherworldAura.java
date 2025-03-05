@@ -14,23 +14,23 @@ import net.minecraft.tileentity.TileEntity;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class TileEntityOtherworldAura extends TileEntityAMPower{
+public class TileEntityOtherworldAura extends TileEntityAMManaPower{
 
-	private PowerTypes[] valid = new PowerTypes[]{
-			PowerTypes.DARK,
-			PowerTypes.NEUTRAL
-	};
 
 	private ArrayList<AMVector3> nearbyInventories;
 	private boolean active;
 	private TileEntityCraftingAltar watchTarget;
 	private int delayCounter; //used as a delay when an item isn't found (prevents oversearching)
-	private boolean cantFindItem = false; //render flag for when item can't be found (for render clue)
 	private String placedByUsername = ""; //username of the player who placed the block (used to get the shadow's texture)
 	private EntityShadowHelper helper; //the helper entity that actually moves items around
 
 	public TileEntityOtherworldAura(){
 		super(200);
+	}
+
+	@Override
+	public int getCharge(){
+		return 0;
 	}
 
 	@Override
@@ -45,7 +45,10 @@ public class TileEntityOtherworldAura extends TileEntityAMPower{
 
 	@Override
 	public PowerTypes[] getValidPowerTypes(){
-		return valid;
+		return new PowerTypes[]{
+				PowerTypes.DARK,
+				PowerTypes.NEUTRAL
+		};
 	}
 
 	public void setActive(boolean active, TileEntityCraftingAltar watchMe){
@@ -134,7 +137,7 @@ public class TileEntityOtherworldAura extends TileEntityAMPower{
 		}
 
 		if (!worldObj.isRemote){
-			if (PowerNodeRegistry.For(worldObj).checkPower(this, 1.25f)){
+			if (PowerNodeRegistry.instance.checkPower(this, 1.25f)){
 				if (delayCounter-- <= 0){
 					if (helper == null){
 						spawnHelper();
@@ -152,20 +155,19 @@ public class TileEntityOtherworldAura extends TileEntityAMPower{
 						delayCounter = 100;
 					}else{
 						AMVector3 location = findInNearbyInventories(next);
+						//render flag for when item can't be found (for render clue)
 						if (location == null){
 							//can't find it nearby - don't search again for 5 seconds (gives player time to add)
 							delayCounter = 20;
-							cantFindItem = true;
 							return;
 						}else{
-							cantFindItem = false;
 							if (!this.helper.hasSearchLocation())
 								this.helper.setSearchLocationAndItem(location, next);
 							delayCounter = 20; //delay for 5s (give the helper time to get the item and toss it in)
 						}
 					}
 				}
-				PowerNodeRegistry.For(worldObj).consumePower(this, PowerNodeRegistry.For(worldObj).getHighestPowerType(this), 1.25f);
+				PowerNodeRegistry.instance.consumePower(this, PowerNodeRegistry.instance.getHighestPowerType(this), 1.25f);
 			}else{
 				if (this.helper != null)
 					this.helper.unSummon();

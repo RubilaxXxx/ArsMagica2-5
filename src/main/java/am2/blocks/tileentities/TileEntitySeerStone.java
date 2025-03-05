@@ -27,9 +27,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-public class TileEntitySeerStone extends TileEntityAMPower implements IInventory, IKeystoneLockable{
+public class TileEntitySeerStone extends TileEntityAMManaPower implements IInventory, IKeystoneLockable{
 
 	private boolean hasSight;
 	private ArrayList<SpriteRenderInfo> animations;
@@ -149,7 +148,7 @@ public class TileEntitySeerStone extends TileEntityAMPower implements IInventory
 	public boolean isActive(){
 		if (this.worldObj == null)
 			return false;
-		return PowerNodeRegistry.For(this.worldObj).checkPower(this, PowerTypes.LIGHT, this.hasSight ? 2 : 1) && GetSearchRadius() > 0;
+		return PowerNodeRegistry.instance.checkPower(this, PowerTypes.LIGHT, this.hasSight ? 2 : 1) && GetSearchRadius() > 0;
 	}
 
 	@Override
@@ -170,9 +169,9 @@ public class TileEntitySeerStone extends TileEntityAMPower implements IInventory
 
 		if (!worldObj.isRemote && isActive()){
 			if (hasSight)
-				PowerNodeRegistry.For(worldObj).consumePower(this, PowerTypes.LIGHT, 0.25f);
+				PowerNodeRegistry.instance.consumePower(this, PowerTypes.LIGHT, 0.25f);
 			else
-				PowerNodeRegistry.For(worldObj).consumePower(this, PowerTypes.LIGHT, 0.125f);
+				PowerNodeRegistry.instance.consumePower(this, PowerTypes.LIGHT, 0.125f);
 		}
 
 		ticksToNextCheck--;
@@ -509,7 +508,12 @@ public class TileEntitySeerStone extends TileEntityAMPower implements IInventory
 	}
 
 	@Override
-	public boolean canProvidePower(PowerTypes type){
+	public int getCharge(){
+		return 0;
+	}
+
+	@Override
+	public boolean canSendPower(PowerTypes type){
 		return false;
 	}
 

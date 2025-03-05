@@ -55,7 +55,7 @@ public class BlockEssenceGenerator extends AMSpecialRenderPoweredBlock{
 
 	private TileEntityObelisk getTileEntity(IBlockAccess blockAccess, int x, int y, int z){
 		TileEntity te = blockAccess.getTileEntity(x, y, z);
-		if (te != null && te instanceof TileEntityObelisk){
+		if (te instanceof TileEntityObelisk){
 			return (TileEntityObelisk)te;
 		}
 		return null;
@@ -64,11 +64,6 @@ public class BlockEssenceGenerator extends AMSpecialRenderPoweredBlock{
 	@Override
 	public boolean canProvidePower(){
 		return true;
-	}
-
-	@Override
-	public int quantityDropped(Random random){
-		return 1;
 	}
 
 	@Override
@@ -141,10 +136,7 @@ public class BlockEssenceGenerator extends AMSpecialRenderPoweredBlock{
 			float f = par1World.rand.nextFloat() * 0.8F + 0.1F;
 			float f1 = par1World.rand.nextFloat() * 0.8F + 0.1F;
 			float f2 = par1World.rand.nextFloat() * 0.8F + 0.1F;
-			do{
-				if (itemstack.stackSize <= 0){
-					break;
-				}
+			while (itemstack.stackSize > 0){
 				int i1 = par1World.rand.nextInt(21) + 10;
 				if (i1 > itemstack.stackSize){
 					i1 = itemstack.stackSize;
@@ -158,7 +150,7 @@ public class BlockEssenceGenerator extends AMSpecialRenderPoweredBlock{
 				entityitem.motionY = (float)par1World.rand.nextGaussian() * f3 + 0.2F;
 				entityitem.motionZ = (float)par1World.rand.nextGaussian() * f3;
 				par1World.spawnEntityInWorld(entityitem);
-			}while (true);
+			}
 		}
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 	}

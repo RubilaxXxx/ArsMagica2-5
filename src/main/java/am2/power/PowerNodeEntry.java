@@ -1,7 +1,7 @@
 package am2.power;
 
 import am2.api.math.AMVector3;
-import am2.api.power.IPowerNode;
+import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import am2.blocks.BlocksCommonProxy;
 import net.minecraft.nbt.NBTTagCompound;
@@ -82,7 +82,7 @@ public class PowerNodeEntry{
 				return false;
 			TileEntity te = world.getTileEntity((int)vec.x, (int)vec.y, (int)vec.z);
 			//if valid, continue the loop, otherwise return false.
-			if (te != null && te instanceof IPowerNode)
+			if (te != null && te instanceof IManaPower)
 				continue;
 
 			//set a marker block to say that a conduit or other power relay of some sort was here and is now not
@@ -101,9 +101,9 @@ public class PowerNodeEntry{
 			return 0f;
 		AMVector3 end = path.getLast();
 		TileEntity te = world.getTileEntity((int)end.x, (int)end.y, (int)end.z);
-		if (te != null && te instanceof IPowerNode){
-			if (((IPowerNode)te).canProvidePower(type)){
-				return PowerNodeRegistry.For(world).consumePower(((IPowerNode)te), type, amount);
+		if (te != null && te instanceof IManaPower){
+			if (((IManaPower)te).canSendPower(type)){
+				return PowerNodeRegistry.instance.consumePower(((IManaPower)te), type, amount);
 			}
 		}
 		return 0f;

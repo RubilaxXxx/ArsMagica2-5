@@ -3,8 +3,8 @@ package am2.blocks.tileentities;
 import am2.AMCore;
 import am2.api.blocks.MultiblockStructureDefinition;
 import am2.api.blocks.MultiblockStructureDefinition.StructureGroup;
-import am2.api.math.AMVector3;
 import am2.api.power.PowerTypes;
+import am2.blocks.BlockAMOre;
 import am2.blocks.BlocksCommonProxy;
 import am2.buffs.BuffEffectManaRegen;
 import am2.buffs.BuffList;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblockStructureController{
+public class TileEntityBlackAurem extends TileEntityPowerSources implements IMultiblockStructureController{
 
 	private final HashMap arcs;
 
@@ -41,7 +41,7 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 	private float rotationIncrement = 0.15f;
 
 	public TileEntityBlackAurem() {
-		super(10000);
+		super(10000, PowerTypes.DARK);
 
 		arcs = new HashMap();
 
@@ -63,32 +63,31 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 
 		structure.addAllowedBlock(pillars, -2, 0, -2, Blocks.nether_brick);
 		structure.addAllowedBlock(pillars, -2, 1, -2, Blocks.nether_brick);
-		structure.addAllowedBlock(chimerite, -2, 2, -2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_CHIMERITE_BLOCK);
+		structure.addAllowedBlock(chimerite, -2, 2, -2, BlocksCommonProxy.AMOres, BlockAMOre.META_CHIMERITE_BLOCK);
 		structure.addAllowedBlock(obsidian, -2, 2, -2, Blocks.obsidian);
-		structure.addAllowedBlock(sunstone, -2, 2, -2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_SUNSTONE_BLOCK);
+		structure.addAllowedBlock(sunstone, -2, 2, -2, BlocksCommonProxy.AMOres, BlockAMOre.META_SUNSTONE_BLOCK);
 
 		structure.addAllowedBlock(pillars, 2, 0, -2, Blocks.nether_brick);
 		structure.addAllowedBlock(pillars, 2, 1, -2, Blocks.nether_brick);
-		structure.addAllowedBlock(chimerite, 2, 2, -2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_CHIMERITE_BLOCK);
+		structure.addAllowedBlock(chimerite, 2, 2, -2, BlocksCommonProxy.AMOres, BlockAMOre.META_CHIMERITE_BLOCK);
 		structure.addAllowedBlock(obsidian, 2, 2, -2, Blocks.obsidian);
-		structure.addAllowedBlock(sunstone, 2, 2, -2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_SUNSTONE_BLOCK);
+		structure.addAllowedBlock(sunstone, 2, 2, -2, BlocksCommonProxy.AMOres, BlockAMOre.META_SUNSTONE_BLOCK);
 
 		structure.addAllowedBlock(pillars, -2, 0, 2, Blocks.nether_brick);
 		structure.addAllowedBlock(pillars, -2, 1, 2, Blocks.nether_brick);
-		structure.addAllowedBlock(chimerite, -2, 2, 2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_CHIMERITE_BLOCK);
+		structure.addAllowedBlock(chimerite, -2, 2, 2, BlocksCommonProxy.AMOres, BlockAMOre.META_CHIMERITE_BLOCK);
 		structure.addAllowedBlock(obsidian, -2, 2, 2, Blocks.obsidian);
-		structure.addAllowedBlock(sunstone, -2, 2, 2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_SUNSTONE_BLOCK);
+		structure.addAllowedBlock(sunstone, -2, 2, 2, BlocksCommonProxy.AMOres, BlockAMOre.META_SUNSTONE_BLOCK);
 
 		structure.addAllowedBlock(pillars, 2, 0, 2, Blocks.nether_brick);
 		structure.addAllowedBlock(pillars, 2, 1, 2, Blocks.nether_brick);
-		structure.addAllowedBlock(chimerite, 2, 2, 2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_CHIMERITE_BLOCK);
+		structure.addAllowedBlock(chimerite, 2, 2, 2, BlocksCommonProxy.AMOres, BlockAMOre.META_CHIMERITE_BLOCK);
 		structure.addAllowedBlock(obsidian, 2, 2, 2, Blocks.obsidian);
-		structure.addAllowedBlock(sunstone, 2, 2, 2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_SUNSTONE_BLOCK);
+		structure.addAllowedBlock(sunstone, 2, 2, 2, BlocksCommonProxy.AMOres, BlockAMOre.META_SUNSTONE_BLOCK);
 
-		wizardChalkCircle = addWizChalkGroupToStructure(structure, 1);
+		wizardChalkCircle = structure.addWizChalkGroupToStructure( 1);
 	}
 
-	@Override
 	protected void checkNearbyBlockState() {
 		ArrayList<StructureGroup> groups = structure.getMatchedGroups(7, worldObj, xCoord, yCoord, zCoord);
 
@@ -177,7 +176,7 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 							if (ent.getHealth() <= 0) {
 								ent.setDead();
 								float power = ((int)Math.ceil((ent.getMaxHealth() * (ent.ticksExisted / 20)) % 5000)) * this.powerMultiplier;
-								PowerNodeRegistry.For(this.worldObj).insertPower(this, PowerTypes.DARK, power);
+								PowerNodeRegistry.instance.insertPower(this, PowerTypes.DARK, power);
 							}
 						}
 					}
@@ -213,7 +212,7 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 		if (surroundingCheckTicks % 100 == 0) {
 			checkNearbyBlockState();
 			surroundingCheckTicks = 1;
-			if (!worldObj.isRemote && PowerNodeRegistry.For(this.worldObj).checkPower(this, this.capacity * 0.1f)) {
+			if (!worldObj.isRemote && PowerNodeRegistry.instance.checkPower(this, this.capacity * 0.1f)) {
 				List<EntityPlayer> nearbyPlayers = worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 2, this.yCoord, this.zCoord - 2, this.xCoord + 2, this.yCoord + 3, this.zCoord + 2));
 				for (EntityPlayer p : nearbyPlayers) {
 					if (p.isPotionActive(BuffList.manaRegen.id)) continue;
@@ -227,8 +226,6 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 					IllEffectsManager.instance.ApplyRandomBadThing(this, IllEffectSeverity.values()[maxSev], BadThingTypes.DARKNEXUS);
 				}*/
 		}
-
-		super.callSuperUpdate();
 	}
 
 	private void updateNearbyEntities() {
@@ -243,7 +240,6 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 					entity instanceof EntityWinterGuardianArm ||
 					entity instanceof EntityThrownSickle ||
 					entity instanceof EntityFlicker ||
-					entity instanceof EntityShadowHelper ||
 					entity instanceof EntityShadowHelper ||
                     entity instanceof EntityThrownRock  ||
                     entity instanceof EntityBroom)
@@ -261,12 +257,7 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 	}
 
 	@Override
-	public boolean canRequestPower() {
-		return false;
-	}
-
-	@Override
-	public boolean canProvidePower(PowerTypes type) {
+	public boolean canSendPower(PowerTypes type) {
 		return type == PowerTypes.DARK;
 	}
 
@@ -276,10 +267,4 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 				PowerTypes.DARK
 		};
 	}
-
-	@Override
-	public int getSizeInventory() {
-		return 0;
-	}
-
 }

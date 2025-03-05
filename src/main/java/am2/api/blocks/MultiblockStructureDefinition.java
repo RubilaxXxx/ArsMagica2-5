@@ -1,5 +1,6 @@
 package am2.api.blocks;
 
+import am2.blocks.BlocksCommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 
@@ -289,6 +290,18 @@ public class MultiblockStructureDefinition{
 
 	public void addAllowedBlock(StructureGroup group, int offsetX, int offsetY, int offsetZ, Block block){
 		addAllowedBlock(group, offsetX, offsetY, offsetZ, block, -1);
+	}
+	public StructureGroup addWizChalkGroupToStructure(int mutex){
+		StructureGroup group = createGroup("wizardChalkCircle", mutex);
+
+		for (int i = -1; i <= 1; ++i){
+			for (int j = -1; j <= 1; ++j){
+				if (i == 0 && j == 0) continue;
+					addAllowedBlock(group, i, 0, j, BlocksCommonProxy.wizardChalk);
+			}
+		}
+
+		return group;
 	}
 
 	public StructureGroup createGroup(String name, int mutex){

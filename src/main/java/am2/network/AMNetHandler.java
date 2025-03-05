@@ -2,7 +2,7 @@ package am2.network;
 
 import am2.LogHelper;
 import am2.api.math.AMVector3;
-import am2.api.power.IPowerNode;
+import am2.api.power.IManaPower;
 import am2.blocks.tileentities.TileEntityArmorImbuer;
 import am2.blocks.tileentities.TileEntityCalefactor;
 import am2.blocks.tileentities.TileEntityObelisk;
@@ -206,8 +206,8 @@ public class AMNetHandler{
 
 		sendPacketToAllClientsNear(hecate.worldObj.provider.dimensionId, hecate.posX, hecate.posY, hecate.posZ, 32, AMPacketIDs.HECATE_DEATH, writer.generate());
 	}
-
-	public void syncPowerPaths(IPowerNode node, EntityPlayerMP player){
+/*
+	public void syncPowerPaths(IManaPower node, EntityPlayerMP player){
 		AMDataWriter writer = new AMDataWriter();
 		if (((TileEntity)node).getWorldObj().isRemote){
 			writer.add((byte)0);
@@ -218,7 +218,7 @@ public class AMNetHandler{
 
 			sendPacketToServer(AMPacketIDs.REQUEST_PWR_PATHS, writer.generate());
 		}else{
-			NBTTagCompound compound = PowerNodeRegistry.For(((TileEntity)node).getWorldObj()).getDataCompoundForNode(node);
+			NBTTagCompound compound = PowerNodeRegistry.instance(((TileEntity)node).getWorldObj()).getDataCompoundForNode(node);
 			if (compound != null){
 				writer.add((byte)0);
 				writer.add(compound);
@@ -227,7 +227,7 @@ public class AMNetHandler{
 			}
 		}
 	}
-
+*/
 	public void sendImbueToServer(TileEntityArmorImbuer tileEntity, String hoveredID){
 		AMDataWriter writer = new AMDataWriter();
 		writer.add(tileEntity.xCoord);

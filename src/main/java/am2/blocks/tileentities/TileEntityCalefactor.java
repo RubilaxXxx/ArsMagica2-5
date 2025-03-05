@@ -26,9 +26,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.Constants;
 
-import java.util.Random;
-
-public class TileEntityCalefactor extends TileEntityAMPower implements IInventory, ISidedInventory, IKeystoneLockable{
+public class TileEntityCalefactor extends TileEntityAMManaPower implements IInventory, ISidedInventory, IKeystoneLockable{
 
 	private ItemStack calefactorItemStacks[];
 	private float rotationX, rotationY, rotationZ;
@@ -139,9 +137,9 @@ public class TileEntityCalefactor extends TileEntityAMPower implements IInventor
 			ItemStack smeltStack = var1.copy();
 
 			if (this.calefactorItemStacks[0].getItem() instanceof ItemFood || this.calefactorItemStacks[0].getItem() instanceof ItemBlock || this.calefactorItemStacks[0].getItem() == ItemsCommonProxy.itemOre){
-				if (PowerNodeRegistry.For(worldObj).checkPower(this, PowerTypes.DARK, getCookTickPowerCost()))
-					if (PowerNodeRegistry.For(worldObj).checkPower(this, PowerTypes.NEUTRAL, getCookTickPowerCost()))
-						if (PowerNodeRegistry.For(worldObj).checkPower(this, PowerTypes.LIGHT, getCookTickPowerCost()))
+				if (PowerNodeRegistry.instance.checkPower(this, PowerTypes.DARK, getCookTickPowerCost()))
+					if (PowerNodeRegistry.instance.checkPower(this, PowerTypes.NEUTRAL, getCookTickPowerCost()))
+						if (PowerNodeRegistry.instance.checkPower(this, PowerTypes.LIGHT, getCookTickPowerCost()))
 							smeltStack.stackSize++;
 			}
 
@@ -280,7 +278,7 @@ public class TileEntityCalefactor extends TileEntityAMPower implements IInventor
 			}
 		}
 
-		boolean powerCheck = PowerNodeRegistry.For(this.worldObj).checkPower(this, getCookTickPowerCost());
+		boolean powerCheck = PowerNodeRegistry.instance.checkPower(this, getCookTickPowerCost());
 		if (this.canSmelt() && this.isSmelting() && powerCheck){
 			++this.timeSpentCooking;
 
@@ -296,16 +294,16 @@ public class TileEntityCalefactor extends TileEntityAMPower implements IInventor
 				}
 			}
 			if (!worldObj.isRemote){
-				if (PowerNodeRegistry.For(worldObj).checkPower(this, PowerTypes.DARK, getCookTickPowerCost()) &&
-						PowerNodeRegistry.For(worldObj).checkPower(this, PowerTypes.NEUTRAL, getCookTickPowerCost()) &&
-						PowerNodeRegistry.For(worldObj).checkPower(this, PowerTypes.LIGHT, getCookTickPowerCost())){
+				if (PowerNodeRegistry.instance.checkPower(this, PowerTypes.DARK, getCookTickPowerCost()) &&
+						PowerNodeRegistry.instance.checkPower(this, PowerTypes.NEUTRAL, getCookTickPowerCost()) &&
+						PowerNodeRegistry.instance.checkPower(this, PowerTypes.LIGHT, getCookTickPowerCost())){
 
-					PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerTypes.DARK, getCookTickPowerCost());
-					PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerTypes.NEUTRAL, getCookTickPowerCost());
-					PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerTypes.LIGHT, getCookTickPowerCost());
+					PowerNodeRegistry.instance.consumePower(this, PowerTypes.DARK, getCookTickPowerCost());
+					PowerNodeRegistry.instance.consumePower(this, PowerTypes.NEUTRAL, getCookTickPowerCost());
+					PowerNodeRegistry.instance.consumePower(this, PowerTypes.LIGHT, getCookTickPowerCost());
 
 				}else{
-					PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerNodeRegistry.For(this.worldObj).getHighestPowerType(this), getCookTickPowerCost());
+					PowerNodeRegistry.instance.consumePower(this, PowerNodeRegistry.instance.getHighestPowerType(this), getCookTickPowerCost());
 				}
 			}
 		}else if (!this.isSmelting() && this.canSmelt() && powerCheck){
@@ -331,7 +329,12 @@ public class TileEntityCalefactor extends TileEntityAMPower implements IInventor
 	}
 
 	@Override
-	public boolean canProvidePower(PowerTypes type){
+	public int getCharge(){
+		return 0;
+	}
+
+	@Override
+	public boolean canSendPower(PowerTypes type){
 		return false;
 	}
 

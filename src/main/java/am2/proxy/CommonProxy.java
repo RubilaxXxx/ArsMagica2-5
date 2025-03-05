@@ -3,23 +3,22 @@ package am2.proxy;
 import am2.*;
 import am2.affinity.AffinityHelper;
 import am2.api.math.AMVector3;
-import am2.api.power.IPowerNode;
+import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import am2.armor.ArmorEventHandler;
 import am2.armor.infusions.*;
 import am2.blocks.BlocksCommonProxy;
 import am2.blocks.tileentities.TileEntityParticleEmitter;
 import am2.buffs.BuffList;
-import am2.configuration.AMConfig;
 import am2.enchantments.AMEnchantments;
 import am2.entities.EntityManager;
 import am2.entities.ai.MageVillagerTrade;
+import am2.items.ItemOre;
 import am2.items.ItemsCommonProxy;
 import am2.network.AMNetHandler;
 import am2.network.AMPacketProcessorServer;
 import am2.particles.ParticleManagerServer;
 import am2.playerextensions.ExtendedProperties;
-import am2.power.PowerNodeCache;
 import am2.power.PowerNodeEntry;
 import am2.proxy.gui.ServerGuiManager;
 import am2.proxy.tick.ServerTickHandler;
@@ -56,7 +55,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class CommonProxy{
+public abstract class CommonProxy{
 	private ArrayList<AMVector3> pendingFlickerLinks;
 
 	public BlocksCommonProxy blocks;
@@ -100,7 +99,6 @@ public class CommonProxy{
 
 		MinecraftForge.EVENT_BUS.register(new AMEventHandler());
 		FMLCommonHandler.instance().bus().register(new AMEventHandler());
-		MinecraftForge.EVENT_BUS.register(PowerNodeCache.instance);
 		MinecraftForge.EVENT_BUS.register(new AffinityHelper());
 		MinecraftForge.EVENT_BUS.register(new SpellUnlockManager());
 		MinecraftForge.EVENT_BUS.register(new ArmorEventHandler());
@@ -132,7 +130,7 @@ public class CommonProxy{
 		blocks.InstantiateBlocks();
 		items.InstantiateItems();
 
-		ObeliskFuelHelper.instance.registerFuelType(new ItemStack(ItemsCommonProxy.itemOre, 0, ItemsCommonProxy.itemOre.META_VINTEUMDUST), 200);
+		ObeliskFuelHelper.instance.registerFuelType(new ItemStack(ItemsCommonProxy.itemOre, 0, ItemOre.META_VINTEUMDUST), 200);
 		ObeliskFuelHelper.instance.registerFuelType(new ItemStack(ItemsCommonProxy.itemAMBucket, 0, Short.MAX_VALUE), 2000);
 
 		EnervatorRecipeHelper.instance.registerRecipe(new ItemStack(Blocks.stonebrick), new ItemStack(Blocks.stonebrick, 1, 2));
@@ -324,7 +322,7 @@ public class CommonProxy{
 		deferredPotionEffects.clear();
 	}
 
-	public void requestPowerPathVisuals(IPowerNode node, EntityPlayerMP player){
+	public void requestPowerPathVisuals(IManaPower node, EntityPlayerMP player){
 
 	}
 
@@ -369,6 +367,10 @@ public class CommonProxy{
 
 	public void setTrackedLocation(AMVector3 location){
 	}
+
+	public AMVector3 getTrackLocation(){
+		return null;
+	};
 
 	public boolean hasTrackedLocationSynced(){
 		return false;

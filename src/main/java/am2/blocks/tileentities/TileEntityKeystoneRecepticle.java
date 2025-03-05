@@ -27,13 +27,11 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-public class TileEntityKeystoneRecepticle extends TileEntityAMPower implements IInventory, IMultiblockStructureController, IKeystoneLockable{
+public class TileEntityKeystoneRecepticle extends TileEntityAMManaPower implements IInventory, IMultiblockStructureController, IKeystoneLockable{
 
 	private boolean isActive;
 	private long key;
@@ -125,7 +123,7 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMPower implements I
 
 	@Override
 	public void invalidate(){
-		AMCore.instance.proxy.blocks.removeKeystonePortal(xCoord, yCoord, zCoord, worldObj.provider.dimensionId);
+		AMCore.proxy.blocks.removeKeystonePortal(xCoord, yCoord, zCoord, worldObj.provider.dimensionId);
 
 		if (!worldObj.isRemote){
 			AMChunkLoader.INSTANCE.releaseStaticChunkLoad(this.getClass(), this.xCoord, this.yCoord, this.zCoord, this.worldObj);
@@ -140,9 +138,9 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMPower implements I
 		this.redPortal = redPortal;
 		int myMeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
-		if (PowerNodeRegistry.For(worldObj).getHighestPowerType(this) == PowerTypes.DARK){
+		if (PowerNodeRegistry.instance.getHighestPowerType(this) == PowerTypes.DARK){
 			myMeta |= 8;
-		}else if (PowerNodeRegistry.For(worldObj).getHighestPowerType(this) == PowerTypes.LIGHT){
+		}else if (PowerNodeRegistry.instance.getHighestPowerType(this) == PowerTypes.LIGHT){
 			myMeta |= 4;
 		}
 
@@ -204,7 +202,7 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMPower implements I
 		allGood &= worldObj.isAirBlock(xCoord, yCoord - 2, zCoord);
 		allGood &= worldObj.isAirBlock(xCoord, yCoord - 3, zCoord);
 		allGood &= checkStructure();
-		allGood &= PowerNodeRegistry.For(this.worldObj).checkPower(this);
+		allGood &= PowerNodeRegistry.instance.checkPower(this);
 		allGood &= !this.isActive;
 		return allGood;
 	}
@@ -261,7 +259,7 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMPower implements I
 
 			if (AMCore.config.getHazardousGateways()){
 				//uh-oh!  Not enough power!  The teleporter will still send you though, but I wonder where...
-				float charge = PowerNodeRegistry.For(this.worldObj).getHighestPower(this);
+				float charge = PowerNodeRegistry.instance.getHighestPower(this);
 				if (charge < essenceCost){
 					essenceCost = charge;
 					//get the distance that our charge *will* take us towards the next point
@@ -306,7 +304,7 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMPower implements I
 			}
 			entity.setPositionAndRotation(newLocation.x + 0.5, newLocation.y - entity.height, newLocation.z + 0.5, newRotation, entity.rotationPitch);
 
-			PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerNodeRegistry.For(this.worldObj).getHighestPowerType(this), essenceCost);
+			PowerNodeRegistry.instance.consumePower(this, PowerNodeRegistry.instance.getHighestPowerType(this), essenceCost);
 
 			this.worldObj.playSoundEffect(myLocation.x, myLocation.y, myLocation.z, "mob.endermen.portal", 1.0F, 1.0F);
 			this.worldObj.playSoundEffect(newLocation.x, newLocation.y, newLocation.z, "mob.endermen.portal", 1.0F, 1.0F);
@@ -447,7 +445,12 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMPower implements I
 	}
 
 	@Override
-	public boolean canProvidePower(PowerTypes type){
+	public int getCharge(){
+		return 0;
+	}
+
+	@Override
+	public boolean canSendPower(PowerTypes type){
 		return false;
 	}
 

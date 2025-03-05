@@ -3,7 +3,11 @@ package am2.items;
 import am2.AMCore;
 import am2.MeteorSpawnHelper;
 import am2.api.math.AMVector3;
+import am2.api.power.IManaPower;
+import am2.api.power.PowerTypes;
 import am2.api.spell.enums.SkillPointTypes;
+import am2.blocks.tileentities.TileEntityAMManaPower;
+import am2.blocks.tileentities.TileEntityManaBattery;
 import am2.entities.*;
 import am2.particles.AMLineArc;
 import am2.playerextensions.ExtendedProperties;
@@ -281,8 +285,18 @@ public class ItemRune extends ArsMagicaItem{
 	//===========================================
 
 	public void doCurrentDebugOperation(ItemStack stack, World world, EntityPlayer player){
-		displayBlockMeta(stack, world, player);
+		//displayBlockMeta(stack, world, player);
+		if (!world.isRemote){
+			MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(world, player, true);
+			if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK){
+				TileEntity block = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
+				if (block instanceof TileEntityManaBattery){
+					((TileEntityManaBattery)block).setPower(PowerTypes.NEUTRAL, ((TileEntityManaBattery)block).getCapacity());
+				}
+			}
+		}
 	}
+
 
 	public void displayBlockMeta(ItemStack stack, World world, EntityPlayer player){
 		if (world.isRemote){

@@ -16,7 +16,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.Constants;
 
 // public class TileEntityArmorImbuer extends TileEntityAMPower implements IInventory, IKeystoneLockable, IMultiblockStructureController{
-public class TileEntityArmorImbuer extends TileEntityAMPower implements IInventory, IMultiblockStructureController{
+public class TileEntityArmorImbuer extends TileEntityAMManaPower implements IInventory, IMultiblockStructureController{
 
 	private ItemStack[] inventory;
 	private MultiblockStructureDefinition def;
@@ -30,6 +30,11 @@ public class TileEntityArmorImbuer extends TileEntityAMPower implements IInvento
 	private void setupMultiblock(){
 		def = new MultiblockStructureDefinition("armorInfuser");
 
+	}
+
+	@Override
+	public int getCharge(){
+		return 0;
 	}
 
 	@Override

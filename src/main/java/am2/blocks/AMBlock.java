@@ -1,5 +1,6 @@
 package am2.blocks;
 
+
 import am2.lore.CompendiumUnlockHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

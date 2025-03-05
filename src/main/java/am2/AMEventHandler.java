@@ -5,7 +5,7 @@ import am2.api.events.ManaCostEvent;
 import am2.api.items.BoundItemHandler;
 import am2.api.items.IBoundItem;
 import am2.api.items.ManaItemHandler;
-import am2.api.power.IPowerNode;
+import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import am2.api.spell.component.interfaces.ISkillTreeEntry;
 import am2.api.spell.enums.Affinity;
@@ -42,6 +42,9 @@ import am2.spell.SpellUtils;
 import am2.utility.*;
 import cofh.api.energy.IEnergyHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -125,6 +128,10 @@ public class AMEventHandler{
 		AffinityData.For(original).saveNBTData(OldAffinity);
 		AffinityData.For(newplayer).loadNBTData(OldAffinity);
 
+	}
+	@Mod.EventHandler
+	public void ServerStop(FMLServerStoppingEvent event){
+		PowerNodeRegistry.instance.clear();
 	}
 	@SubscribeEvent
 	public void onPotionBrewed(PotionBrewedEvent brewEvent){
@@ -958,7 +965,7 @@ public class AMEventHandler{
 
 				if (enable_spatialVortex){
 					Map<String, String> spatialVortices = extendedProperties.getExtraVariablesContains("spatialvortex_");
-					if (spatialVortices.size() > 0){
+					if (!spatialVortices.isEmpty()){
 						int[] totalenergy = new int[spatialVortices.size()];
 						int[] totalenergyExternallyLimited = new int[spatialVortices.size()];
 						int[] totaletheriumdark = new int[spatialVortices.size()];
@@ -982,9 +989,9 @@ public class AMEventHandler{
 											totalenergy[vIndex] += ((IEnergyHandler)te).getEnergyStored(ForgeDirection.UNKNOWN);
 											totalenergyExternallyLimited[vIndex] += ((IEnergyHandler)te).extractEnergy(ForgeDirection.UNKNOWN, 50000, true); // sim only
 										}
-										if (te instanceof IPowerNode){
-											totaletheriumdark[vIndex] += PowerNodeRegistry.For(thisdim).getPower((IPowerNode)te, PowerTypes.DARK);
-											totaletheriumlight[vIndex] += PowerNodeRegistry.For(thisdim).getPower((IPowerNode)te, PowerTypes.LIGHT);
+										if (te instanceof IManaPower){
+											totaletheriumdark[vIndex] += PowerNodeRegistry.instance.getPower((IManaPower)te, PowerTypes.DARK);
+											totaletheriumlight[vIndex] += PowerNodeRegistry.instance.getPower((IManaPower)te, PowerTypes.LIGHT);
 										}
 									}
 								}
@@ -1112,9 +1119,9 @@ public class AMEventHandler{
 										for (int zadd = -1; zadd <= 1; zadd += 2){
 											TileEntity te = thisdim.getTileEntity(x + xadd, y, z + zadd);
 											if (te != null){
-												if (te instanceof IPowerNode){
+												if (te instanceof IManaPower){
 													if (toSubtractD > 0)
-														toSubtractD -= PowerNodeRegistry.For(thisdim).consumePower((IPowerNode)te, PowerTypes.DARK, toSubtractD); // real
+														toSubtractD -= PowerNodeRegistry.instance.consumePower((IManaPower)te, PowerTypes.DARK, toSubtractD); // real
 												}
 											}
 										}
@@ -1137,9 +1144,9 @@ public class AMEventHandler{
 										for (int zadd = -1; zadd <= 1; zadd += 2){
 											TileEntity te = thisdim.getTileEntity(x + xadd, y, z + zadd);
 											if (te != null){
-												if (te instanceof IPowerNode){
+												if (te instanceof IManaPower){
 													if (toSubtractL > 0)
-														toSubtractL -= PowerNodeRegistry.For(thisdim).consumePower((IPowerNode)te, PowerTypes.LIGHT, toSubtractL); // real
+														toSubtractL -= PowerNodeRegistry.instance.consumePower((IManaPower)te, PowerTypes.LIGHT, toSubtractL); // real
 												}
 											}
 										}
@@ -1185,9 +1192,9 @@ public class AMEventHandler{
 										for (int zadd = -1; zadd <= 1; zadd += 2){
 											TileEntity te = thisdim.getTileEntity(x + xadd, y, z + zadd);
 											if (te != null){
-												if (te instanceof IPowerNode){
+												if (te instanceof IManaPower){
 													if (toTransferD > 0)
-														toTransferD -= PowerNodeRegistry.For(thisdim).insertPower((IPowerNode)te, PowerTypes.DARK, toTransferD);
+														toTransferD -= PowerNodeRegistry.instance.insertPower((IManaPower)te, PowerTypes.DARK, toTransferD);
 													else DLeft = false;
 												}
 											}
@@ -1207,9 +1214,9 @@ public class AMEventHandler{
 										for (int zadd = -1; zadd <= 1; zadd += 2){
 											TileEntity te = thisdim.getTileEntity(x + xadd, y, z + zadd);
 											if (te != null){
-												if (te instanceof IPowerNode){
+												if (te instanceof IManaPower){
 													if (toTransferL > 0)
-														toTransferL -= PowerNodeRegistry.For(thisdim).insertPower((IPowerNode)te, PowerTypes.LIGHT, toTransferL);
+														toTransferL -= PowerNodeRegistry.instance.insertPower((IManaPower)te, PowerTypes.LIGHT, toTransferL);
 													else LLeft = false;
 												}
 											}

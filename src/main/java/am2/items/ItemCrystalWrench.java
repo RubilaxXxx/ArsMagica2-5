@@ -2,26 +2,34 @@ package am2.items;
 
 import am2.AMCore;
 import am2.api.math.AMVector3;
-import am2.api.power.IPowerNode;
+import am2.api.power.IBindable;
+import am2.api.power.IManaPower;
+
 import am2.blocks.tileentities.TileEntityCrystalMarker;
 import am2.blocks.tileentities.TileEntityFlickerHabitat;
 import am2.blocks.tileentities.TileEntityParticleEmitter;
 import am2.particles.AMParticle;
 import am2.particles.ParticleFadeOut;
 import am2.particles.ParticleMoveOnHeading;
-import am2.power.PowerNodeRegistry;
+
 import am2.texture.ResourceManager;
+import cofh.lib.util.helpers.NBTHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+
+import java.util.List;
+
 
 public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 
@@ -31,16 +39,21 @@ public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 	@SideOnly(Side.CLIENT)
 	private IIcon wrenchDisconnectIcon;
 
-	private static String KEY_PAIRLOC = "PAIRLOC";
-	private static String HAB_PAIRLOC = "HABLOC";
-	private static String KEEP_BINDING = "KEEPBINDING";
-	private static String MODE = "WRENCHMODE";
+	private static final String KEY_PAIRLOC = "PAIRLOC";
+	private static final String HAB_PAIRLOC = "HABLOC";
+	private static final String KEEP_BINDING = "KEEPBINDING";
+	private static final String MODE = "WRENCHMODE";
+	private static final String BOUNDX = "boundx";
+	private static final String BOUNDY = "boundy";
+	private static final String BOUNDZ = "boundz";
+	private  boolean storedbound = false;
 
-	private static final int MODE_PAIR = 0;
-	private static final int MODE_DISCONNECT = 1;
+	private static final boolean WRENCHMODE = true; //true to pair, false to disconnect
+
 
 	public ItemCrystalWrench(){
 		super();
+		setMaxStackSize(1);
 	}
 
 	@Override
@@ -52,35 +65,67 @@ public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ){
-		TileEntity te = world.getTileEntity(x, y, z);
 
+
+		TileEntity te = world.getTileEntity(x, y, z);
 		if (!stack.hasTagCompound())
 			stack.setTagCompound(new NBTTagCompound());
 
-		int cMode = getMode(stack);
-		if (te != null && !(te instanceof IPowerNode || te instanceof TileEntityParticleEmitter) && cMode == MODE_DISCONNECT){
+		if (te != null && !(te instanceof IBindable || te instanceof TileEntityParticleEmitter) && !getMode(stack)){
 			player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("am2.tooltip.wrongWrenchMode")));
-			return false;
+			return true;
 		}
 
-		if (te != null && te instanceof IPowerNode){
-			if (cMode == MODE_DISCONNECT){
-				doDisconnect((IPowerNode)te, world, x + hitX, y + hitY, z + hitZ, player);
-				return false;
-			}
+		if (te instanceof IBindable){
+			if(this.storedbound){
+				// te => the tile entity we hit.
+				//storedtile => the tile we have stored in the wand.
+				ChunkCoordinates ChunkTile = GetStoredTile(stack);
+				TileEntity storedTile = world.getTileEntity(ChunkTile.posX, ChunkTile.posY, ChunkTile.posZ);
+				if (storedTile instanceof IBindable){
+					if(storedTile == te){
+						player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("am2.tooltip.nodePairToSelf")));
+						return true;
+					}
+					if (!getMode(stack)){
+						((IBindable)storedTile).unbind(world, ChunkTile.posX, ChunkTile.posY, ChunkTile.posZ);
+						ClearStored(stack);
+						player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("am2.tooltip.disconnectPower")));
+						if(world.isRemote)
+							spawnLinkParticles(player.worldObj, hitX, hitY, hitZ, true);
+						return true;
+					}
 
-			if (stack.stackTagCompound.hasKey(KEY_PAIRLOC)){
-				doPairNodes(world, x, y, z, stack, player, hitX, hitY, hitZ, te);
+					if(((IBindable)storedTile).bindTo(world, te.xCoord, te.yCoord, te.zCoord, player)){
+						player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("am.tooltip.success")));
+						ClearStored(stack);
+						if(world.isRemote)
+							spawnLinkParticles(player.worldObj, hitX, hitY, hitZ, false);
+						return true;
+					}
+					System.out.print("CANT BIND!");
+				}else return true;
+			}
+			else{
+				System.out.print("STORING DATA !");
+				storePairLocation(world, te, stack, player, x , y , z);
+				return true;
+			}
+		}
+		else if(player.isSneaking()){
+			if(storedbound){
+				System.out.print("CLEARING !");
+				ClearStored(stack);
 			}else{
-				storePairLocation(world, te, stack, player, x + hitX, y + hitY, z + hitZ);
+				SetMode(stack);
 			}
-		}else if (te != null && te instanceof TileEntityCrystalMarker && stack.stackTagCompound != null && stack.stackTagCompound.hasKey(HAB_PAIRLOC)){
-			handleCMPair(stack, world, player, te, x + hitX, y + hitY, z + hitZ);
-		}else if (player.isSneaking()){
-			handleModeChanges(stack);
+			return true;
 
 		}
-		return false;
+		else if (te instanceof TileEntityCrystalMarker && stack.stackTagCompound != null && stack.stackTagCompound.hasKey(HAB_PAIRLOC)){
+			handleCMPair(stack, world, player, te, x + hitX, y + hitY, z + hitZ);
+		}
+		return true;
 	}
 
 	private void handleCMPair(ItemStack stack, World world, EntityPlayer player, TileEntity te, double hitX, double hitY, double hitZ){
@@ -98,77 +143,61 @@ public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 	}
 
 	private void storePairLocation(World world, TileEntity te, ItemStack stack, EntityPlayer player, double hitX, double hitY, double hitZ){
-		AMVector3 destination = new AMVector3(te);
-		if (!world.isRemote){
-			if (te instanceof TileEntityFlickerHabitat){
-				NBTTagCompound habLoc = new NBTTagCompound();
-				destination.writeToNBT(habLoc);
-				stack.stackTagCompound.setTag(HAB_PAIRLOC, habLoc);
-			}else{
-				NBTTagCompound pairLoc = new NBTTagCompound();
-				destination.writeToNBT(pairLoc);
-				stack.stackTagCompound.setTag(KEY_PAIRLOC, pairLoc);
-			}
+//		AMVector3 destination = new AMVector3(te);
+//
+//			if (te instanceof TileEntityFlickerHabitat){
+//				NBTTagCompound habLoc = new NBTTagCompound();
+//				destination.writeToNBT(habLoc);
+//				stack.stackTagCompound.setTag(HAB_PAIRLOC, habLoc);
+//			}
+//			else{
+		System.out.print("Debug Stored tile V0 !");
+				StoreTile(stack, te.xCoord,te.yCoord, te.zCoord);
+//			}
 
-			if (player.isSneaking()){
-				stack.stackTagCompound.setBoolean(KEEP_BINDING, true);
-			}
-		}else{
+		if(world.isRemote){
 			spawnLinkParticles(world, hitX, hitY, hitZ);
 		}
 	}
+	private ChunkCoordinates GetStoredTile(ItemStack stack){
+		int x = stack.stackTagCompound.getInteger(BOUNDX);
+		int y = stack.stackTagCompound.getInteger(BOUNDY);
+		int z = stack.stackTagCompound.getInteger(BOUNDZ);
+		return new ChunkCoordinates(x, y ,z);
 
-	private void doPairNodes(World world, int x, int y, int z, ItemStack stack, EntityPlayer player, double hitX, double hitY, double hitZ, TileEntity te){
-		AMVector3 source = AMVector3.readFromNBT(stack.stackTagCompound.getCompoundTag(KEY_PAIRLOC));
-		TileEntity sourceTE = world.getTileEntity((int)source.x, (int)source.y, (int)source.z);
-		if (sourceTE != null && sourceTE instanceof IPowerNode && !world.isRemote){
-			player.addChatMessage(new ChatComponentText(PowerNodeRegistry.For(world).tryPairNodes((IPowerNode)sourceTE, (IPowerNode)te)));
-		}else if (world.isRemote){
-			spawnLinkParticles(world, x + hitX, y + hitY, z + hitZ);
-		}
-		if (!stack.stackTagCompound.hasKey(KEEP_BINDING))
-			stack.stackTagCompound.removeTag(KEY_PAIRLOC);
 	}
-
-	private void doDisconnect(IPowerNode node, World world, double hitX, double hitY, double hitZ, EntityPlayer player){
-		PowerNodeRegistry.For(world).tryDisconnectAllNodes(node);
-		if (world.isRemote){
-			spawnLinkParticles(player.worldObj, hitX, hitY, hitZ, true);
-		}else{
-			player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("am2.tooltip.disconnectPower")));
-		}
+	private void StoreTile(ItemStack stack, int x, int y, int z){
+		System.out.print("Debug Stored tile processing !");
+		stack.stackTagCompound.setInteger(BOUNDX,x);
+		stack.stackTagCompound.setInteger(BOUNDY,y);
+		stack.stackTagCompound.setInteger(BOUNDZ,z);
+		this.storedbound = true;
 	}
-
-	private void handleModeChanges(ItemStack stack){
-		if (stack.stackTagCompound.hasKey(KEEP_BINDING)){
-			stack.stackTagCompound.removeTag(KEEP_BINDING);
-
-			if (stack.stackTagCompound.hasKey(KEY_PAIRLOC))
-				stack.stackTagCompound.removeTag(KEY_PAIRLOC);
-
-			if (stack.stackTagCompound.hasKey(HAB_PAIRLOC))
-				stack.stackTagCompound.removeTag(HAB_PAIRLOC);
-		}else{
-			if (getMode(stack) == MODE_PAIR)
-				stack.stackTagCompound.setInteger(MODE, MODE_DISCONNECT);
-			else
-				stack.stackTagCompound.setInteger(MODE, MODE_PAIR);
-
-		}
+	private void ClearStored(ItemStack stack){
+		System.out.print("Debug Stored tile Clearing !");
+		stack.stackTagCompound.removeTag(BOUNDX);
+		stack.stackTagCompound.removeTag(BOUNDY);
+		stack.stackTagCompound.removeTag(BOUNDZ);
+		this.storedbound = false;
 	}
-
-	public static int getMode(ItemStack stack){
-		if (stack.stackTagCompound.hasKey(MODE)){
-			return stack.stackTagCompound.getInteger(MODE);
-		}
-		return 0;
+	private void SetMode(ItemStack stack){
+		if (getMode(stack))
+			stack.stackTagCompound.setBoolean(MODE, !WRENCHMODE);
+		else
+			stack.stackTagCompound.setBoolean(MODE, WRENCHMODE);
+	}
+	public static boolean getMode(ItemStack stack){
+			if (stack.stackTagCompound.hasKey(MODE)){
+				return stack.stackTagCompound.getBoolean(MODE);
+			}
+			return true;
 	}
 
 	private void spawnLinkParticles(World world, double hitX, double hitY, double hitZ){
 		spawnLinkParticles(world, hitX, hitY, hitZ, false);
 	}
 
-	private void spawnLinkParticles(World world, double hitX, double hitY, double hitZ, boolean disconnect){
+	public static void spawnLinkParticles(World world, double hitX, double hitY, double hitZ, boolean disconnect){
 		for (int i = 0; i < 10; ++i){
 			AMParticle particle = (AMParticle)AMCore.proxy.particleManager.spawn(world, "none_hand", hitX, hitY, hitZ);
 			if (particle != null){
@@ -182,11 +211,6 @@ public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 				particle.AddParticleController(new ParticleFadeOut(particle, 1, false).setFadeSpeed(0.1f));
 			}
 		}
-	}
-
-	@Override
-	public boolean getShareTag(){
-		return true;
 	}
 
 	@Override
@@ -206,9 +230,9 @@ public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 
 	private IIcon GetWrenchIcon(ItemStack stack, int pass){
 		if (stack.stackTagCompound != null && pass == 0){
-			if (stack.stackTagCompound.hasKey(KEEP_BINDING))
+			if (storedbound)
 				return wrenchStoredIcon;
-			else if (stack.stackTagCompound.hasKey(MODE) && stack.stackTagCompound.getInteger(MODE) == MODE_DISCONNECT)
+			else if (stack.stackTagCompound.hasKey(MODE) && !(stack.stackTagCompound.getBoolean(MODE)))
 				return wrenchDisconnectIcon;
 			else
 				return this.itemIcon;
@@ -216,10 +240,42 @@ public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 			return this.itemIcon;
 		}
 	}
-
+	private String GetModeString(ItemStack stack){
+		if(stack.hasTagCompound())
+			return "am2.tooltip." + (getMode(stack) ? "link" : "disconnect");
+		return "am2.tooltip.link";
+	}
 	@Override
-	public int getItemStackLimit(){
-		return 1;
+	public void addInformation(ItemStack stack, EntityPlayer p, List list, boolean adv){
+		list.add(StatCollector.translateToLocal(GetModeString(stack)));
+	}
+}
+/*
+	private void doPairNodes(World world, int x, int y, int z, ItemStack stack, EntityPlayer player, double hitX, double hitY, double hitZ, TileEntity te){
+		AMVector3 source = AMVector3.readFromNBT(stack.stackTagCompound.getCompoundTag(KEY_PAIRLOC));
+		TileEntity sourceTE = world.getTileEntity((int)source.x, (int)source.y, (int)source.z);
+		if (sourceTE instanceof IManaPower && !world.isRemote){
+			player.addChatMessage(new ChatComponentText(PowerNodeRegistry.instance.tryPairNodes((IManaPower)sourceTE, (IManaPower)te)));
+		}else if (world.isRemote){
+
+		}
+		if (!stack.stackTagCompound.hasKey(KEEP_BINDING))
+			stack.stackTagCompound.removeTag(KEY_PAIRLOC);
 	}
 
-}
+	private void doDisconnect(IManaPower node, World world, double hitX, double hitY, double hitZ, EntityPlayer player){
+		PowerNodeRegistry.instance.tryDisconnectAllNodes(node);
+		if (world.isRemote){
+			spawnLinkParticles(player.worldObj, hitX, hitY, hitZ, true);
+		}else{
+			player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("am2.tooltip.disconnectPower")));
+		}
+	}
+*/
+
+//	private void SetKeepBinding(ItemStack stack){
+//		if (stack.stackTagCompound.hasKey(KEEP_BINDING))
+//			stack.stackTagCompound.removeTag(KEEP_BINDING);
+//		else
+//			stack.stackTagCompound.setBoolean(KEEP_BINDING, true);
+//	}

@@ -2,13 +2,11 @@ package am2.blocks.tileentities;
 
 import am2.EnervatorRecipeHelper;
 import am2.api.power.PowerTypes;
-import am2.network.AMDataReader;
 import am2.network.AMDataWriter;
 import am2.network.AMNetHandler;
 import am2.network.AMPacketIDs;
 import am2.proxy.ClientProxy;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,12 +14,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants;
 
-import java.util.List;
-
-public class TileEntityEntropicEnervator extends TileEntityAMPower implements IInventory{
+public class TileEntityEntropicEnervator extends TileEntityAMManaPower implements IInventory{
 	private ItemStack[] inventory;
 
 	public int rendTimeRemaining = 0;
@@ -163,6 +158,11 @@ public class TileEntityEntropicEnervator extends TileEntityAMPower implements II
 	@Override
 	public PowerTypes[] getValidPowerTypes(){
 		return new PowerTypes[]{PowerTypes.DARK};
+	}
+
+	@Override
+	public int getCharge(){
+		return 0;
 	}
 
 	@Override

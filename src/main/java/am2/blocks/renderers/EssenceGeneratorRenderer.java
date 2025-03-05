@@ -3,6 +3,7 @@ package am2.blocks.renderers;
 import am2.blocks.tileentities.TileEntityBlackAurem;
 import am2.blocks.tileentities.TileEntityCelestialPrism;
 import am2.blocks.tileentities.TileEntityObelisk;
+import am2.blocks.tileentities.TileEntityPowerSources;
 import am2.texture.ResourceManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
@@ -30,7 +31,7 @@ public class EssenceGeneratorRenderer extends TileEntitySpecialRenderer{
 	public EssenceGeneratorRenderer(){
 		rLoc_obelisk = new ResourceLocation("arsmagica2", ResourceManager.getCustomBlockTexturePath("obelisk.png"));
 		rLoc_obelisk_active = new ResourceLocation("arsmagica2", ResourceManager.getCustomBlockTexturePath("obelisk_active.png"));
-		rLoc_obelisk_active_highpower = new ResourceLocation("arsmagica2", ResourceManager.getCustomBlockTexturePath("obelisk_active_highpower.png"));
+		//rLoc_obelisk_active_highpower = new ResourceLocation("arsmagica2", ResourceManager.getCustomBlockTexturePath("obelisk_active_highpower.png"));
 		rLoc_obelisk_runes = new ResourceLocation("arsmagica2", ResourceManager.getCustomBlockTexturePath("obelisk_runes.png"));
 		rLoc_celestial = new ResourceLocation("arsmagica2", ResourceManager.getCustomBlockTexturePath("celestial_prism.png"));
 
@@ -40,16 +41,24 @@ public class EssenceGeneratorRenderer extends TileEntitySpecialRenderer{
 		model_celestial = (WavefrontObject)AdvancedModelLoader.loadModel(ResourceManager.getOBJFilePath("celestial_prism.obj"));
 	}
 
-	public void renderAModelAt(TileEntityObelisk tile, double d, double d1, double d2, float f){
-
+	public void renderAModelAt(TileEntityPowerSources tile, double d, double d1, double d2, float f){
+		//System.out.println("Log RenderTileAt v2");
 		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_TEXTURE_BIT);
-		if (tile instanceof TileEntityCelestialPrism)
+		if (tile instanceof TileEntityCelestialPrism){
+			//System.out.println("Log RenderTileAt black aurem");
 			renderCelestial((TileEntityCelestialPrism)tile, d, d1, d2, f);
-		else if (tile instanceof TileEntityBlackAurem)
+		}
+		else if (tile instanceof TileEntityBlackAurem){
+			//System.out.println("Log RenderTileAt black aurem");
 			renderBlackAurem((TileEntityBlackAurem)tile, d, d1, d2, f);
-		else
-			renderObelisk(tile, d, d1, d2, f);
+		}
+
+		else{
+		//System.out.println("Log RenderTileAt obelisk");
+			renderObelisk((TileEntityObelisk) tile, d, d1, d2, f);
+		}
+
 
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
@@ -73,16 +82,16 @@ public class EssenceGeneratorRenderer extends TileEntitySpecialRenderer{
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		Tessellator tessellator = Tessellator.instance;
-		if (tile.isHighPowerActive())
-			bindTexture(rLoc_obelisk_active_highpower);
-		else if (tile.isActive())
+	//	if (tile.isActive())    (high power active)
+	//		bindTexture(rLoc_obelisk_active_highpower);
+		if (tile.isActive())
 			bindTexture(rLoc_obelisk_active);
 		else
 			bindTexture(rLoc_obelisk);
 		GL11.glRotatef(j, 0.0F, 1.0F, 0.0F); //rotate based on metadata
 		try{
 			model_obelisk.renderAll();
-		}catch (Throwable t){
+		}catch (Throwable ignored){
 
 		}
 
@@ -99,7 +108,7 @@ public class EssenceGeneratorRenderer extends TileEntitySpecialRenderer{
 			GL11.glColor4f(1, 1, 1, transp);
 			try{
 				model_obelisk.renderAll();
-			}catch (Throwable t){
+			}catch (Throwable ignored){
 
 			}
 			GL11.glPopMatrix();
@@ -124,7 +133,7 @@ public class EssenceGeneratorRenderer extends TileEntitySpecialRenderer{
 
 		try{
 			model_celestial.renderAll();
-		}catch (Throwable t){
+		}catch (Throwable ignored){
 
 		}
 
@@ -190,12 +199,13 @@ public class EssenceGeneratorRenderer extends TileEntitySpecialRenderer{
 			tessellator.addVertexWithUV(f4 - f5, f4 - f6, 0.0D, BRX, TLY);
 			tessellator.addVertexWithUV(0.0F - f5, f4 - f6, 0.0D, TLX, TLY);
 			tessellator.draw();
-		}catch (Throwable t){
+		}catch (Throwable ignored){
 		}
 	}
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2, float f){
-		renderAModelAt((TileEntityObelisk)tileentity, d, d1, d2, f); //where to render
+		//System.out.println("Log RenderTileAt");
+		renderAModelAt((TileEntityPowerSources)tileentity, d, d1, d2, f); //where to render
 	}
 }

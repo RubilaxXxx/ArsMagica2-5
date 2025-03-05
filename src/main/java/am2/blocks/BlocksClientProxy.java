@@ -59,7 +59,7 @@ public class BlocksClientProxy extends BlocksCommonProxy{
 	@Override
 	public void registerRenderInformation(){
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEssenceConduit.class, new EssenceConduitRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityObelisk.class, new EssenceGeneratorRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPowerSources.class, new EssenceGeneratorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySpatialVortex.class, new SpatialVortexRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCalefactor.class, new CalefactorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBlockCaster.class, new CasterRenderer());

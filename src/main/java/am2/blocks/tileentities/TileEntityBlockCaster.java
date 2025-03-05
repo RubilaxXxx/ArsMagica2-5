@@ -24,7 +24,12 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class TileEntityBlockCaster extends TileEntityAMPower implements IInventory {
+public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInventory {
+   //TAGS
+   public static final String TAG_POWERAMOUNT = "PowerAmount";
+
+   //Vars
+   private int poweramount;
    protected float rotation = 0.0F;
    protected ItemStack[] casterItemStacks = new ItemStack[4];
    protected boolean hasRequestedFullUpdate = false;
@@ -51,15 +56,8 @@ public class TileEntityBlockCaster extends TileEntityAMPower implements IInvento
       return false;
    }
 
-   public float getCharge() {
-      PowerTypes highestValid = PowerTypes.NONE;
-      float amt = 0;
-      for (PowerTypes type1 : PowerTypes.all()){
-         float tmpAmt = PowerNodeRegistry.For(worldObj).getPower(this, type1);
-         if (tmpAmt > amt)
-            highestValid = type1;
-      }
-      return PowerNodeRegistry.For(this.worldObj).getPower(this, highestValid);
+   public int getCharge() {
+    return this.poweramount;
    }
 
 
@@ -186,10 +184,10 @@ public class TileEntityBlockCaster extends TileEntityAMPower implements IInvento
       if (this.getCharge() > castCost) {
          prepForActivate();
          if (SpellUtils.instance.spellIsChanneled(castingStack) && SpellHelper.instance.applyStackStageOnUsing(castingStack, caster, caster, (double)this.xCoord, (double)this.yCoord, (double)this.zCoord, this.worldObj, false, false, this.activeTicks++) == SpellCastResult.SUCCESS) {
-            PowerNodeRegistry.For(this.worldObj).consumePower(this, getBestType(), castCost);
+            PowerNodeRegistry.instance.consumePower(this, getBestType(), castCost);
             this.hasCast = true;
          } else if (!this.hasCast && SpellHelper.instance.applyStackStage(castingStack, caster, caster, (double)this.xCoord, (double)this.yCoord, (double)this.zCoord, 0, this.worldObj, false, false, 0) == SpellCastResult.SUCCESS) {
-            PowerNodeRegistry.For(this.worldObj).consumePower(this, getBestType(), castCost);
+            PowerNodeRegistry.instance.consumePower(this, getBestType(), castCost);
             this.hasCast = true;
          }
       }
@@ -237,15 +235,15 @@ public class TileEntityBlockCaster extends TileEntityAMPower implements IInvento
       PowerTypes highestValid = PowerTypes.NONE;
       float amt = 0;
       for (PowerTypes type1 : PowerTypes.all()){
-         float tmpAmt = PowerNodeRegistry.For(worldObj).getPower(this, type1);
+         float tmpAmt = PowerNodeRegistry.instance.getPower(this, type1);
          if (tmpAmt > amt)
             highestValid = type1;
       }
       return highestValid;
    }
 
-   protected float getChargeThreshold() {
-      return (float)this.capacity;
+   protected int getChargeThreshold() {
+      return this.capacity;
    }
 
    public void incrementRotation() {

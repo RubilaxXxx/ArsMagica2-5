@@ -46,13 +46,23 @@ public class RenderEverstone extends TileEntitySpecialRenderer{
 	}
 
 	private void renderBlock(Block block, double x, double y, double z, Block fBlock, TileEntityEverstone te){
-		itemRenderBlocks.renderFaceYPos(block, x, y, z, fBlock.getIcon(1, te.getFacadeMeta()));
-		itemRenderBlocks.renderFaceYNeg(block, x, y, z, fBlock.getIcon(0, te.getFacadeMeta()));
-
-		itemRenderBlocks.renderFaceXPos(block, x, y, z, fBlock.getIcon(2, te.getFacadeMeta()));
-		itemRenderBlocks.renderFaceXNeg(block, x, y, z, fBlock.getIcon(3, te.getFacadeMeta()));
-
-		itemRenderBlocks.renderFaceZPos(block, x, y, z, fBlock.getIcon(4, te.getFacadeMeta()));
-		itemRenderBlocks.renderFaceZNeg(block, x, y, z, fBlock.getIcon(5, te.getFacadeMeta()));
+		if(fBlock.getIcon(0, te.getFacadeMeta()) != null){
+			itemRenderBlocks.renderFaceYNeg(block, x, y, z, fBlock.getIcon(0, te.getFacadeMeta()));
+		}
+		if(fBlock.getIcon(1, te.getFacadeMeta()) != null){
+			itemRenderBlocks.renderFaceYPos(block, x, y, z, fBlock.getIcon(1, te.getFacadeMeta()));
+		}
+		if(fBlock.getIcon(2, te.getFacadeMeta()) != null){
+			itemRenderBlocks.renderFaceXPos(block, x, y, z, fBlock.getIcon(2, te.getFacadeMeta()));
+		}
+		if(fBlock.getIcon(3, te.getFacadeMeta()) != null){
+			itemRenderBlocks.renderFaceXNeg(block, x, y, z, fBlock.getIcon(3, te.getFacadeMeta()));
+		}
+		if(fBlock.getIcon(4, te.getFacadeMeta()) != null){
+			itemRenderBlocks.renderFaceZPos(block, x, y, z, fBlock.getIcon(4, te.getFacadeMeta()));
+		}
+		if(fBlock.getIcon(5, te.getFacadeMeta()) != null){
+			itemRenderBlocks.renderFaceZNeg(block, x, y, z, fBlock.getIcon(5, te.getFacadeMeta()));
+		}
 	}
 }

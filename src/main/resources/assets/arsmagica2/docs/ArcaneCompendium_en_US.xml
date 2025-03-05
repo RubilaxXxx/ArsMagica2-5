@@ -5,7 +5,7 @@
     <shape id="Projectile">
       <name>Projectile</name>
       <desc>You are able to focus your will into a concentrated ball, which you can propel forwards away from you.  The projectile will last for 5 seconds of flight, or until it strikes something.  It will by default pass through water and non-collidable blocks unless you modify it with target non-solid blocks.</desc>
-      <modifiedBy>SPEED,GRAVITY,BOUNCE,DURATION,PIERCING,TARGET_NONSOLID_BLOCKS</modifiedBy>
+      <modifiedBy>SPEED,GRAVITY,BOUNCE,DURATION,PIERCING,TARGET_NONSOLID_BLOCKS,HOMING</modifiedBy>
     </shape>
     <shape id="Channel">
       <name>Channeled</name>
@@ -611,7 +611,7 @@
     </modifier>
     <modifier id="Range">
       <name>Range</name>
-      <desc>Increases the range of projectile and beam spells.</desc>
+      <desc>Increases the range of chain and beam spells.</desc>
       <modifies>RANGE</modifies>
     </modifier>
     <modifier id="Radius">
@@ -2405,8 +2405,7 @@
     <block id="sanguineAmaryllis">
       <name>Sanguine Amaryllis</name>
       <desc>
-           		An infused stem grown with an abundance of negative and unstable energies
-           		in the environment around it. Passively radiates some of its fury
+           		An infused stem grown by feeding on the blood of preys. killing weak mobs will infuse the stem with dark and malicious energy turning it slowly into a Red powerful plant. Passively radiates some of its fury
            		and frustration back into the environment; exhibits effects affecting the mind
            		and possibly the body of passersby. Otherwise, serves as a potent spell ingredient.
        		</desc>

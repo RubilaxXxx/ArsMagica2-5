@@ -24,7 +24,7 @@ import am2.playerextensions.AffinityData;
 import am2.playerextensions.ExtendedProperties;
 import am2.playerextensions.RiftStorage;
 import am2.playerextensions.SkillData;
-import am2.power.PowerNodeCache;
+
 import am2.proxy.CommonProxy;
 import am2.spell.SkillManager;
 import am2.spell.SkillTreeManager;
@@ -257,9 +257,7 @@ public class AMCore{
 
 	@EventHandler
 	public void serverStopping(FMLServerStoppingEvent event){
-		for (WorldServer ws : MinecraftServer.getServer().worldServers){
-			PowerNodeCache.instance.saveWorldToFile(ws);
-		}
+
 		// custom data
 		CustomWorldData.saveAllWorldData();
 	}

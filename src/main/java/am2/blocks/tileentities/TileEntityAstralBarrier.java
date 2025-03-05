@@ -4,7 +4,6 @@ import am2.AMCore;
 import am2.api.blocks.IKeystoneLockable;
 import am2.api.power.PowerTypes;
 import am2.items.ISpellFocus;
-import am2.network.AMDataWriter;
 import am2.particles.AMParticle;
 import am2.particles.ParticleFadeOut;
 import am2.particles.ParticleHoldPosition;
@@ -22,9 +21,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.Constants;
 
-import java.util.Random;
-
-public class TileEntityAstralBarrier extends TileEntityAMPower implements IInventory, IKeystoneLockable{
+public class TileEntityAstralBarrier extends TileEntityAMManaPower implements IInventory, IKeystoneLockable{
 
 	private ItemStack[] inventory;
 	private static final int maxRadius = 20;
@@ -54,7 +51,7 @@ public class TileEntityAstralBarrier extends TileEntityAMPower implements IInven
 	}
 
 	public boolean IsActive(){
-		return PowerNodeRegistry.For(this.worldObj).checkPower(this, 0.35f * getRadius()) && worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord) && getRadius() > 0;
+		return PowerNodeRegistry.instance.checkPower(this, 0.35f * getRadius()) && worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord) && getRadius() > 0;
 	}
 
 	@Override
@@ -77,7 +74,7 @@ public class TileEntityAstralBarrier extends TileEntityAMPower implements IInven
 		int radius = getRadius();
 
 		if (IsActive()){
-			PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerNodeRegistry.For(worldObj).getHighestPowerType(this), 0.35f * radius);
+			PowerNodeRegistry.instance.consumePower(this, PowerNodeRegistry.instance.getHighestPowerType(this), 0.35f * radius);
 		}
 
 		if (worldObj.isRemote){
@@ -116,9 +113,9 @@ public class TileEntityAstralBarrier extends TileEntityAMPower implements IInven
 
 	public void onEntityBlocked(EntityLivingBase entity){
 		if (this.worldObj.isRemote){
-			if (PowerNodeRegistry.For(getWorldObj()).checkPower(this, PowerTypes.DARK, 50)){
+			if (PowerNodeRegistry.instance.checkPower(this, PowerTypes.DARK, 50)){
 				entity.attackEntityFrom(DamageSource.magic, 5);
-				PowerNodeRegistry.For(getWorldObj()).consumePower(this, PowerTypes.DARK, 50);
+				PowerNodeRegistry.instance.consumePower(this, PowerTypes.DARK, 50);
 			}
 		}
 	}
@@ -231,7 +228,12 @@ public class TileEntityAstralBarrier extends TileEntityAMPower implements IInven
 	}
 
 	@Override
-	public boolean canProvidePower(PowerTypes type){
+	public int getCharge(){
+		return 0;
+	}
+
+	@Override
+	public boolean canSendPower(PowerTypes type){
 		return false;
 	}
 

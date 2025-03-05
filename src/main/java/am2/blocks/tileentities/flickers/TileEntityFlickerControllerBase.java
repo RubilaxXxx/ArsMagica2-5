@@ -4,7 +4,7 @@ import am2.api.flickers.IFlickerController;
 import am2.api.flickers.IFlickerFunctionality;
 import am2.api.power.PowerTypes;
 import am2.api.spell.enums.Affinity;
-import am2.blocks.tileentities.TileEntityAMPower;
+import am2.blocks.tileentities.TileEntityAMManaPower;
 import am2.blocks.tileentities.TileEntityFlickerHabitat;
 import am2.items.ItemsCommonProxy;
 import am2.power.PowerNodeRegistry;
@@ -17,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.HashMap;
 
-public class TileEntityFlickerControllerBase extends TileEntityAMPower implements IFlickerController{
+public class TileEntityFlickerControllerBase extends TileEntityAMManaPower implements IFlickerController{
 	private HashMap<Integer, byte[]> sigilMetadata;
 	private IFlickerFunctionality operator;
 	private int tickCounter;
@@ -32,7 +32,7 @@ public class TileEntityFlickerControllerBase extends TileEntityAMPower implement
 
 	protected void setOperator(IFlickerFunctionality operator){
 		if (this.operator != null){
-			this.operator.RemoveOperator(worldObj, this, PowerNodeRegistry.For(worldObj).checkPower(this, this.operator.PowerPerOperation()), nearbyList);
+			this.operator.RemoveOperator(worldObj, this, PowerNodeRegistry.instance.checkPower(this, this.operator.PowerPerOperation()), nearbyList);
 		}
 		this.operator = operator;
 		tickCounter = 0;
@@ -93,7 +93,7 @@ public class TileEntityFlickerControllerBase extends TileEntityAMPower implement
 
 		//tick operator, if it exists
 		if (operator != null){
-			boolean powered = PowerNodeRegistry.For(worldObj).checkPower(this, operator.PowerPerOperation());
+			boolean powered = PowerNodeRegistry.instance.checkPower(this, operator.PowerPerOperation());
 
 			//check which neighbors are not receiving power
 			//this allows individual upgrades to be turned off by providing them with a redstone signal.
@@ -108,7 +108,7 @@ public class TileEntityFlickerControllerBase extends TileEntityAMPower implement
 					}
 					boolean success = operator.DoOperation(worldObj, this, powered, unpoweredNeighbors);
 					if (success || operator.RequiresPower())
-						PowerNodeRegistry.For(worldObj).consumePower(this, PowerNodeRegistry.For(worldObj).getHighestPowerType(this), operator.PowerPerOperation());
+						PowerNodeRegistry.instance.consumePower(this, PowerNodeRegistry.instance.getHighestPowerType(this), operator.PowerPerOperation());
 					lastOpWasPowered = true;
 				}else if (lastOpWasPowered && operator.RequiresPower() && !powered){
 					operator.RemoveOperator(worldObj, this, powered, unpoweredNeighbors);
@@ -179,7 +179,12 @@ public class TileEntityFlickerControllerBase extends TileEntityAMPower implement
 	}
 
 	@Override
-	public boolean canProvidePower(PowerTypes type){
+	public int getCharge(){
+		return 0;
+	}
+
+	@Override
+	public boolean canSendPower(PowerTypes type){
 		return false;
 	}
 
@@ -189,7 +194,7 @@ public class TileEntityFlickerControllerBase extends TileEntityAMPower implement
 	}
 
 	@Override
-	public boolean canRequestPower(){
+	public boolean canReceivePower(){
 		return true;
 	}
 

@@ -14,7 +14,7 @@ import net.minecraft.util.Vec3;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class TileEntitySlipstreamGenerator extends TileEntityAMPower{
+public class TileEntitySlipstreamGenerator extends TileEntityAMManaPower{
 
 	private ArrayList<EntityPlayer> levitatingEntities;
 	private int updateTicks = 1;
@@ -27,7 +27,12 @@ public class TileEntitySlipstreamGenerator extends TileEntityAMPower{
 	}
 
 	@Override
-	public boolean canProvidePower(PowerTypes type){
+	public int getCharge(){
+		return 0;
+	}
+
+	@Override
+	public boolean canSendPower(PowerTypes type){
 		return false;
 	}
 
@@ -50,7 +55,7 @@ public class TileEntitySlipstreamGenerator extends TileEntityAMPower{
 				continue;
 			}
 
-			if (PowerNodeRegistry.For(this.worldObj).getHighestPower(this) >= 0.25f){
+			if (PowerNodeRegistry.instance.getHighestPower(this) >= 0.25f){
 
 				player.motionY *= 0.5999999;
 				if (Math.abs(player.motionY) < 0.2){
@@ -71,7 +76,7 @@ public class TileEntitySlipstreamGenerator extends TileEntityAMPower{
 
 				if (worldObj.isRemote)
 					spawnParticles(player);
-				PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerNodeRegistry.For(this.worldObj).getHighestPowerType(this), 0.25f);
+				PowerNodeRegistry.instance.consumePower(this, PowerNodeRegistry.instance.getHighestPowerType(this), 0.25f);
 			}
 		}
 	}
@@ -111,7 +116,7 @@ public class TileEntitySlipstreamGenerator extends TileEntityAMPower{
 	}
 
 	@Override
-	public boolean canRequestPower(){
+	public boolean canReceivePower(){
 		return true;
 	}
 

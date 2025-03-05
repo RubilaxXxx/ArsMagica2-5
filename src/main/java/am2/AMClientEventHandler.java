@@ -1,7 +1,7 @@
 package am2;
 
 import am2.api.math.AMVector3;
-import am2.api.power.IPowerNode;
+import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import am2.armor.AMArmor;
 import am2.armor.ArmorHelper;
@@ -9,6 +9,7 @@ import am2.armor.infusions.GenericImbuement;
 import am2.blocks.BlockCrystalMarker;
 import am2.blocks.BlocksCommonProxy;
 import am2.blocks.tileentities.TileEntityCrystalMarker;
+import am2.blocks.tileentities.TileEntityManaBattery;
 import am2.blocks.tileentities.TileEntityParticleEmitter;
 import am2.buffs.BuffList;
 import am2.entities.EntityShadowHelper;
@@ -20,6 +21,7 @@ import am2.network.AMNetHandler;
 import am2.network.AMPacketIDs;
 import am2.playerextensions.ExtendedProperties;
 import am2.power.PowerNodeEntry;
+import am2.power.PowerNodeRegistry;
 import am2.utility.EntityUtilities;
 import am2.utility.RenderUtilities;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -66,7 +68,7 @@ public class AMClientEventHandler{
 				){
 
 			TileEntity te = event.player.worldObj.getTileEntity(event.target.blockX, event.target.blockY, event.target.blockZ);
-			if (te != null && te instanceof IPowerNode){
+			if (te instanceof IManaPower){
 				AMCore.proxy.setTrackedLocation(new AMVector3(event.target.blockX, event.target.blockY, event.target.blockZ));
 			}else{
 				AMCore.proxy.setTrackedLocation(AMVector3.zero());
@@ -83,14 +85,14 @@ public class AMClientEventHandler{
 	}
 
 	private void renderPowerFloatingText(DrawBlockHighlightEvent event, TileEntity te){
-		PowerNodeEntry data = AMCore.proxy.getTrackedData();
+		IManaPower Manatile = (IManaPower)te;
 		Block block = event.player.worldObj.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ);
 		float yOff = 0.5f;
-		if (data != null){
+		if (Manatile != null){
 			GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_LIGHTING_BIT);
-			for (PowerTypes type : ((IPowerNode)te).getValidPowerTypes()){
-				float pwr = data.getPower(type);
-				float pct = pwr / ((IPowerNode)te).getCapacity() * 100;
+			for (PowerTypes type : Manatile.getValidPowerTypes()){
+				float pwr = Manatile.getCharge();
+				float pct = pwr / ((IManaPower)te).getCapacity() * 100;
 				AMVector3 offset = new AMVector3(event.target.blockX + 0.5, event.target.blockY + 0.5, event.target.blockZ + 0.5).sub(
 						new AMVector3((event.player.prevPosX - (event.player.prevPosX - event.player.posX) * event.partialTicks),
 								(event.player.prevPosY - (event.player.prevPosY - event.player.posY) * event.partialTicks) + event.player.getEyeHeight(),
@@ -158,6 +160,7 @@ public class AMClientEventHandler{
 
 	@SubscribeEvent
 	public void onItemTooltip(ItemTooltipEvent event){
+
 		ItemStack stack = event.itemStack;
 		if (stack != null && stack.getItem() instanceof ItemArmor){
 			double xp = 0;
@@ -186,14 +189,13 @@ public class AMClientEventHandler{
 			}else{
 				event.toolTip.add(StatCollector.translateToLocal("am2.tooltip.shiftForDetails"));
 			}
-		}else if (stack.getItem() instanceof ItemBlock){
+		}else if (stack != null && stack.getItem() instanceof ItemBlock){
 			if (((ItemBlock)stack.getItem()).field_150939_a == BlocksCommonProxy.manaBattery){
 				if (stack.hasTagCompound()){
-					float batteryCharge = stack.stackTagCompound.getFloat("power_charge");
-					PowerTypes powerType = PowerTypes.getByID(stack.stackTagCompound.getInteger("outputType"));
+					int batteryCharge = stack.stackTagCompound.getInteger(TileEntityManaBattery.TAG_POWERAMOUNT);
+					PowerTypes powerType = PowerTypes.getByID(stack.stackTagCompound.getInteger(TileEntityManaBattery.TAG_OUTPUTTYPE));
 					if (batteryCharge != 0) {
-						// TODO localize this tooltip
-						event.toolTip.add(String.format("\u00A7r\u00A79Contains \u00A75%.2f %s%s \u00A79etherium", batteryCharge, powerType.chatColor(), powerType.name()));
+						event.toolTip.add(String.format(StatCollector.translateToLocal("am2.tooltip.cont_eth"),String.format("%s",batteryCharge), powerType.chatColor(), powerType.name()));
 					}
 				}
 			}

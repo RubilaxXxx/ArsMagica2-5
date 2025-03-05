@@ -5,7 +5,7 @@ import am2.EntityItemWatcher;
 import am2.LogHelper;
 import am2.MeteorSpawnHelper;
 import am2.api.math.AMVector3;
-import am2.api.power.IPowerNode;
+import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import am2.api.spell.ItemSpellBase;
 import am2.api.spell.component.interfaces.ISpellComponent;
@@ -210,16 +210,16 @@ public class ClientTickHandler{
 								TileEntity teStart = Minecraft.getMinecraft().theWorld.getTileEntity((int)start.x, (int)start.y, (int)start.z);
 								TileEntity teEnd = Minecraft.getMinecraft().theWorld.getTileEntity((int)end.x, (int)end.y, (int)end.z);
 
-								if (teEnd == null || !(teEnd instanceof IPowerNode))
+								if (teEnd == null || !(teEnd instanceof IManaPower))
 									break;
 
-								double startX = start.x + ((teStart != null && teStart instanceof IPowerNode) ? ((IPowerNode)teStart).particleOffset(0) : 0.5f);
-								double startY = start.y + ((teStart != null && teStart instanceof IPowerNode) ? ((IPowerNode)teStart).particleOffset(1) : 0.5f);
-								double startZ = start.z + ((teStart != null && teStart instanceof IPowerNode) ? ((IPowerNode)teStart).particleOffset(2) : 0.5f);
+								double startX = start.x + ((teStart != null && teStart instanceof IManaPower) ? ((IManaPower)teStart).particleOffset(0) : 0.5f);
+								double startY = start.y + ((teStart != null && teStart instanceof IManaPower) ? ((IManaPower)teStart).particleOffset(1) : 0.5f);
+								double startZ = start.z + ((teStart != null && teStart instanceof IManaPower) ? ((IManaPower)teStart).particleOffset(2) : 0.5f);
 
-								double endX = end.x + ((IPowerNode)teEnd).particleOffset(0);
-								double endY = end.y + ((IPowerNode)teEnd).particleOffset(1);
-								double endZ = end.z + ((IPowerNode)teEnd).particleOffset(2);
+								double endX = end.x + ((IManaPower)teEnd).particleOffset(0);
+								double endY = end.y + ((IManaPower)teEnd).particleOffset(1);
+								double endZ = end.z + ((IManaPower)teEnd).particleOffset(2);
 
 								AMLineArc arc = (AMLineArc)AMCore.proxy.particleManager.spawn(
 										Minecraft.getMinecraft().theWorld,
@@ -461,8 +461,6 @@ public class ClientTickHandler{
 	}
 
 	public void setTrackData(NBTTagCompound compound){
-		this.powerData = new PowerNodeEntry();
-		this.powerData.readFromNBT(compound);
 		this.hasSynced = true;
 	}
 

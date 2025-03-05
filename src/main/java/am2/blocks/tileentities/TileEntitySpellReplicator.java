@@ -3,7 +3,6 @@ package am2.blocks.tileentities;
 import am2.AMCore;
 import am2.api.power.PowerTypes;
 import am2.items.SpellBase;
-import am2.network.AMNetHandler;
 import am2.particles.AMParticle;
 import am2.particles.ParticleHoldPosition;
 import am2.power.PowerNodeRegistry;
@@ -20,13 +19,12 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.List;
 
-public class TileEntitySpellReplicator extends TileEntityAMPower implements IInventory{
+public class TileEntitySpellReplicator extends TileEntityAMManaPower implements IInventory{
 	public float yetToConsume;
 	private ItemStack[] inventory;
 	@SideOnly(Side.CLIENT)
@@ -59,8 +57,8 @@ public class TileEntitySpellReplicator extends TileEntityAMPower implements IInv
 			yetToConsume = getTotalReplicateCost();
 		} else if (yetToConsume > 0){
 			if (!worldObj.isRemote){
-				float availablePower = PowerNodeRegistry.For(this.worldObj).getPower(this, PowerTypes.LIGHT);
-				PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerTypes.LIGHT, Math.min(yetToConsume, Math.min(availablePower, 100)));
+				float availablePower = PowerNodeRegistry.instance.getPower(this, PowerTypes.LIGHT);
+				PowerNodeRegistry.instance.consumePower(this, PowerTypes.LIGHT, Math.min(yetToConsume, Math.min(availablePower, 100)));
 				yetToConsume -= Math.min(yetToConsume, Math.min(availablePower, 100));
 			}
 		} else if (this.inventory[0] != null && yetToConsume == 0){
@@ -90,6 +88,11 @@ public class TileEntitySpellReplicator extends TileEntityAMPower implements IInv
 	private float getTotalReplicateCost(){
 		if (this.inventory[0] != null && this.inventory[0].getItem() instanceof SpellBase) return SpellUtils.instance.getSpellRequirements(this.inventory[0], this.worldObj.getClosestPlayer(this.xCoord, this.yCoord, this.zCoord, -1)).manaCost * 10;
 		return -1;
+	}
+
+	@Override
+	public int getCharge(){
+		return 0;
 	}
 
 	@Override

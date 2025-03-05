@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 public final class PowerTypes{
 
-	public static final PowerTypes NONE = new PowerTypes(0, "None", "\u00A7f");
-	public static final PowerTypes LIGHT = new PowerTypes(1, "Light", "\u00A7b");
-	public static final PowerTypes NEUTRAL = new PowerTypes(2, "Neutral", "\u00A71");
-	public static final PowerTypes DARK = new PowerTypes(4, "Dark", "\u00A74");
+	public static final PowerTypes NONE = new PowerTypes(0, "None", "§f");
+	public static final PowerTypes LIGHT = new PowerTypes(1, "Light", "§b");
+	public static final PowerTypes NEUTRAL = new PowerTypes(2, "Neutral", "§1");
+	public static final PowerTypes DARK = new PowerTypes(4, "Dark", "§4");
 
 	private static final ArrayList<PowerTypes> allPowerTypes = new ArrayList<PowerTypes>(){{
 		add(LIGHT);
@@ -19,17 +19,17 @@ public final class PowerTypes{
 		add(DARK);
 	}};
 
-	private int _id;
-	private String _name;
-	private String _chatColor;
+	private int id;
+	private String name;
+	private String chatColor;
 
 	private PowerTypes(int ID, String name, String chatColor){
 		if ((ID & -ID) != ID){
 			throw new InvalidParameterException(String.format("ID must be a bitflag that is a power of 2!  (You used %d)", ID));
 		}
-		_id = ID;
-		_name = name;
-		_chatColor = chatColor;
+		this.id = ID;
+		this.name = name;
+		this.chatColor = chatColor;
 	}
 
 	public static void RegisterPowerType(int id, String name, String chatColor){
@@ -42,18 +42,18 @@ public final class PowerTypes{
 	}
 
 	public int ID(){
-		return _id;
+		return id;
 	}
 
 	public String name(){
-		return _name;
+		return name;
 	}
 
 	public String chatColor(){
 		if (ArsMagicaApi.instance.getColourblindMode()){
 			return "";
 		}
-		return _chatColor;
+		return chatColor;
 	}
 
 	public static PowerTypes[] all(){

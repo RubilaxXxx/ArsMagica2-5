@@ -4,7 +4,6 @@ import am2.blocks.tileentities.TileEntitySummoner;
 import am2.containers.ContainerSummoner;
 import am2.power.PowerNodeRegistry;
 import am2.texture.ResourceManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -43,7 +42,7 @@ public class GuiSummoner extends GuiContainer{
 		float cost = summonerInventory.getSummonCost();
 		float maintainCost = summonerInventory.getMaintainCost() * 20;
 		String essenceCostString = cost >= 0 ? String.format("%.2f/s", maintainCost) : "N/A";
-		int color = cost >= 0 ? cost <= PowerNodeRegistry.For(Minecraft.getMinecraft().theWorld).getHighestPower(summonerInventory) ? 0x007700 : 0x770000 : 0x333333;
+		int color = cost >= 0 ? cost <= PowerNodeRegistry.instance.getHighestPower(summonerInventory) ? 0x007700 : 0x770000 : 0x333333;
 
 		int offset = fontRendererObj.getStringWidth(essenceString) + 25;
 
@@ -52,7 +51,7 @@ public class GuiSummoner extends GuiContainer{
 		fontRendererObj.drawString(essenceCostString, xSize - offset, ySize - 120, color);
 
 		essenceCostString = cost >= 0 ? String.format("%.2f", cost) : "N/A";
-		color = cost >= 0 ? cost <= PowerNodeRegistry.For(Minecraft.getMinecraft().theWorld).getHighestPower(summonerInventory) ? 0x007700 : 0x770000 : 0x333333;
+		color = cost >= 0 ? cost <= PowerNodeRegistry.instance.getHighestPower(summonerInventory) ? 0x007700 : 0x770000 : 0x333333;
 
 		fontRendererObj.drawString(essenceString, 20, ySize - 130, 0x777777);
 		fontRendererObj.drawString(essenceCostString, 20, ySize - 120, color);
