@@ -7,5 +7,7 @@ public interface IMultiblockStructureController{
 	/**
 	 * Returns a completely initialized multiblock structure definition.
 	 */
-	public MultiblockStructureDefinition getDefinition();
+	MultiblockStructureDefinition getDefinition();
+
+	void GenerateStructureData();
 }

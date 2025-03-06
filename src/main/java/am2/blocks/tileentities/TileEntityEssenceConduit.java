@@ -120,11 +120,6 @@ public class TileEntityEssenceConduit extends TileEntityAMManaPower{
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 1;
-	}
-
-	@Override
 	public boolean canReceivePower(){
 		return !this.redstonePowered;
 	}

@@ -249,11 +249,6 @@ public class TileEntityAstralBarrier extends TileEntityAMManaPower implements II
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 50;
-	}
-
-	@Override
 	public boolean canRelayPower(PowerTypes type){
 		return false;
 	}

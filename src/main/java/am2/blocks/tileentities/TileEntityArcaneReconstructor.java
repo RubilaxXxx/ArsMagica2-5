@@ -477,11 +477,6 @@ public class TileEntityArcaneReconstructor extends TileEntityAMManaPower impleme
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 250;
-	}
-
-	@Override
 	public boolean canRelayPower(PowerTypes type){
 		return false;
 	}

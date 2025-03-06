@@ -42,11 +42,6 @@ public interface IManaPower{
 	boolean isSource();
 
 	/**
-	 * How fast does this block charge?
-	 */
-	int getChargeRate();
-
-	/**
 	 * Gets the current power type of the block.
 	 */
 	PowerTypes[] getValidPowerTypes();

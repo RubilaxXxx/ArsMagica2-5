@@ -293,11 +293,6 @@ public class TileEntityEssenceRefiner extends TileEntityAMManaPower implements I
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 500;
-	}
-
-	@Override
 	public int getCharge(){
 		return 0;
 	}

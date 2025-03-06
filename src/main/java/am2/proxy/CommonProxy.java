@@ -55,7 +55,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public abstract class CommonProxy{
+public class CommonProxy{
 	private ArrayList<AMVector3> pendingFlickerLinks;
 
 	public BlocksCommonProxy blocks;

@@ -3,7 +3,6 @@ package am2.blocks.tileentities;
 import am2.api.blocks.IKeystoneLockable;
 import am2.api.power.PowerTypes;
 import am2.damage.DamageSources;
-import am2.items.ItemFocusCharge;
 import am2.items.ItemFocusMana;
 import am2.power.PowerNodeRegistry;
 import am2.spell.SkillManager;
@@ -292,12 +291,6 @@ public class TileEntitySummoner extends TileEntityAMManaPower implements IInvent
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt){
 		this.readFromNBT(pkt.func_148857_g());
-	}
-
-	@Override
-	public int getChargeRate(){
-		int numChargeFoci = numFociOfType(ItemFocusCharge.class);
-		return 100 + (50 * numChargeFoci);
 	}
 
 	@Override

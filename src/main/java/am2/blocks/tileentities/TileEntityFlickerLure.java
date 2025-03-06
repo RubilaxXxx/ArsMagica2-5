@@ -21,11 +21,6 @@ public class TileEntityFlickerLure extends TileEntityAMManaPower{
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 5;
-	}
-
-	@Override
 	public void updateEntity(){
 		super.updateEntity();
 

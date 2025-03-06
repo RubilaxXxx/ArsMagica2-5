@@ -204,11 +204,6 @@ public class TileEntityFlickerControllerBase extends TileEntityAMManaPower imple
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 100;
-	}
-
-	@Override
 	public PowerTypes[] getValidPowerTypes(){
 		return PowerTypes.all();
 	}

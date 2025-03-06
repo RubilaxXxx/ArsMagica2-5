@@ -1,16 +1,8 @@
 package am2.blocks.tileentities;
 
 import am2.api.power.IManaPower;
-import am2.api.power.IPowerSource;
 import am2.api.power.PowerTypes;
-import am2.power.PowerNodeRegistry;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
-
 
 
 public class TileEntityManaBattery extends TileEntityAMManaPower{
@@ -111,14 +103,6 @@ public class TileEntityManaBattery extends TileEntityAMManaPower{
 		}
 		setCharge(amount);
 		this.markDirty();
-	}
-
-	//------------------------------------------
-	//---           GETTERS               ------
-	//------------------------------------------
-	@Override
-	public int getChargeRate(){
-		return 1000;
 	}
 
 	public int getCharge(){

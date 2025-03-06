@@ -151,11 +151,6 @@ public class TileEntityEntropicEnervator extends TileEntityAMManaPower implement
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 500;
-	}
-
-	@Override
 	public PowerTypes[] getValidPowerTypes(){
 		return new PowerTypes[]{PowerTypes.DARK};
 	}

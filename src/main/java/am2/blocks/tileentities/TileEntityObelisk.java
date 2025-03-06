@@ -12,15 +12,18 @@ import am2.multiblock.IMultiblockStructureController;
 import am2.network.AMDataReader;
 import am2.network.AMDataWriter;
 import am2.network.AMNetHandler;
-import am2.utility.InventoryUtilities;
+import am2.utility.MathUtilities;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants;
 
@@ -29,8 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TileEntityObelisk extends TileEntityPowerSources implements IMultiblockStructureController, IInventory, IPowerSource{
-//	protected static int pillarBlockID = 98; //stone brick
-//	protected static int pillarBlockMeta = 3; //arcane texture
 	private ItemStack[] inventory;
 
 	public boolean active = false;
@@ -50,38 +51,10 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 		inventory = new ItemStack[this.getSizeInventory()];
 	}
 
-
-
 	public TileEntityObelisk(int capacity){
 		super(capacity,PowerTypes.NEUTRAL);
 		surroundingCheckTicks = 0;
-
-		structure = new MultiblockStructureDefinition("obelisk_structure");
-
-		pillars = structure.createGroup("pillars", 2);
-		caps = new HashMap<StructureGroup, Float>();
-		StructureGroup chiseled = structure.createGroup("caps_chiseled_stone", 4);
-		caps.put(chiseled, 1.35f);
-
-		structure.addAllowedBlock(0, 0, 0, BlocksCommonProxy.obelisk);
-
-		structure.addAllowedBlock(pillars, -2, 0, -2, Blocks.stonebrick, 0);
-		structure.addAllowedBlock(pillars, -2, 1, -2, Blocks.stonebrick, 0);
-		structure.addAllowedBlock(chiseled, -2, 2, -2, Blocks.stonebrick, 3);
-
-		structure.addAllowedBlock(pillars, 2, 0, -2, Blocks.stonebrick, 0);
-		structure.addAllowedBlock(pillars, 2, 1, -2, Blocks.stonebrick, 0);
-		structure.addAllowedBlock(chiseled, 2, 2, -2, Blocks.stonebrick, 3);
-
-		structure.addAllowedBlock(pillars, -2, 0, 2, Blocks.stonebrick, 0);
-		structure.addAllowedBlock(pillars, -2, 1, 2, Blocks.stonebrick, 0);
-		structure.addAllowedBlock(chiseled, -2, 2, 2, Blocks.stonebrick, 3);
-
-		structure.addAllowedBlock(pillars, 2, 0, 2, Blocks.stonebrick, 0);
-		structure.addAllowedBlock(pillars, 2, 1, 2, Blocks.stonebrick, 0);
-		structure.addAllowedBlock(chiseled, 2, 2, 2, Blocks.stonebrick, 3);
-
-		wizardChalkCircle = structure.addWizChalkGroupToStructure(1);
+		GenerateStructureData();
 	}
 
 	public boolean isActive(){
@@ -99,14 +72,30 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 
 	private void sendCookUpdateToClients(){
 		if (!worldObj.isRemote){
-			AMNetHandler.INSTANCE.sendObeliskUpdate(this, new AMDataWriter().add(PK_BURNTIME_CHANGE).add(this.burnTimeRemaining).generate());
+			List<?> players = worldObj.playerEntities;
+			for(Object player : players){
+				if(player instanceof EntityPlayerMP){
+					EntityPlayerMP mp = (EntityPlayerMP)player;
+					if(MathUtilities.pointDistancePlane(mp.posX,mp.posZ,xCoord +0.5D,zCoord +0.5D) < 64){
+						mp.playerNetServerHandler.sendPacket(getDescriptionPacket());
+					}
+				}
+			}
+		//	AMNetHandler.INSTANCE.sendObeliskUpdate(this, new AMDataWriter().add(PK_BURNTIME_CHANGE).add(this.burnTimeRemaining).generate());
 		}
+	}
+	@Override
+	public Packet getDescriptionPacket(){
+		NBTTagCompound nbttagcompound = new NBTTagCompound();
+		super.writeToNBT(nbttagcompound);
+		nbttagcompound.setInteger(TAG_BURNTIMEREMAINING, burnTimeRemaining);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, -888, nbttagcompound);
 	}
 
 	public void handlePacket(byte[] data){
-		AMDataReader rdr = new AMDataReader(data);
-		if (rdr.ID == PK_BURNTIME_CHANGE)
-			this.burnTimeRemaining = rdr.getInt();
+//		AMDataReader rdr = new AMDataReader(data);
+//		if (rdr.ID == PK_BURNTIME_CHANGE)
+//			this.burnTimeRemaining = rdr.getInt();
 	}
 	protected void checkNearbyBlockState(){
 		ArrayList<StructureGroup> groups = structure.getMatchedGroups(7, worldObj, xCoord, yCoord, zCoord);
@@ -192,23 +181,10 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 //			offsetY = (float)Math.max(Math.sin(worldObj.getTotalWorldTime() / 20f) / 5, 0.25f);
 //		}
 
-
-
-
-
-
-
-	@Override
-	public MultiblockStructureDefinition getDefinition(){
-		return structure;
-	}
-
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound){
 		super.writeToNBT(nbttagcompound);
 		nbttagcompound.setInteger(TAG_BURNTIMEREMAINING, burnTimeRemaining);
-
-
 		if (inventory != null){
 			NBTTagList nbttaglist = new NBTTagList();
 			for (int i = 0; i < inventory.length; i++){
@@ -229,8 +205,6 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 	public void readFromNBT(NBTTagCompound nbttagcompound){
 		super.readFromNBT(nbttagcompound);
 		burnTimeRemaining = nbttagcompound.getInteger(TAG_BURNTIMEREMAINING);
-
-
 		if (nbttagcompound.hasKey(TAG_BURNINVENTORY)){
 			NBTTagList nbttaglist = nbttagcompound.getTagList(TAG_BURNINVENTORY, Constants.NBT.TAG_COMPOUND);
 			inventory = new ItemStack[getSizeInventory()];
@@ -244,27 +218,35 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 			}
 		}
 	}
+	public void GenerateStructureData(){
 
-	@Override
-	public int getChargeRate(){
-		return 0;
+		structure = new MultiblockStructureDefinition("obelisk_structure");
+
+		pillars = structure.createGroup("pillars", 2);
+		caps = new HashMap<StructureGroup, Float>();
+		StructureGroup chiseled = structure.createGroup("caps_chiseled_stone", 4);
+		caps.put(chiseled, 1.35f);
+
+		structure.addAllowedBlock(0, 0, 0, BlocksCommonProxy.obelisk);
+
+		structure.addAllowedBlock(pillars, -2, 0, -2, Blocks.stonebrick, 0);
+		structure.addAllowedBlock(pillars, -2, 1, -2, Blocks.stonebrick, 0);
+		structure.addAllowedBlock(chiseled, -2, 2, -2, Blocks.stonebrick, 3);
+
+		structure.addAllowedBlock(pillars, 2, 0, -2, Blocks.stonebrick, 0);
+		structure.addAllowedBlock(pillars, 2, 1, -2, Blocks.stonebrick, 0);
+		structure.addAllowedBlock(chiseled, 2, 2, -2, Blocks.stonebrick, 3);
+
+		structure.addAllowedBlock(pillars, -2, 0, 2, Blocks.stonebrick, 0);
+		structure.addAllowedBlock(pillars, -2, 1, 2, Blocks.stonebrick, 0);
+		structure.addAllowedBlock(chiseled, -2, 2, 2, Blocks.stonebrick, 3);
+
+		structure.addAllowedBlock(pillars, 2, 0, 2, Blocks.stonebrick, 0);
+		structure.addAllowedBlock(pillars, 2, 1, 2, Blocks.stonebrick, 0);
+		structure.addAllowedBlock(chiseled, 2, 2, 2, Blocks.stonebrick, 3);
+
+		wizardChalkCircle = structure.addWizChalkGroupToStructure(1);
 	}
-
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return type == PowerTypes.NEUTRAL;
-	}
-
-	@Override
-	public PowerTypes[] getValidPowerTypes(){
-		return new PowerTypes[]{PowerTypes.NEUTRAL};
-	}
-
-	public int getCharge(){
-		return this.poweramount;
-	}
-
-
 	//------------------------------------------
 	//--   INVENTORY  HANDLER          ---------
 	//------------------------------------------

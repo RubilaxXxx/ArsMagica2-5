@@ -5,12 +5,12 @@ import am2.api.blocks.MultiblockStructureDefinition;
 import am2.api.blocks.MultiblockStructureDefinition.BlockCoord;
 import am2.api.blocks.MultiblockStructureDefinition.BlockDec;
 import am2.api.blocks.MultiblockStructureDefinition.StructureGroup;
-import am2.api.math.AMVector3;
 import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import am2.api.spell.component.interfaces.ISkillTreeEntry;
 import am2.api.spell.component.interfaces.ISpellModifier;
 import am2.api.spell.component.interfaces.ISpellPart;
+import am2.blocks.BlockAMOre;
 import am2.blocks.BlockWizardsChalk;
 import am2.blocks.BlocksCommonProxy;
 import am2.blocks.liquid.BlockLiquidEssence;
@@ -20,6 +20,7 @@ import am2.entities.EntityFireElemental;
 import am2.entities.EntityManaElemental;
 import am2.entities.EntityWaterElemental;
 import am2.items.ItemEssence;
+import am2.items.ItemRune;
 import am2.items.ItemsCommonProxy;
 import am2.multiblock.IMultiblockStructureController;
 import am2.network.AMDataReader;
@@ -123,7 +124,7 @@ public class TileEntityCraftingAltar extends TileEntityAMManaPower implements IM
 
 	public TileEntityCraftingAltar(){
 		super(500);
-		setupMultiblock();
+		GenerateStructureData();
 		allAddedItems = new ArrayList<ItemStack>();
 		currentAddedItems = new ArrayList<ItemStack>();
 		isCrafting = false;
@@ -141,7 +142,7 @@ public class TileEntityCraftingAltar extends TileEntityAMManaPower implements IM
 		}
 	}
 
-	private void setupMultiblock(){
+	public void GenerateStructureData(){
 		primary = new MultiblockStructureDefinition("craftingAltar_alt");
 
 		Block[] augMatls = new Block[]{
@@ -166,8 +167,8 @@ public class TileEntityCraftingAltar extends TileEntityAMManaPower implements IM
 				0, //gold
 				0, //diamond
 				0,  //emerald
-				BlocksCommonProxy.AMOres.META_MOONSTONE_BLOCK,
-				BlocksCommonProxy.AMOres.META_SUNSTONE_BLOCK
+				BlockAMOre.META_MOONSTONE_BLOCK,
+				BlockAMOre.META_SUNSTONE_BLOCK
 		};
 
 		lecternGroup_primary = new StructureGroup[4];
@@ -1008,7 +1009,7 @@ public class TileEntityCraftingAltar extends TileEntityAMManaPower implements IM
 		List<Entity> items = this.worldObj.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(xCoord - 2, yCoord - 3, zCoord - 2, xCoord + 2, yCoord, zCoord + 2));
 		if (items.size() == 1){
 			EntityItem item = (EntityItem)items.get(0);
-			if (item != null && !item.isDead && item.getEntityItem().getItem() == ItemsCommonProxy.rune && item.getEntityItem().getItemDamage() == ItemsCommonProxy.rune.META_BLANK){
+			if (item != null && !item.isDead && item.getEntityItem().getItem() == ItemsCommonProxy.rune && item.getEntityItem().getItemDamage() == ItemRune.META_BLANK){
 				item.setDead();
 				setCrafting(true);
 			}
@@ -1102,7 +1103,7 @@ public class TileEntityCraftingAltar extends TileEntityAMManaPower implements IM
 		if (!worldObj.isRemote){
 			this.setCrafting(false);
 			for (ItemStack stack : allAddedItems){
-				if (stack.getItem() == ItemsCommonProxy.essence && stack.getItemDamage() > ItemsCommonProxy.essence.META_MAX)
+				if (stack.getItem() == ItemsCommonProxy.essence && stack.getItemDamage() > ItemEssence.META_MAX)
 					continue;
 				EntityItem eItem = new EntityItem(worldObj);
 				eItem.setPosition(xCoord, yCoord - 1, zCoord);
@@ -1273,11 +1274,6 @@ public class TileEntityCraftingAltar extends TileEntityAMManaPower implements IM
 			NBTTagCompound compound = (NBTTagCompound)currentShapeGroups.getCompoundTagAt(i);
 			shapeGroups.get(i).addAll(NBTToISpellPartList(compound));
 		}
-	}
-
-	@Override
-	public int getChargeRate(){
-		return 250;
 	}
 
 	@Override

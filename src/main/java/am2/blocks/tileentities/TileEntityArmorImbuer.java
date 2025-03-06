@@ -16,7 +16,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.Constants;
 
 // public class TileEntityArmorImbuer extends TileEntityAMPower implements IInventory, IKeystoneLockable, IMultiblockStructureController{
-public class TileEntityArmorImbuer extends TileEntityAMManaPower implements IInventory, IMultiblockStructureController{
+public class TileEntityArmorImbuer extends TileEntityAMManaPower implements IInventory{
 
 	private ItemStack[] inventory;
 	private MultiblockStructureDefinition def;
@@ -27,11 +27,6 @@ public class TileEntityArmorImbuer extends TileEntityAMManaPower implements IInv
 		inventory = new ItemStack[getSizeInventory()];
 	}
 
-	private void setupMultiblock(){
-		def = new MultiblockStructureDefinition("armorInfuser");
-
-	}
-
 	@Override
 	public int getCharge(){
 		return 0;
@@ -40,11 +35,6 @@ public class TileEntityArmorImbuer extends TileEntityAMManaPower implements IInv
 	@Override
 	public boolean canRelayPower(PowerTypes type){
 		return false;
-	}
-
-	@Override
-	public int getChargeRate(){
-		return 10;
 	}
 
 	/*
@@ -201,10 +191,6 @@ public class TileEntityArmorImbuer extends TileEntityAMManaPower implements IInv
 		return false;
 	}
 
-	@Override
-	public MultiblockStructureDefinition getDefinition(){
-		return def;
-	}
 
 	public void imbueCurrentArmor(String string){
 		ItemStack armorStack = inventory[0];

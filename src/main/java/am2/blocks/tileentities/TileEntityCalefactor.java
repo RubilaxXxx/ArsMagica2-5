@@ -474,17 +474,6 @@ public class TileEntityCalefactor extends TileEntityAMManaPower implements IInve
 	}
 
 	@Override
-	public int getChargeRate(){
-		int numFoci = numFociOfType(ItemFocusCharge.class);
-		int base = 20;
-		if (numFoci > 0){
-			base += 27 * numFoci;
-		}
-
-		return base;
-	}
-
-	@Override
 	public boolean canRelayPower(PowerTypes type){
 		return false;
 	}

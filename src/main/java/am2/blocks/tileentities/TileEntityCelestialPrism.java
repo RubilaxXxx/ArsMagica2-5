@@ -27,15 +27,80 @@ public class TileEntityCelestialPrism extends TileEntityPowerSources implements 
 	private int particleCounter = 0;
 	private TileEntity Binded = null;
 
-
-
 	private boolean onlyChargeAtNight = false;
 
 	public TileEntityCelestialPrism(){
 		super(2500, PowerTypes.LIGHT);
+		GenerateStructureData();
+	}
 
-		powerBase = 1;
 
+	protected void checkNearbyBlockState(){
+		ArrayList<StructureGroup> groups = structure.getMatchedGroups(7, worldObj, xCoord, yCoord, zCoord);
+
+		float capsLevel = 1;
+		boolean pillarsFound = false;
+		boolean wizChalkFound = false;
+
+		for (StructureGroup group : groups){
+			if (group == pillars)
+				pillarsFound = true;
+			else if (group == wizardChalkCircle)
+				wizChalkFound = true;
+
+			for (StructureGroup cap : caps.keySet()){
+				if (group == cap){
+					capsLevel = caps.get(cap);
+					if (group == moonstone)
+						onlyChargeAtNight = true;
+					else
+						onlyChargeAtNight = false;
+					break;
+				}
+			}
+		}
+
+		powerMultiplier = 1;
+
+		if (wizChalkFound)
+			powerMultiplier = 1.25f;
+
+		if (pillarsFound)
+			powerMultiplier *= capsLevel;
+	}
+
+	private boolean isNight(){
+		long ticks = worldObj.getWorldTime() % 24000;
+		return ticks >= 12500 && ticks <= 23500;
+	}
+
+	@Override
+	public void updateEntity(){
+
+		if (surroundingCheckTicks++ % 100 == 0){
+			checkNearbyBlockState();
+			surroundingCheckTicks = 1;
+			if (!worldObj.isRemote && this.getCharge() >= this.getCapacity() * 0.1f){
+				List<EntityPlayer> nearbyPlayers = worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 2, this.yCoord, this.zCoord - 2, this.xCoord + 2, this.yCoord + 3, this.zCoord + 2));
+				for (EntityPlayer p : nearbyPlayers){
+					if (p.isPotionActive(BuffList.manaRegen.id)) continue;
+					p.addPotionEffect(new BuffEffectManaRegen(600, 1));
+				}
+			}
+		}
+
+		if (onlyChargeAtNight == isNight()){
+			PowerNodeRegistry.instance.insertPower(this, PowerTypes.LIGHT, 0.25f * powerMultiplier);
+			if (worldObj.isRemote){
+
+				if (particleCounter++ % 180 == 0){
+					particleCounter = 1;
+					AMCore.proxy.particleManager.RibbonFromPointToPoint(worldObj, xCoord + worldObj.rand.nextFloat(), yCoord + (worldObj.rand.nextFloat() * 2), zCoord + worldObj.rand.nextFloat(), xCoord + worldObj.rand.nextFloat(), yCoord + (worldObj.rand.nextFloat() * 2), zCoord + worldObj.rand.nextFloat());
+				}
+			}
+		}
+	}
+	public void GenerateStructureData(){
 		structure = new MultiblockStructureDefinition("celestialprism_structure");
 
 		StructureGroup glass = structure.createGroup("caps_glass", 2);
@@ -86,98 +151,5 @@ public class TileEntityCelestialPrism extends TileEntityPowerSources implements 
 		structure.addAllowedBlock(moonstone, 2, 2, 2, BlocksCommonProxy.AMOres, BlockAMOre.META_MOONSTONE_BLOCK);
 
 		wizardChalkCircle = structure.addWizChalkGroupToStructure(1);
-	}
-
-	protected void checkNearbyBlockState(){
-		ArrayList<StructureGroup> groups = structure.getMatchedGroups(7, worldObj, xCoord, yCoord, zCoord);
-
-		float capsLevel = 1;
-		boolean pillarsFound = false;
-		boolean wizChalkFound = false;
-
-		for (StructureGroup group : groups){
-			if (group == pillars)
-				pillarsFound = true;
-			else if (group == wizardChalkCircle)
-				wizChalkFound = true;
-
-			for (StructureGroup cap : caps.keySet()){
-				if (group == cap){
-					capsLevel = caps.get(cap);
-					if (group == moonstone)
-						onlyChargeAtNight = true;
-					else
-						onlyChargeAtNight = false;
-					break;
-				}
-			}
-		}
-
-		powerMultiplier = 1;
-
-		if (wizChalkFound)
-			powerMultiplier = 1.25f;
-
-		if (pillarsFound)
-			powerMultiplier *= capsLevel;
-	}
-
-	private boolean isNight(){
-		long ticks = worldObj.getWorldTime() % 24000;
-		return ticks >= 12500 && ticks <= 23500;
-	}
-
-	@Override
-	public void updateEntity(){
-
-		if (surroundingCheckTicks++ % 100 == 0){
-			checkNearbyBlockState();
-			surroundingCheckTicks = 1;
-			if (!worldObj.isRemote && this.getCharge() >= this.capacity * 0.1f){
-				List<EntityPlayer> nearbyPlayers = worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 2, this.yCoord, this.zCoord - 2, this.xCoord + 2, this.yCoord + 3, this.zCoord + 2));
-				for (EntityPlayer p : nearbyPlayers){
-					if (p.isPotionActive(BuffList.manaRegen.id)) continue;
-					p.addPotionEffect(new BuffEffectManaRegen(600, 1));
-				}
-			}
-		}
-
-		if (onlyChargeAtNight == isNight()){
-			PowerNodeRegistry.instance.insertPower(this, PowerTypes.LIGHT, 0.25f * powerMultiplier);
-			if (worldObj.isRemote){
-
-				if (particleCounter++ % 180 == 0){
-					particleCounter = 1;
-					AMCore.proxy.particleManager.RibbonFromPointToPoint(worldObj, xCoord + worldObj.rand.nextFloat(), yCoord + (worldObj.rand.nextFloat() * 2), zCoord + worldObj.rand.nextFloat(), xCoord + worldObj.rand.nextFloat(), yCoord + (worldObj.rand.nextFloat() * 2), zCoord + worldObj.rand.nextFloat());
-				}
-			}
-		}
-	}
-
-	@Override
-	public MultiblockStructureDefinition getDefinition(){
-		return structure;
-	}
-
-	@Override
-	public boolean canReceivePower(){
-		return false;
-	}
-
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return type == PowerTypes.LIGHT;
-	}
-
-	@Override
-	public PowerTypes[] getValidPowerTypes(){
-		return new PowerTypes[]{
-				PowerTypes.LIGHT
-		};
-	}
-
-	@Override
-	public void setCharge(int amount){
-
 	}
 }

@@ -42,11 +42,12 @@ public class TileEntityBlackAurem extends TileEntityPowerSources implements IMul
 
 	public TileEntityBlackAurem() {
 		super(10000, PowerTypes.DARK);
-
 		arcs = new HashMap();
-
 		cachedEntities = new ArrayList<EntityLivingBase>();
+		GenerateStructureData();
 
+	}
+	public void GenerateStructureData(){
 		structure = new MultiblockStructureDefinition("blackaurem_structure");
 
 		pillars = structure.createGroup("pillars", 4);

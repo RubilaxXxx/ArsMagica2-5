@@ -63,11 +63,6 @@ public class TileEntityArcaneDeconstructor extends TileEntityAMManaPower impleme
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 250;
-	}
-
-	@Override
 	public void updateEntity(){
 		super.updateEntity();
 		if (worldObj.isRemote){

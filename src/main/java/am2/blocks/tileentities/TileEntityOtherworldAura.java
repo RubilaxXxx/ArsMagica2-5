@@ -39,11 +39,6 @@ public class TileEntityOtherworldAura extends TileEntityAMManaPower{
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 100;
-	}
-
-	@Override
 	public PowerTypes[] getValidPowerTypes(){
 		return new PowerTypes[]{
 				PowerTypes.DARK,

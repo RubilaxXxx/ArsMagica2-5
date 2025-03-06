@@ -50,10 +50,10 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMManaPower implemen
 		super(250000);
 		this.isActive = false;
 		inventory = new ItemStack[getSizeInventory()];
-		initMultiblock();
+		GenerateStructureData();
 	}
 
-	public void initMultiblock(){
+	public void GenerateStructureData(){
 		//primary
 		//row 0
 		primary.addAllowedBlock(0, 0, 0, BlocksCommonProxy.keystoneRecepticle, 0);
@@ -489,11 +489,6 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMManaPower implemen
 	@Override
 	public AxisAlignedBB getRenderBoundingBox(){
 		return AxisAlignedBB.getBoundingBox(xCoord - 3, yCoord - 3, zCoord - 3, xCoord + 3, yCoord + 3, zCoord + 3);
-	}
-
-	@Override
-	public int getChargeRate(){
-		return 5;
 	}
 
 	@Override

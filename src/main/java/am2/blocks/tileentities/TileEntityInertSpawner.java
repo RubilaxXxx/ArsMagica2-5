@@ -40,11 +40,6 @@ public class TileEntityInertSpawner extends TileEntityAMManaPower implements IIn
 	}
 
 	@Override
-	public int getChargeRate() {
-		return 100;
-	}
-
-	@Override
 	public int getSizeInventory() {
 		return 1;
 	}

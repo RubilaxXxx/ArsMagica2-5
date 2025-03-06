@@ -106,11 +106,6 @@ public class TileEntitySpellReplicator extends TileEntityAMManaPower implements 
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 300;
-	}
-
-	@Override
 	public int getSizeInventory(){
 		return 1;
 	}

@@ -121,11 +121,6 @@ public class TileEntitySlipstreamGenerator extends TileEntityAMManaPower{
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 12;
-	}
-
-	@Override
 	public boolean canRelayPower(PowerTypes type){
 		return false;
 	}

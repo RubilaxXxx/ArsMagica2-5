@@ -540,11 +540,6 @@ public class TileEntitySeerStone extends TileEntityAMManaPower implements IInven
 	}
 
 	@Override
-	public int getChargeRate(){
-		return 20;
-	}
-
-	@Override
 	public PowerTypes[] getValidPowerTypes(){
 		return validTypes;
 	}

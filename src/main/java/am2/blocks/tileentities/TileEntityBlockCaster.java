@@ -419,8 +419,4 @@ public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInv
       return true;
    }
 
-   @Override
-   public int getChargeRate(){
-      return 250;
-   }
 }
