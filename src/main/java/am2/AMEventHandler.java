@@ -100,6 +100,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import static am2.network.AMNetHandler.sendTiledatatoClient;
+import static am2.utility.MathUtilities.getMovingObjectPositionFromPlayer;
 
 @SuppressWarnings("unused")
 public class AMEventHandler{
@@ -644,8 +645,8 @@ public class AMEventHandler{
 		if (ent instanceof EntityPlayer){
 			EntityPlayer player = (EntityPlayer)ent;
 			if(player.getCurrentArmor(3) != null && player.getCurrentArmor(3).getItem() instanceof ItemMagitechGoggles || ArmorHelper.isInfusionPreset(player.getCurrentArmor(3), GenericImbuement.magitechGoggleIntegration)){
-				MovingObjectPosition mop = 	((ItemMagitechGoggles)player.getCurrentArmor(3).getItem()).getMOP(world, player);
-				if(mop != null){
+				MovingObjectPosition mop = 	getMovingObjectPositionFromPlayer(world, player, false);
+				if(mop !=  null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK){
 					TileEntity tile = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 					if(tile instanceof IWrenchable && !world.isRemote && player instanceof EntityPlayerMP){
 						sendTiledatatoClient(tile, (EntityPlayerMP) player);

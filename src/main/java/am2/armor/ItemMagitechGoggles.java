@@ -3,8 +3,6 @@ package am2.armor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.world.World;
 
 public class ItemMagitechGoggles extends AMArmor{
 
@@ -27,13 +25,6 @@ public class ItemMagitechGoggles extends AMArmor{
 		return this.itemIcon;
 	}
 
-	public MovingObjectPosition getMOP(World world,EntityPlayer player){
-		MovingObjectPosition mop = this.getMovingObjectPositionFromPlayer(world, player, false);
-		if(mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK){
-			return mop;
-		}
-		return null;
-	}
 	@Override
 	public int GetDamageReduction(){
 		return 2;
