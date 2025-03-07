@@ -16,6 +16,7 @@ import am2.utility.MathUtilities;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -205,7 +206,6 @@ public class SpellBase extends ItemSpellBase{
 				return entityPos;
 			}
 		}
-
 		return entityPos != null ? entityPos : mop;
 
 	}

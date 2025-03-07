@@ -6,12 +6,14 @@ import am2.api.items.BoundItemHandler;
 import am2.api.items.IBoundItem;
 import am2.api.items.ManaItemHandler;
 import am2.api.power.IManaPower;
+import am2.api.power.IWrenchable;
 import am2.api.power.PowerTypes;
 import am2.api.spell.component.interfaces.ISkillTreeEntry;
 import am2.api.spell.enums.Affinity;
 import am2.api.spell.enums.BuffPowerLevel;
 import am2.api.spell.enums.SpellModifiers;
 import am2.armor.ArmorHelper;
+import am2.armor.ItemMagitechGoggles;
 import am2.armor.infusions.GenericImbuement;
 import am2.blocks.BlocksCommonProxy;
 import am2.blocks.tileentities.TileEntityAstralBarrier;
@@ -96,6 +98,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+
+import static am2.network.AMNetHandler.sendTiledatatoClient;
+
 @SuppressWarnings("unused")
 public class AMEventHandler{
 
@@ -638,6 +643,15 @@ public class AMEventHandler{
 
 		if (ent instanceof EntityPlayer){
 			EntityPlayer player = (EntityPlayer)ent;
+			if(player.getCurrentArmor(3) != null && player.getCurrentArmor(3).getItem() instanceof ItemMagitechGoggles || ArmorHelper.isInfusionPreset(player.getCurrentArmor(3), GenericImbuement.magitechGoggleIntegration)){
+				MovingObjectPosition mop = 	((ItemMagitechGoggles)player.getCurrentArmor(3).getItem()).getMOP(world, player);
+				if(mop != null){
+					TileEntity tile = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
+					if(tile instanceof IWrenchable && !world.isRemote && player instanceof EntityPlayerMP){
+						sendTiledatatoClient(tile, (EntityPlayerMP) player);
+					}
+				}
+			}
 			HandlePlayerSpellExtendedProperties(player, extendedProperties);
 
 			ArmorHelper.HandleArmorInfusion(player);
