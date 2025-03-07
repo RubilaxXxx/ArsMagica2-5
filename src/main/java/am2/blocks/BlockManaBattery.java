@@ -57,25 +57,6 @@ public class BlockManaBattery extends PoweredBlock{
 //		else
 //			return 0;
 //	}
-	@Override
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9){
-		if (!super.onBlockActivated(par1World, par2, par3, par4, par5EntityPlayer, par6, par7, par8, par9))
-			return true;
-		TileEntityManaBattery te = getTileEntity(par1World, par2, par3, par4);
-		if (te != null){
-			PowerTypes type = te.getPowerType();
-			int power = te.getCharge();
-			if (AMCore.config.colourblindMode()){
-				par5EntityPlayer.addChatMessage(new ChatComponentText(String.format("Charge Level:  %% [%s]", te.getCharge() / te.getCapacity() * 100, getColorNameFromPowerType(te.getPowerType()))));
-			}else{
-				par5EntityPlayer.addChatMessage(new ChatComponentText(String.format(StatCollector.translateToLocal("am2.tooltip.containedpower"),String.format("%%", power), type.chatColor(), type.name())));
-				}
-		}
-
-
-
-		return true;
-	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int i){
@@ -98,7 +79,7 @@ public class BlockManaBattery extends PoweredBlock{
 				System.out.print("FOUND TE");
 				if (stack.stackTagCompound.hasKey(TileEntityManaBattery.TAG_POWERAMOUNT) && stack.stackTagCompound.hasKey(TileEntityManaBattery.TAG_OUTPUTTYPE)){
 					System.out.print("FOUND DATA");
-					te.setPower(PowerTypes.getByID(stack.stackTagCompound.getInteger(TileEntityManaBattery.TAG_OUTPUTTYPE)),stack.stackTagCompound.getInteger(TileEntityManaBattery.TAG_POWERAMOUNT));
+					te.setCharge(PowerTypes.getByID(stack.stackTagCompound.getInteger(TileEntityManaBattery.TAG_OUTPUTTYPE)),stack.stackTagCompound.getInteger(TileEntityManaBattery.TAG_POWERAMOUNT));
 				}
 			}
 

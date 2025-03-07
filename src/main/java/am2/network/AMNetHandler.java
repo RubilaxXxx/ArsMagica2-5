@@ -26,6 +26,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -314,5 +315,11 @@ public class AMNetHandler{
 
 	public void sendAffinityActivate(){
 		sendPacketToServer(AMPacketIDs.AFFINITY_ACTIVATE, new byte[0]);
+	}
+
+	public static void sendTiledatatoClient(TileEntity tile, EntityPlayerMP player){
+		NBTTagCompound nbttagcompound = new NBTTagCompound();
+		tile.writeToNBT(nbttagcompound);
+		player.playerNetServerHandler.sendPacket(new S35PacketUpdateTileEntity(tile.xCoord, tile.yCoord, tile.zCoord, -888, nbttagcompound));
 	}
 }

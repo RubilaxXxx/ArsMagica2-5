@@ -627,7 +627,6 @@ public class AMEventHandler{
 				}
 			}
 		}
-
 		World world = ent.worldObj;
 
 		BuffStatModifiers.instance.applyStatModifiersBasedOnBuffs(ent);

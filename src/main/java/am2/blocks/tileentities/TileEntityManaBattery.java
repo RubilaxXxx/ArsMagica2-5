@@ -7,13 +7,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class TileEntityManaBattery extends TileEntityAMManaPower{
 	private static final String ACTIVE = "active";
-	public static final String TAG_OUTPUTTYPE = "outputType";
-	public static final String TAG_POWERAMOUNT = "PowerAmount";
-
-
-	private PowerTypes outputPowerType = PowerTypes.NONE;
 	private int tick = 0;
-	private int poweramount = 0;
+
 
 
 	public TileEntityManaBattery(){
@@ -40,7 +35,7 @@ public class TileEntityManaBattery extends TileEntityAMManaPower{
 			this.setPowerRequests();
 		}
 		if(!worldObj.isRemote){
-			if (this.canRequestPower && getRequestInterval() <= tick){
+			if (this.IsActive() && getRequestInterval() <= tick){
 				tick = 0;
 				if (GetBinded() != null && ((IManaPower)GetBinded()).getCharge() > 0){
 					return;
@@ -58,8 +53,8 @@ public class TileEntityManaBattery extends TileEntityAMManaPower{
 	public void writeToNBT(NBTTagCompound nbttagcompound){
 		super.writeToNBT(nbttagcompound);
 		nbttagcompound.setBoolean(ACTIVE, this.IsActive());
-		nbttagcompound.setInteger(TAG_OUTPUTTYPE, outputPowerType.ID());
-		nbttagcompound.setInteger(TAG_POWERAMOUNT, getCharge());
+
+
 
 	}
 
@@ -71,43 +66,14 @@ public class TileEntityManaBattery extends TileEntityAMManaPower{
 		}else{
 			this.setNoPowerRequests();
 		}
-		if (nbttagcompound.hasKey(TAG_OUTPUTTYPE) && nbttagcompound.hasKey(TAG_POWERAMOUNT)){
-			outputPowerType = PowerTypes.getByID(nbttagcompound.getInteger(TAG_OUTPUTTYPE));
-			this.setPower(outputPowerType, nbttagcompound.getInteger(TAG_POWERAMOUNT));
-		}
-	}
 
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
 	}
 
 
 	//------------------------------------------
 	//---           SETTERS               ------
 	//------------------------------------------
-	private void setCharge(int amount){
-		this.poweramount = Math.max(0, Math.min(getCharge() + amount, getCapacity()));
 
-	}
-	public void setPower(PowerTypes type, int amount){
-		if(outputPowerType != PowerTypes.NONE && outputPowerType != type){
-			return;
-		}
-		else if(outputPowerType == PowerTypes.NONE){
-			outputPowerType = type;
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, type.ID(), 2);
-			setCharge(amount);
-			this.markDirty();
-			return;
-		}
-		setCharge(amount);
-		this.markDirty();
-	}
-
-	public int getCharge(){
-		return this.poweramount;
-	}
 
 
 

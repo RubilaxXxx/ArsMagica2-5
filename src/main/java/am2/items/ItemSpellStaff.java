@@ -1,6 +1,7 @@
 package am2.items;
 
 import am2.api.power.IManaPower;
+import am2.api.power.IWrenchable;
 import am2.api.power.PowerTypes;
 import am2.api.spell.component.interfaces.ISpellShape;
 import am2.api.spell.enums.SpellCastResult;
@@ -196,19 +197,13 @@ public class ItemSpellStaff extends ArsMagicaItem{
 		if (isMagiTechStaff()){
 			if (!world.isRemote){
 				TileEntity te = world.getTileEntity(x, y, z);
-				if (te instanceof IManaPower){
-						PowerTypes[] types = ((IManaPower)te).getValidPowerTypes();
-						for (PowerTypes type : types){
-							float power = PowerNodeRegistry.instance.getPower((IManaPower)te, type);
-							player.addChatMessage(new ChatComponentText(String.format(StatCollector.translateToLocal("am2.tooltip.det_eth"),
-													type.chatColor(), type.name(), String.format("%.2f", power))));
-						}
+				if (te instanceof IWrenchable){
+					((IWrenchable)te).WrenchClick(player, stack);
 
+				}
 					return true;
 				}
 			}
-		}
-
 		return false;
 	}
 

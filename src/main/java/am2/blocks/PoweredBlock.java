@@ -4,6 +4,8 @@ import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import am2.blocks.tileentities.TileEntityAMManaPower;
 import am2.blocks.tileentities.TileEntityManaBattery;
+import am2.blocks.tileentities.TileEntityObelisk;
+import am2.blocks.tileentities.TileEntityPowerSources;
 import am2.items.ItemsCommonProxy;
 import am2.power.PowerNodeRegistry;
 import net.minecraft.block.Block;
@@ -24,7 +26,7 @@ public abstract class PoweredBlock extends AMBlockContainer{
 
 	protected boolean HandleSpecialItems(World world, EntityPlayer player, int x, int y, int z){
 		TileEntity te = world.getTileEntity(x, y, z);
-		if (!(te instanceof TileEntityAMManaPower)){
+		if (!((te instanceof TileEntityPowerSources) || te instanceof TileEntityAMManaPower)){
 			return false;
 		}
 

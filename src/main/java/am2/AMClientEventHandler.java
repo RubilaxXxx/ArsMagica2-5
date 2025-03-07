@@ -2,6 +2,7 @@ package am2;
 
 import am2.api.math.AMVector3;
 import am2.api.power.IManaPower;
+import am2.api.power.IWrenchable;
 import am2.api.power.PowerTypes;
 import am2.armor.AMArmor;
 import am2.armor.ArmorHelper;
@@ -64,20 +65,12 @@ public class AMClientEventHandler{
 
 		if (AMCore.proxy.getLocalPlayer().getCurrentArmor(3) != null &&
 				(AMCore.proxy.getLocalPlayer().getCurrentArmor(3).getItem() == ItemsCommonProxy.magitechGoggles ||
-						ArmorHelper.isInfusionPreset(AMCore.proxy.getLocalPlayer().getCurrentArmor(3), GenericImbuement.magitechGoggleIntegration))
-				){
-
+						ArmorHelper.isInfusionPreset(AMCore.proxy.getLocalPlayer().getCurrentArmor(3), GenericImbuement.magitechGoggleIntegration))){
 			TileEntity te = event.player.worldObj.getTileEntity(event.target.blockX, event.target.blockY, event.target.blockZ);
-			if (te instanceof IManaPower){
-				AMCore.proxy.setTrackedLocation(new AMVector3(event.target.blockX, event.target.blockY, event.target.blockZ));
-			}else{
-				AMCore.proxy.setTrackedLocation(AMVector3.zero());
-			}
 
-			if (AMCore.proxy.hasTrackedLocationSynced()){
+			if (te instanceof IWrenchable){
 				renderPowerFloatingText(event, te);
 			}
-
 			if (te instanceof TileEntityCrystalMarker){
 				renderPriorityText(event, (TileEntityCrystalMarker)te);
 			}
@@ -91,22 +84,22 @@ public class AMClientEventHandler{
 		if (Manatile != null){
 			GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_LIGHTING_BIT);
 			for (PowerTypes type : Manatile.getValidPowerTypes()){
-				float pwr = Manatile.getCharge();
-				float pct = pwr / ((IManaPower)te).getCapacity() * 100;
+				int pwr = Manatile.getCharge();
+				float pct = ((float)pwr / ((IManaPower)te).getCapacity() * 100);
 				AMVector3 offset = new AMVector3(event.target.blockX + 0.5, event.target.blockY + 0.5, event.target.blockZ + 0.5).sub(
 						new AMVector3((event.player.prevPosX - (event.player.prevPosX - event.player.posX) * event.partialTicks),
 								(event.player.prevPosY - (event.player.prevPosY - event.player.posY) * event.partialTicks) + event.player.getEyeHeight(),
 								(event.player.prevPosZ - (event.player.prevPosZ - event.player.posZ) * event.partialTicks)));
 				offset = offset.normalize();
 				if (event.target.blockY <= event.player.posY - 0.5){
-					RenderUtilities.drawTextInWorldAtOffset(String.format("%s%.2f (%.2f%%)", type.chatColor(), pwr, pct),
+					RenderUtilities.drawTextInWorldAtOffset(String.format("%s %d (%.2f%%)", type.chatColor(), pwr, pct),
 							event.target.blockX - (event.player.prevPosX - (event.player.prevPosX - event.player.posX) * event.partialTicks) + 0.5f - offset.x,
 							event.target.blockY + yOff - (event.player.prevPosY - (event.player.prevPosY - event.player.posY) * event.partialTicks) + block.getBlockBoundsMaxY() * 0.8f,
 							event.target.blockZ - (event.player.prevPosZ - (event.player.prevPosZ - event.player.posZ) * event.partialTicks) + 0.5f - offset.z,
 							0xFFFFFF);
 					yOff += 0.12f;
 				}else{
-					RenderUtilities.drawTextInWorldAtOffset(String.format("%s%.2f (%.2f%%)", type.chatColor(), pwr, pct),
+					RenderUtilities.drawTextInWorldAtOffset(String.format("%s %d (%.2f%%)", type.chatColor(), pwr, pct),
 							event.target.blockX - (event.player.prevPosX - (event.player.prevPosX - event.player.posX) * event.partialTicks) + 0.5f - offset.x,
 							event.target.blockY - yOff - (event.player.prevPosY - (event.player.prevPosY - event.player.posY) * event.partialTicks) - block.getBlockBoundsMaxY() * 0.2f,
 							event.target.blockZ - (event.player.prevPosZ - (event.player.prevPosZ - event.player.posZ) * event.partialTicks) + 0.5f - offset.z,

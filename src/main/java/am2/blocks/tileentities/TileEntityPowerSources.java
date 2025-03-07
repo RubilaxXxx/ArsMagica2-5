@@ -1,35 +1,43 @@
 package am2.blocks.tileentities;
 
 import am2.api.blocks.MultiblockStructureDefinition;
-import am2.api.power.IBindable;
+
 import am2.api.power.IManaPower;
+import am2.api.power.IBindable;
 import am2.api.power.IPowerSource;
+import am2.api.power.IWrenchable;
 import am2.api.power.PowerTypes;
 import am2.multiblock.IMultiblockStructureController;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
 
-public class TileEntityPowerSources extends TileEntity implements IManaPower, IBindable, IMultiblockStructureController, IPowerSource{
+import static am2.network.AMNetHandler.sendTiledatatoClient;
+
+public class TileEntityPowerSources extends TileEntity implements IManaPower, IBindable, IMultiblockStructureController, IPowerSource, IWrenchable{
 	protected PowerTypes type;
 	protected int capacity;
 	protected int surroundingCheckTicks;
 	protected int poweramount;
-	protected int powerBase;
-	protected float powerMultiplier;
+	protected int powerBase = 5;
+	protected int powerMultiplier = 1;
 	protected MultiblockStructureDefinition structure;
 	protected MultiblockStructureDefinition.StructureGroup wizardChalkCircle;
 	protected MultiblockStructureDefinition.StructureGroup pillars;
-	protected HashMap<MultiblockStructureDefinition.StructureGroup, Float> caps;
+	protected HashMap<MultiblockStructureDefinition.StructureGroup, Integer> caps;
 	protected String TAG_POWERAMOUNT = "poweramount";
 
 
@@ -47,6 +55,19 @@ public class TileEntityPowerSources extends TileEntity implements IManaPower, IB
 	@Override
 	public boolean unbind(World world, int x, int y, int z){
 		return false;
+	}
+
+	@Override
+	public void WrenchClick(EntityPlayer player, ItemStack stack){
+		if(player == null)return;
+		if(!worldObj.isRemote){
+			if(player instanceof EntityPlayerMP){
+				sendTiledatatoClient(this, (EntityPlayerMP)player);
+
+			}
+		}
+		player.addChatMessage(new ChatComponentText(String.format(StatCollector.translateToLocal("am2.tooltip.det_eth"),
+				type.chatColor(), type.name(), getCharge())));
 	}
 
 	@Override
@@ -72,7 +93,7 @@ public class TileEntityPowerSources extends TileEntity implements IManaPower, IB
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound){
 		super.readFromNBT(nbttagcompound);
-		setCharge(nbttagcompound.getInteger(TAG_POWERAMOUNT));
+		setPower(nbttagcompound.getInteger(TAG_POWERAMOUNT));
 	}
 
 	@Override
@@ -92,7 +113,7 @@ public class TileEntityPowerSources extends TileEntity implements IManaPower, IB
 
 	@Override
 	public PowerTypes[] getValidPowerTypes(){
-		return new PowerTypes[0];
+		return new PowerTypes[]{type};
 	}
 
 	@Override
@@ -123,8 +144,15 @@ public class TileEntityPowerSources extends TileEntity implements IManaPower, IB
 		return this.structure;
 	}
 
+	public void SetChargeRate(int chargerate){
+		this.powerBase = chargerate;
+	}
+
 	@Override
 	public void setCharge(int amount){
 		 this.poweramount = Math.max(0, Math.min(getCharge() + amount, getCapacity()));
+	}
+	private void setPower(int power){
+		this.poweramount = Math.min(power, getCapacity());
 	}
 }

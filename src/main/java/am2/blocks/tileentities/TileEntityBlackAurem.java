@@ -52,13 +52,13 @@ public class TileEntityBlackAurem extends TileEntityPowerSources implements IMul
 
 		pillars = structure.createGroup("pillars", 4);
 
-		caps = new HashMap<StructureGroup, Float>();
+		caps = new HashMap<StructureGroup, Integer>();
 		StructureGroup chimerite = structure.createGroup("caps_chimerite", 2);
 		StructureGroup obsidian = structure.createGroup("caps_obsidian", 2);
 		StructureGroup sunstone = structure.createGroup("caps_sunstone", 2);
-		caps.put(chimerite, 1.1f);
-		caps.put(obsidian, 1.5f);
-		caps.put(sunstone, 2f);
+		caps.put(chimerite, 1);
+		caps.put(obsidian, 2);
+		caps.put(sunstone, 3);
 
 		structure.addAllowedBlock(0, 0, 0, BlocksCommonProxy.blackAurem);
 
@@ -92,10 +92,10 @@ public class TileEntityBlackAurem extends TileEntityPowerSources implements IMul
 	protected void checkNearbyBlockState() {
 		ArrayList<StructureGroup> groups = structure.getMatchedGroups(7, worldObj, xCoord, yCoord, zCoord);
 
-		float capsLevel = 1;
+		int capsLevel = 1;
 		boolean pillarsFound = false;
 		boolean wizChalkFound = false;
-
+		powerMultiplier = 1;
 		for (StructureGroup group : groups) {
 			if (group == pillars)
 				pillarsFound = true;
@@ -110,10 +110,9 @@ public class TileEntityBlackAurem extends TileEntityPowerSources implements IMul
 			}
 		}
 
-		powerMultiplier = 1;
 
 		if (wizChalkFound)
-			powerMultiplier = 1.25f;
+			powerMultiplier = 2;
 
 		if (pillarsFound)
 			powerMultiplier *= capsLevel;

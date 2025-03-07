@@ -3,8 +3,7 @@ package am2.interop;
 import am2.blocks.BlocksCommonProxy;
 import am2.blocks.RecipesEssenceRefiner;
 import am2.items.RecipeArsMagica;
-import am2.items.RecipesArsMagica;
-import am2.texture.ResourceManager;
+
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
@@ -13,9 +12,9 @@ import codechicken.nei.recipe.HandlerInfo;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.oredict.OreDictionary;
+
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;

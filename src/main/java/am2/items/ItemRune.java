@@ -291,7 +291,7 @@ public class ItemRune extends ArsMagicaItem{
 			if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK){
 				TileEntity block = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 				if (block instanceof TileEntityManaBattery){
-					((TileEntityManaBattery)block).setPower(PowerTypes.NEUTRAL, ((TileEntityManaBattery)block).getCapacity());
+					((TileEntityManaBattery)block).setCharge(PowerTypes.NEUTRAL, ((TileEntityManaBattery)block).getCapacity());
 				}
 			}
 		}

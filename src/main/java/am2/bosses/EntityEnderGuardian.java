@@ -4,9 +4,9 @@ import am2.AMCore;
 import am2.api.math.AMVector3;
 import am2.bosses.ai.*;
 import am2.buffs.BuffList;
-import am2.damage.DamageSourceFire;
-import am2.damage.DamageSourceFrost;
 import am2.damage.DamageSources;
+import am2.items.ItemEssence;
+import am2.items.ItemRune;
 import am2.items.ItemsCommonProxy;
 import am2.playerextensions.ExtendedProperties;
 import net.minecraft.entity.EntityLivingBase;
@@ -145,17 +145,8 @@ public class EntityEnderGuardian extends AM2Boss implements IAnimatedEntity{
 
 	@Override
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2){
-
-		int you = 0;
-		int should = 0;
-		int not = 0;
-		int be = 0;
-		int looking = 0;
-		int here = 0;
-		int cheater = 0;
-
 		if (par1DamageSource.getSourceOfDamage() instanceof EntityEnderman){
-			((EntityEnderman)par1DamageSource.getSourceOfDamage()).attackEntityFrom(DamageSources.wtfBoom, 5000);
+			par1DamageSource.getSourceOfDamage().attackEntityFrom(DamageSources.wtfBoom, 5000);
 			this.heal(10);
 			return false;
 		}
@@ -175,7 +166,7 @@ public class EntityEnderGuardian extends AM2Boss implements IAnimatedEntity{
 		ticksSinceLastAttack = 0;
 
 		if (!worldObj.isRemote && par1DamageSource.getSourceOfDamage() != null && par1DamageSource.getSourceOfDamage() instanceof EntityPlayer){
-			if (par1DamageSource.damageType == this.lastDamageType){
+			if (par1DamageSource.damageType.equals(this.lastDamageType)){
 				hitCount++;
 				if (hitCount > 5)
 					this.heal(par2 / 4);
@@ -268,12 +259,12 @@ public class EntityEnderGuardian extends AM2Boss implements IAnimatedEntity{
 	@Override
 	protected void dropFewItems(boolean par1, int par2){
 		if (par1)
-			this.entityDropItem(new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_INF_ORB_RED), 0.0f);
+			this.entityDropItem(new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_INF_ORB_RED), 0.0f);
 
 		int i = rand.nextInt(4);
 
 		for (int j = 0; j < i; j++){
-			this.entityDropItem(new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_ENDER), 0.0f);
+			this.entityDropItem(new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_ENDER), 0.0f);
 		}
 
 		i = rand.nextInt(10);

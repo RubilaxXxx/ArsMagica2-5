@@ -52,7 +52,7 @@ public class SetSkillKnown extends CommandBase{
 		if (player == null) return;
 		LearnSkill(var1, player, skill);
 	}
-	public void LearnSkill(ICommandSender sender, EntityPlayer player, String skill){
+	private void LearnSkill(ICommandSender sender, EntityPlayer player, String skill){
 
 		ISkillTreeEntry entry = SkillManager.instance.getSkill(skill);
 		if(SkillTreeManager.instance.getSkillPointTypeForPart(entry) == SkillPointTypes.SILVER){

@@ -3,6 +3,7 @@ package am2.spell.components;
 import am2.AMCore;
 import am2.api.spell.component.interfaces.ISpellComponent;
 import am2.api.spell.enums.Affinity;
+import am2.blocks.BlockAMOre;
 import am2.blocks.BlocksCommonProxy;
 import am2.items.ItemSpellBook;
 import am2.items.ItemsCommonProxy;
@@ -41,7 +42,7 @@ public class Appropriation implements ISpellComponent{
 	public Object[] getRecipeItems(){
 		return new Object[]{
 				Items.ender_pearl,
-				new ItemStack(BlocksCommonProxy.AMOres, 1, BlocksCommonProxy.AMOres.META_CHIMERITE_BLOCK),
+				new ItemStack(BlocksCommonProxy.AMOres, 1, BlockAMOre.META_CHIMERITE_BLOCK),
 				Blocks.chest
 		};
 	}
@@ -73,7 +74,7 @@ public class Appropriation implements ISpellComponent{
 		}
 
 		for (String s : AMCore.config.getAppropriationBlockBlacklist()){
-			if (block.getUnlocalizedName() == s){
+			if (block.getUnlocalizedName().equals(s)){
 				return false;
 			}
 		}

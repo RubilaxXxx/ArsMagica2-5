@@ -38,10 +38,8 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 	public float offsetY = 0;
 	public int burnTimeRemaining = 0;
 	public int maxBurnTime = 1;
-	private static final byte PK_BURNTIME_CHANGE = 1;
-	private static final int GROUP_CHISELED_STONE = 0;
 	//TAGS
-	private static final String TAG_POWERAMOUNT = "poweramount";
+
 	private static final String TAG_BURNTIMEREMAINING = "burntimeremaining";
 	private static final String TAG_BURNINVENTORY = "burninventory";
 
@@ -55,6 +53,7 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 		super(capacity,PowerTypes.NEUTRAL);
 		surroundingCheckTicks = 0;
 		GenerateStructureData();
+
 	}
 
 	public boolean isActive(){
@@ -100,10 +99,10 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 	protected void checkNearbyBlockState(){
 		ArrayList<StructureGroup> groups = structure.getMatchedGroups(7, worldObj, xCoord, yCoord, zCoord);
 
-		float capsLevel = 1;
+		int capsLevel = 1;
 		boolean pillarsFound = false;
 		boolean wizChalkFound = false;
-
+		powerMultiplier = 1;
 		for (StructureGroup group : groups){
 			if (group == pillars)
 				pillarsFound = true;
@@ -117,10 +116,8 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 			}
 		}
 
-		powerMultiplier = 1;
-
 		if (wizChalkFound)
-			powerMultiplier = 1.25f;
+			powerMultiplier = 2;
 
 		if (pillarsFound)
 			powerMultiplier *= capsLevel;
@@ -133,6 +130,7 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 		active = false;
 		if(surroundingCheckTicks % 100 == 0){
 			checkNearbyBlockState();
+
 			surroundingCheckTicks = 1;
 		}
 		if(burnTimeRemaining > 0){
@@ -157,7 +155,7 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 				}
 				if (burnTimeRemaining > 0 && burnTimeRemaining % 20 == 0){
 					active = true;
-					this.setCharge((int)(powerBase * powerMultiplier));
+					this.setCharge((powerBase * powerMultiplier));
 					sendCookUpdateToClients();
 				}
 			}
@@ -223,9 +221,9 @@ public class TileEntityObelisk extends TileEntityPowerSources implements IMultib
 		structure = new MultiblockStructureDefinition("obelisk_structure");
 
 		pillars = structure.createGroup("pillars", 2);
-		caps = new HashMap<StructureGroup, Float>();
+		caps = new HashMap<StructureGroup, Integer>();
 		StructureGroup chiseled = structure.createGroup("caps_chiseled_stone", 4);
-		caps.put(chiseled, 1.35f);
+		caps.put(chiseled, 2);
 
 		structure.addAllowedBlock(0, 0, 0, BlocksCommonProxy.obelisk);
 
