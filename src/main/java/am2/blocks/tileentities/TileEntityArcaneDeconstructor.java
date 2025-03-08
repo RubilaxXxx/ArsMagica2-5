@@ -31,14 +31,14 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
 
-public class TileEntityArcaneDeconstructor extends TileEntityAMManaPower implements IInventory, ISidedInventory, IKeystoneLockable{
+import static am2.api.power.PowerTypes.DARK;
+
+public class TileEntityArcaneDeconstructor extends TileEntityManaConsumer implements IInventory, ISidedInventory, IKeystoneLockable{
 
 	private int particleCounter;
 	private static final float DECONSTRUCTION_POWER_COST = 1.25f; //power cost per tick
 	private static final int DECONSTRUCTION_TIME = 200; //how long does it take to deconstruct something?
 	private int current_deconstruction_time = 0; //how long have we been deconstructing something?
-
-	private static final PowerTypes[] validPowerTypes = new PowerTypes[]{PowerTypes.DARK};
 
 	@SideOnly(Side.CLIENT)
 	AMParticle radiant;
@@ -48,18 +48,8 @@ public class TileEntityArcaneDeconstructor extends TileEntityAMManaPower impleme
 	private ItemStack[] deconstructionRecipe;
 
 	public TileEntityArcaneDeconstructor(){
-		super(500);
+		super(500, new PowerTypes[]{DARK});
 		inventory = new ItemStack[getSizeInventory()];
-	}
-
-	@Override
-	public int getCharge(){
-		return 0;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
 	}
 
 	@Override
@@ -87,7 +77,7 @@ public class TileEntityArcaneDeconstructor extends TileEntityAMManaPower impleme
 					deconstructionRecipe = null;
 					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				}else{
-					if (PowerNodeRegistry.instance.checkPower(this, PowerTypes.DARK, DECONSTRUCTION_POWER_COST)){
+					if (PowerNodeRegistry.instance.checkPower(this, DARK, DECONSTRUCTION_POWER_COST)){
 						if (deconstructionRecipe == null){
 							if (!getDeconstructionRecipe()){
 								transferOrEjectItem(inventory[0]);
@@ -107,7 +97,7 @@ public class TileEntityArcaneDeconstructor extends TileEntityAMManaPower impleme
 							if (current_deconstruction_time % 10 == 0)
 								worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 						}
-						PowerNodeRegistry.instance.consumePower(this, PowerTypes.DARK, DECONSTRUCTION_POWER_COST);
+						PowerNodeRegistry.instance.consumePower(this, DARK, DECONSTRUCTION_POWER_COST);
 					}
 				}
 			}
@@ -383,10 +373,6 @@ public class TileEntityArcaneDeconstructor extends TileEntityAMManaPower impleme
 		return false;
 	}
 
-	@Override
-	public PowerTypes[] getValidPowerTypes(){
-		return validPowerTypes;
-	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound){

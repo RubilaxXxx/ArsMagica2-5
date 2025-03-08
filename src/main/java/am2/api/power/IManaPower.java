@@ -17,6 +17,16 @@ public interface IManaPower{
 	 */
 
 	int getCharge();
+
+
+	void setCharge(PowerTypes type, int amount);
+
+
+	void setCharge(int amount);
+
+
+
+
 	/**
 	 * Can this block provide power?
 	 *

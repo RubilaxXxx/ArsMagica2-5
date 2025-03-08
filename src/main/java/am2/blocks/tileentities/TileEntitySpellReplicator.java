@@ -24,14 +24,16 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.List;
 
-public class TileEntitySpellReplicator extends TileEntityAMManaPower implements IInventory{
+import static am2.api.power.PowerTypes.LIGHT;
+
+public class TileEntitySpellReplicator extends TileEntityManaConsumer implements IInventory{
 	public float yetToConsume;
 	private ItemStack[] inventory;
 	@SideOnly(Side.CLIENT)
 	AMParticle particle;
 
 	public TileEntitySpellReplicator(){
-		super(30000);
+		super(30000, new PowerTypes[]{LIGHT});
 		inventory = new ItemStack[getSizeInventory()];
 		yetToConsume = -1;
 	}
@@ -57,8 +59,8 @@ public class TileEntitySpellReplicator extends TileEntityAMManaPower implements 
 			yetToConsume = getTotalReplicateCost();
 		} else if (yetToConsume > 0){
 			if (!worldObj.isRemote){
-				float availablePower = PowerNodeRegistry.instance.getPower(this, PowerTypes.LIGHT);
-				PowerNodeRegistry.instance.consumePower(this, PowerTypes.LIGHT, Math.min(yetToConsume, Math.min(availablePower, 100)));
+				float availablePower = PowerNodeRegistry.instance.getPower(this, LIGHT);
+				PowerNodeRegistry.instance.consumePower(this, LIGHT, Math.min(yetToConsume, Math.min(availablePower, 100)));
 				yetToConsume -= Math.min(yetToConsume, Math.min(availablePower, 100));
 			}
 		} else if (this.inventory[0] != null && yetToConsume == 0){
@@ -88,21 +90,6 @@ public class TileEntitySpellReplicator extends TileEntityAMManaPower implements 
 	private float getTotalReplicateCost(){
 		if (this.inventory[0] != null && this.inventory[0].getItem() instanceof SpellBase) return SpellUtils.instance.getSpellRequirements(this.inventory[0], this.worldObj.getClosestPlayer(this.xCoord, this.yCoord, this.zCoord, -1)).manaCost * 10;
 		return -1;
-	}
-
-	@Override
-	public int getCharge(){
-		return 0;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
-
-	@Override
-	public PowerTypes[] getValidPowerTypes(){
-		return new PowerTypes[]{PowerTypes.LIGHT};
 	}
 
 	@Override

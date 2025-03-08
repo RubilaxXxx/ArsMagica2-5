@@ -28,7 +28,9 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
 
-public class TileEntitySeerStone extends TileEntityAMManaPower implements IInventory, IKeystoneLockable{
+import static am2.api.power.PowerTypes.LIGHT;
+
+public class TileEntitySeerStone extends TileEntityManaConsumer implements IInventory, IKeystoneLockable{
 
 	private boolean hasSight;
 	private ArrayList<SpriteRenderInfo> animations;
@@ -40,14 +42,12 @@ public class TileEntitySeerStone extends TileEntityAMManaPower implements IInven
 	int tickCounter;
 	public static int keystoneSlot = 1;
 
-	private PowerTypes[] validTypes = new PowerTypes[]{
-			PowerTypes.LIGHT
-	};
+
 
 	boolean swapDetectionMode = false;
 
 	public TileEntitySeerStone(){
-		super(100);
+		super(100,  new PowerTypes[]{LIGHT});
 		hasSight = false;
 		tickCounter = 0;
 		animations = new ArrayList<SpriteRenderInfo>();
@@ -148,7 +148,7 @@ public class TileEntitySeerStone extends TileEntityAMManaPower implements IInven
 	public boolean isActive(){
 		if (this.worldObj == null)
 			return false;
-		return PowerNodeRegistry.instance.checkPower(this, PowerTypes.LIGHT, this.hasSight ? 2 : 1) && GetSearchRadius() > 0;
+		return PowerNodeRegistry.instance.checkPower(this, LIGHT, this.hasSight ? 2 : 1) && GetSearchRadius() > 0;
 	}
 
 	@Override
@@ -169,9 +169,9 @@ public class TileEntitySeerStone extends TileEntityAMManaPower implements IInven
 
 		if (!worldObj.isRemote && isActive()){
 			if (hasSight)
-				PowerNodeRegistry.instance.consumePower(this, PowerTypes.LIGHT, 0.25f);
+				PowerNodeRegistry.instance.consumePower(this, LIGHT, 0.25f);
 			else
-				PowerNodeRegistry.instance.consumePower(this, PowerTypes.LIGHT, 0.125f);
+				PowerNodeRegistry.instance.consumePower(this, LIGHT, 0.125f);
 		}
 
 		ticksToNextCheck--;
@@ -321,8 +321,6 @@ public class TileEntitySeerStone extends TileEntityAMManaPower implements IInven
 		this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, BlocksCommonProxy.seerStone);
 		switch (this.getBlockMetadata()){
 		case 0:
-			this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord + 1, zCoord, BlocksCommonProxy.seerStone);
-			break;
 		case 1:
 			this.worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord + 1, zCoord, BlocksCommonProxy.seerStone);
 			break;
@@ -362,8 +360,7 @@ public class TileEntitySeerStone extends TileEntityAMManaPower implements IInven
 				focusLevel = tempFocusLevel;
 			}
 		}
-		int radius = (focusLevel + 1) * 5;
-		return radius;
+		return (focusLevel + 1) * 5;
 	}
 
 	private Class GetSearchClass(){
@@ -507,27 +504,18 @@ public class TileEntitySeerStone extends TileEntityAMManaPower implements IInven
 		nbttagcompound.setTag("SeerStoneInventory", nbttaglist);
 	}
 
-	@Override
-	public int getCharge(){
-		return 0;
-	}
 
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return false;
-	}
-
-	private void writeInventory(AMDataWriter writer){
-		for (ItemStack stack : inventory){
-			if (stack == null){
-				writer.add(false);
-				continue;
-			}else{
-				writer.add(true);
-				writer.add(stack);
-			}
-		}
-	}
+//	private void writeInventory(AMDataWriter writer){
+//		for (ItemStack stack : inventory){
+//			if (stack == null){
+//				writer.add(false);
+//				continue;
+//			}else{
+//				writer.add(true);
+//				writer.add(stack);
+//			}
+//		}
+//	}
 
 	@Override
 	public boolean hasCustomInventoryName(){
@@ -539,13 +527,4 @@ public class TileEntitySeerStone extends TileEntityAMManaPower implements IInven
 		return false;
 	}
 
-	@Override
-	public PowerTypes[] getValidPowerTypes(){
-		return validTypes;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
 }

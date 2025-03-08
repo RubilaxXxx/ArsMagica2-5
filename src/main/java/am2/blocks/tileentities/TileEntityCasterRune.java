@@ -13,7 +13,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-public class TileEntityCasterRune extends TileEntityBlockCaster {
+public class TileEntityCasterRune extends TileEntityBlockCaster{
    private int castCooldown;
    private static final int maxCastCooldown = 20;
 

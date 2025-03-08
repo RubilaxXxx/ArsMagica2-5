@@ -15,8 +15,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public class BlockInertSpawner extends PoweredBlock{
 
 	protected BlockInertSpawner(){

@@ -26,11 +26,13 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntityCalefactor extends TileEntityAMManaPower implements IInventory, ISidedInventory, IKeystoneLockable{
+import static am2.api.power.PowerTypes.ALL;
+
+public class TileEntityCalefactor extends TileEntityManaConsumer implements IInventory, ISidedInventory, IKeystoneLockable{
 
 	private ItemStack calefactorItemStacks[];
 	private float rotationX, rotationY, rotationZ;
-	private float rotationStepX;
+	private float rotationStepX, rotationStepY, rotationStepZ;
 	private final short baseCookTime = 220; //default to the same as a standard furnace
 	private short timeSpentCooking = 0;
 	private final float basePowerConsumedPerTickCooking = 0.85f;
@@ -41,7 +43,7 @@ public class TileEntityCalefactor extends TileEntityAMManaPower implements IInve
 	private boolean isFirstTick = true;
 
 	public TileEntityCalefactor(){
-		super(100);
+		super(100, ALL);
 
 		calefactorItemStacks = new ItemStack[getSizeInventory()];
 
@@ -86,8 +88,8 @@ public class TileEntityCalefactor extends TileEntityAMManaPower implements IInve
 
 	public void incrementRotations(){
 		rotationX += rotationStepX;
-		rotationY += rotationStepX;
-		rotationZ += rotationStepX;
+		rotationY += rotationStepY;
+		rotationZ += rotationStepZ;
 
 		if (rotationX > 359) rotationX -= 360;
 		if (rotationY > 359) rotationY -= 360;
@@ -103,11 +105,11 @@ public class TileEntityCalefactor extends TileEntityAMManaPower implements IInve
 	}
 
 	public float getRotationY(){
-		return this.rotationX;
+		return this.rotationY;
 	}
 
 	public float getRotationZ(){
-		return this.rotationX;
+		return this.rotationZ;
 	}
 
 	public ItemStack getItemBeingCooked(){
@@ -236,6 +238,8 @@ public class TileEntityCalefactor extends TileEntityAMManaPower implements IInve
 		super.updateEntity();
 		if (isFirstTick) {
 			rotationStepX = worldObj.rand.nextFloat() * 0.03f - 0.015f;
+			rotationStepY = worldObj.rand.nextFloat() * 0.03f + 0.015f;
+			rotationStepZ = worldObj.rand.nextFloat() * 0.03f + 0.015f;
 			isFirstTick = false;
 		}
 
@@ -255,14 +259,14 @@ public class TileEntityCalefactor extends TileEntityAMManaPower implements IInve
 
 					AMCore.proxy.particleManager.BeamFromPointToPoint(worldObj, rStartX, rStartY, rStartZ, endX, endY, endZ, 0xFF8811);
 					if (worldObj.rand.nextBoolean()){
-						AMParticle effect = (AMParticle)AMCore.instance.proxy.particleManager.spawn(worldObj, "smoke", endX, endY, endZ);
+						AMParticle effect = (AMParticle)AMCore.proxy.particleManager.spawn(worldObj, "smoke", endX, endY, endZ);
 						if (effect != null){
 							effect.setIgnoreMaxAge(false);
 							effect.setMaxAge(60);
 							effect.AddParticleController(new ParticleFloatUpward(effect, 0.02f, 0.01f, 1, false));
 						}
 					}else{
-						AMParticle effect = (AMParticle)AMCore.instance.proxy.particleManager.spawn(worldObj, "explosion_2", endX, endY, endZ);
+						AMParticle effect = (AMParticle)AMCore.proxy.particleManager.spawn(worldObj, "explosion_2", endX, endY, endZ);
 						if (effect != null){
 							effect.setIgnoreMaxAge(false);
 							effect.setMaxAge(10);
@@ -328,15 +332,7 @@ public class TileEntityCalefactor extends TileEntityAMManaPower implements IInve
 		return entityplayer.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
 	}
 
-	@Override
-	public int getCharge(){
-		return 0;
-	}
 
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return false;
-	}
 
 	private int numFociOfType(Class type){
 		int count = 0;
@@ -471,11 +467,6 @@ public class TileEntityCalefactor extends TileEntityAMManaPower implements IInve
 	@Override
 	public boolean canExtractItem(int i, ItemStack itemstack, int j){
 		return i == 1 || i == 5;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
 	}
 
 	@Override

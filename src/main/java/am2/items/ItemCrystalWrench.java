@@ -3,17 +3,14 @@ package am2.items;
 import am2.AMCore;
 import am2.api.math.AMVector3;
 import am2.api.power.IBindable;
-import am2.api.power.IManaPower;
 
 import am2.blocks.tileentities.TileEntityCrystalMarker;
-import am2.blocks.tileentities.TileEntityFlickerHabitat;
 import am2.blocks.tileentities.TileEntityParticleEmitter;
 import am2.particles.AMParticle;
 import am2.particles.ParticleFadeOut;
 import am2.particles.ParticleMoveOnHeading;
 
 import am2.texture.ResourceManager;
-import cofh.lib.util.helpers.NBTHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -87,6 +84,7 @@ public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 						player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("am2.tooltip.nodePairToSelf")));
 						return true;
 					}
+					//unbind
 					if (!getMode(stack)){
 						((IBindable)storedTile).unbind(world, ChunkTile.posX, ChunkTile.posY, ChunkTile.posZ);
 						ClearStored(stack);
@@ -95,7 +93,7 @@ public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 							spawnLinkParticles(player.worldObj, hitX, hitY, hitZ, true);
 						return true;
 					}
-
+					//bind
 					if(((IBindable)storedTile).bindTo(world, te.xCoord, te.yCoord, te.zCoord, player)){
 						player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("am.tooltip.success")));
 						ClearStored(stack);
@@ -103,18 +101,16 @@ public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 							spawnLinkParticles(player.worldObj, hitX, hitY, hitZ, false);
 						return true;
 					}
-					System.out.print("CANT BIND!");
 				}else return true;
 			}
 			else{
-				System.out.print("STORING DATA !");
 				storePairLocation(world, te, stack, player, x , y , z);
 				return true;
 			}
 		}
 		else if(player.isSneaking()){
 			if(storedbound){
-				System.out.print("CLEARING !");
+
 				ClearStored(stack);
 			}else{
 				SetMode(stack);
@@ -151,7 +147,6 @@ public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 //				stack.stackTagCompound.setTag(HAB_PAIRLOC, habLoc);
 //			}
 //			else{
-		System.out.print("Debug Stored tile V0 !");
 				StoreTile(stack, te.xCoord,te.yCoord, te.zCoord);
 //			}
 
@@ -167,14 +162,14 @@ public class ItemCrystalWrench extends ArsMagicaRotatedItem{
 
 	}
 	private void StoreTile(ItemStack stack, int x, int y, int z){
-		System.out.print("Debug Stored tile processing !");
+
 		stack.stackTagCompound.setInteger(BOUNDX,x);
 		stack.stackTagCompound.setInteger(BOUNDY,y);
 		stack.stackTagCompound.setInteger(BOUNDZ,z);
 		this.storedbound = true;
 	}
 	private void ClearStored(ItemStack stack){
-		System.out.print("Debug Stored tile Clearing !");
+
 		stack.stackTagCompound.removeTag(BOUNDX);
 		stack.stackTagCompound.removeTag(BOUNDY);
 		stack.stackTagCompound.removeTag(BOUNDZ);

@@ -21,7 +21,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntitySummoner extends TileEntityAMManaPower implements IInventory, IKeystoneLockable{
+import static am2.api.power.PowerTypes.NEUTRAL;
+
+public class TileEntitySummoner extends TileEntityManaConsumer implements IInventory, IKeystoneLockable{
 
 	private static final float summonCost = 2000;
 	private static final float maintainCost = 7.5f;
@@ -36,7 +38,7 @@ public class TileEntitySummoner extends TileEntityAMManaPower implements IInvent
 	private static final int SUMMON_SLOT = 3;
 
 	public TileEntitySummoner(){
-		super(2500);
+		super(2500,new PowerTypes[]{NEUTRAL});
 		inventory = new ItemStack[getSizeInventory()];
 	}
 
@@ -76,7 +78,7 @@ public class TileEntitySummoner extends TileEntityAMManaPower implements IInvent
 			}else{
 				if (ent != null){
 					unsummonCreature();
-					PowerNodeRegistry.instance.insertPower(this, PowerTypes.NEUTRAL, summonCost / 2);
+					PowerNodeRegistry.instance.insertPower(this, NEUTRAL, summonCost / 2);
 				}
 			}
 		}
@@ -293,13 +295,4 @@ public class TileEntitySummoner extends TileEntityAMManaPower implements IInvent
 		this.readFromNBT(pkt.func_148857_g());
 	}
 
-	@Override
-	public int getCharge(){
-		return 0;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
 }

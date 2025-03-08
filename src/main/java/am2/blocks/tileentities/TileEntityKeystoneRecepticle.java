@@ -28,10 +28,11 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.Constants;
-
 import java.util.ArrayList;
+import static am2.api.power.PowerTypes.DARK;
+import static am2.api.power.PowerTypes.LIGHT;
 
-public class TileEntityKeystoneRecepticle extends TileEntityAMManaPower implements IInventory, IMultiblockStructureController, IKeystoneLockable{
+public class TileEntityKeystoneRecepticle extends TileEntityManaConsumer implements IInventory, IMultiblockStructureController, IKeystoneLockable{
 
 	private boolean isActive;
 	private long key;
@@ -47,7 +48,7 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMManaPower implemen
 	private ItemStack[] inventory;
 
 	public TileEntityKeystoneRecepticle(){
-		super(250000);
+		super(250000, new PowerTypes[]{LIGHT, DARK});
 		this.isActive = false;
 		inventory = new ItemStack[getSizeInventory()];
 		GenerateStructureData();
@@ -138,9 +139,9 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMManaPower implemen
 		this.redPortal = redPortal;
 		int myMeta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 
-		if (PowerNodeRegistry.instance.getHighestPowerType(this) == PowerTypes.DARK){
+		if (PowerNodeRegistry.instance.getHighestPowerType(this) == DARK){
 			myMeta |= 8;
-		}else if (PowerNodeRegistry.instance.getHighestPowerType(this) == PowerTypes.LIGHT){
+		}else if (PowerNodeRegistry.instance.getHighestPowerType(this) == LIGHT){
 			myMeta |= 4;
 		}
 
@@ -418,7 +419,7 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMManaPower implemen
 				inventory[byte0] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
-		AMCore.instance.proxy.blocks.registerKeystonePortal(xCoord, yCoord, zCoord, nbttagcompound.getInteger("keystone_receptacle_dimension_id"));
+		AMCore.proxy.blocks.registerKeystonePortal(xCoord, yCoord, zCoord, nbttagcompound.getInteger("keystone_receptacle_dimension_id"));
 
 		this.isActive = nbttagcompound.getBoolean("isActive");
 		this.redPortal = nbttagcompound.getBoolean("redPortal");
@@ -442,16 +443,6 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMManaPower implemen
 		nbttagcompound.setTag("KeystoneRecepticleInventory", nbttaglist);
 		nbttagcompound.setBoolean("isActive", this.isActive);
 		nbttagcompound.setBoolean("redPortal", this.redPortal);
-	}
-
-	@Override
-	public int getCharge(){
-		return 0;
-	}
-
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return false;
 	}
 
 	@Override
@@ -491,13 +482,5 @@ public class TileEntityKeystoneRecepticle extends TileEntityAMManaPower implemen
 		return AxisAlignedBB.getBoundingBox(xCoord - 3, yCoord - 3, zCoord - 3, xCoord + 3, yCoord + 3, zCoord + 3);
 	}
 
-	@Override
-	public int getRequestInterval(){
-		return 0;
-	}
 
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
 }

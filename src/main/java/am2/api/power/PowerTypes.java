@@ -12,12 +12,13 @@ public final class PowerTypes{
 	public static final PowerTypes LIGHT = new PowerTypes(1, "Light", "§b");
 	public static final PowerTypes NEUTRAL = new PowerTypes(2, "Neutral", "§1");
 	public static final PowerTypes DARK = new PowerTypes(4, "Dark", "§4");
-
+	public static final PowerTypes[] ALL = new PowerTypes[]{ LIGHT, NEUTRAL, DARK};
 	private static final ArrayList<PowerTypes> allPowerTypes = new ArrayList<PowerTypes>(){{
 		add(LIGHT);
 		add(NEUTRAL);
 		add(DARK);
 	}};
+
 
 	private int id;
 	private String name;

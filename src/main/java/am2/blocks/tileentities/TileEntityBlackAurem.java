@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class TileEntityBlackAurem extends TileEntityPowerSources implements IMultiblockStructureController{
+public class TileEntityBlackAurem extends TileEntityManaSources implements IMultiblockStructureController{
 
 	private final HashMap arcs;
 

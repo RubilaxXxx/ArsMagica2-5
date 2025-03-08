@@ -14,7 +14,7 @@ import net.minecraft.util.Vec3;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class TileEntitySlipstreamGenerator extends TileEntityAMManaPower{
+public class TileEntitySlipstreamGenerator extends TileEntityManaConsumer{
 
 	private ArrayList<EntityPlayer> levitatingEntities;
 	private int updateTicks = 1;
@@ -22,18 +22,8 @@ public class TileEntitySlipstreamGenerator extends TileEntityAMManaPower{
 	private static final int EFFECT_HEIGHT = 50;
 
 	public TileEntitySlipstreamGenerator(){
-		super(100);
+		super(100, new PowerTypes[]{PowerTypes.NEUTRAL});
 		levitatingEntities = new ArrayList<EntityPlayer>();
-	}
-
-	@Override
-	public int getCharge(){
-		return 0;
-	}
-
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return false;
 	}
 
 	@Override
@@ -113,15 +103,5 @@ public class TileEntitySlipstreamGenerator extends TileEntityAMManaPower{
 			if (playerIsValid(player) && !levitatingEntities.contains(player))
 				levitatingEntities.add(player);
 		}
-	}
-
-	@Override
-	public boolean canReceivePower(){
-		return true;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
 	}
 }

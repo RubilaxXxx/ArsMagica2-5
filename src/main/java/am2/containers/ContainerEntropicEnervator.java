@@ -1,11 +1,8 @@
 package am2.containers;
 
 import am2.EnervatorRecipeHelper;
-import am2.ObeliskFuelHelper;
 import am2.blocks.tileentities.TileEntityEntropicEnervator;
 import am2.containers.slots.SlotEnervator;
-import am2.containers.slots.SlotObelisk;
-import am2.containers.slots.SlotSpecifiedItemsOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;

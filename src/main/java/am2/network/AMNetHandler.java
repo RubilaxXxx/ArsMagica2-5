@@ -2,7 +2,6 @@ package am2.network;
 
 import am2.LogHelper;
 import am2.api.math.AMVector3;
-import am2.api.power.IManaPower;
 import am2.blocks.tileentities.TileEntityArmorImbuer;
 import am2.blocks.tileentities.TileEntityCalefactor;
 import am2.blocks.tileentities.TileEntityObelisk;
@@ -10,7 +9,6 @@ import am2.bosses.IArsMagicaBoss;
 import am2.buffs.BuffList;
 import am2.entities.EntityHecate;
 import am2.items.ItemsCommonProxy;
-import am2.power.PowerNodeRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;

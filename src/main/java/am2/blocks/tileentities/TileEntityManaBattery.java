@@ -5,7 +5,7 @@ import am2.api.power.PowerTypes;
 import net.minecraft.nbt.NBTTagCompound;
 
 
-public class TileEntityManaBattery extends TileEntityAMManaPower{
+public class TileEntityManaBattery extends TileEntityManaStorage{
 	private static final String ACTIVE = "active";
 	private int tick = 0;
 
@@ -35,7 +35,7 @@ public class TileEntityManaBattery extends TileEntityAMManaPower{
 			this.setPowerRequests();
 		}
 		if(!worldObj.isRemote){
-			if (this.IsActive() && getRequestInterval() <= tick){
+			if (this.IsActive() && 20 <= tick){
 				tick = 0;
 				if (GetBinded() != null && ((IManaPower)GetBinded()).getCharge() > 0){
 					return;
@@ -48,6 +48,7 @@ public class TileEntityManaBattery extends TileEntityAMManaPower{
 			}
 		}
 	}
+
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound){

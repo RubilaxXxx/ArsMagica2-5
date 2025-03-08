@@ -1,12 +1,9 @@
 package am2.blocks;
 
 import am2.AMCore;
-import am2.api.blocks.IKeystoneLockable;
-import am2.api.items.KeystoneAccessType;
 import am2.blocks.tileentities.TileEntityEntropicEnervator;
 import am2.guis.ArsMagicaGuiIdList;
 import am2.texture.ResourceManager;
-import am2.utility.KeystoneUtilities;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

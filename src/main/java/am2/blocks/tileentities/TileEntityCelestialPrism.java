@@ -3,25 +3,21 @@ package am2.blocks.tileentities;
 import am2.AMCore;
 import am2.api.blocks.MultiblockStructureDefinition;
 import am2.api.blocks.MultiblockStructureDefinition.StructureGroup;
-import am2.api.power.IPowerSource;
 import am2.api.power.PowerTypes;
 import am2.blocks.BlockAMOre;
 import am2.blocks.BlocksCommonProxy;
 import am2.buffs.BuffEffectManaRegen;
 import am2.buffs.BuffList;
 import am2.multiblock.IMultiblockStructureController;
-import am2.power.PowerNodeRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TileEntityCelestialPrism extends TileEntityPowerSources implements IMultiblockStructureController, IPowerSource{
+public class TileEntityCelestialPrism extends TileEntityManaSources implements IMultiblockStructureController{
 
 	private StructureGroup moonstone;
 	private int ticks;

@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 import static am2.network.AMNetHandler.sendTiledatatoClient;
 
-public  class TileEntityAMManaPower extends TileEntity implements IManaPower, IBindable, IWrenchable{
+public  class TileEntityManaConsumer extends TileEntity implements IManaPower, IBindable, IWrenchable{
 	protected int capacity;
 	protected boolean canRequestPower = true;
 	protected TileEntity Binded;
@@ -29,8 +29,9 @@ public  class TileEntityAMManaPower extends TileEntity implements IManaPower, IB
 
 	private static final int REQUEST_INTERVAL = 20;
 
-	public TileEntityAMManaPower(int capacity){
+	public TileEntityManaConsumer(int capacity, PowerTypes[] types){
 		this.capacity = capacity;
+
 	}
 
 	protected void setNoPowerRequests(){

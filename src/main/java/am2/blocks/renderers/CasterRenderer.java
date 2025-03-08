@@ -2,7 +2,6 @@ package am2.blocks.renderers;
 
 import am2.blocks.BlockCasterRune;
 import am2.blocks.tileentities.TileEntityBlockCaster;
-import am2.blocks.tileentities.TileEntityCasterRune;
 import am2.models.modelBlockCaster;
 import am2.texture.ResourceManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;

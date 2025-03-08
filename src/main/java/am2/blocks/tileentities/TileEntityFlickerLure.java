@@ -4,21 +4,16 @@ import am2.api.power.PowerTypes;
 import am2.entities.EntityFlicker;
 import am2.power.PowerNodeRegistry;
 
-public class TileEntityFlickerLure extends TileEntityAMManaPower{
+import static am2.api.power.PowerTypes.NONE;
+
+public class TileEntityFlickerLure extends TileEntityManaConsumer{
 
 	public TileEntityFlickerLure(){
-		super(200);
+		super(200, new PowerTypes[]{NONE});
 	}
 
-	@Override
-	public int getCharge(){
-		return 0;
-	}
 
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
+
 
 	@Override
 	public void updateEntity(){

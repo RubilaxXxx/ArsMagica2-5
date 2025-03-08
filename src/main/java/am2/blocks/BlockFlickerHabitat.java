@@ -18,8 +18,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.Random;
-
 public class BlockFlickerHabitat extends PoweredBlock{
 
 	protected BlockFlickerHabitat(){

@@ -2,8 +2,6 @@ package am2.network;
 
 import am2.AMCore;
 import am2.LogHelper;
-import am2.api.math.AMVector3;
-import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
 import am2.blocks.tileentities.*;
 import am2.containers.ContainerMagiciansWorkbench;

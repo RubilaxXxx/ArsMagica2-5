@@ -4,7 +4,6 @@ package am2.blocks.tileentities;
 import am2.api.blocks.MultiblockStructureDefinition;
 import am2.api.power.PowerTypes;
 import am2.armor.ArmorHelper;
-import am2.multiblock.IMultiblockStructureController;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -15,27 +14,21 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.Constants;
 
+import static am2.api.power.PowerTypes.NONE;
+
 // public class TileEntityArmorImbuer extends TileEntityAMPower implements IInventory, IKeystoneLockable, IMultiblockStructureController{
-public class TileEntityArmorImbuer extends TileEntityAMManaPower implements IInventory{
+public class TileEntityArmorImbuer extends TileEntityManaConsumer implements IInventory{
 
 	private ItemStack[] inventory;
 	private MultiblockStructureDefinition def;
 	private boolean creativeModeAllowed;
 
 	public TileEntityArmorImbuer(){
-		super(5);
+		super(5, new PowerTypes[]{NONE});
 		inventory = new ItemStack[getSizeInventory()];
 	}
 
-	@Override
-	public int getCharge(){
-		return 0;
-	}
 
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
 
 	/*
 	@Override
@@ -46,22 +39,6 @@ public class TileEntityArmorImbuer extends TileEntityAMManaPower implements IInv
 				inventory[3]
 		};
 	}
-	*/
-
-	@Override
-	public Packet getDescriptionPacket(){
-		NBTTagCompound compound = new NBTTagCompound();
-		writeToNBT(compound);
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, worldObj.getBlockMetadata(xCoord, yCoord, zCoord), compound);
-		return packet;
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt){
-		this.readFromNBT(pkt.func_148857_g());
-	}
-
-	/*
 	@Override
 	public boolean keystoneMustBeHeld(){
 		return false;

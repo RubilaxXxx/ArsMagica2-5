@@ -21,7 +21,11 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntityAstralBarrier extends TileEntityAMManaPower implements IInventory, IKeystoneLockable{
+import static am2.api.power.PowerTypes.DARK;
+import static am2.api.power.PowerTypes.LIGHT;
+
+public class TileEntityAstralBarrier extends TileEntityManaConsumer implements IInventory, IKeystoneLockable{
+
 
 	private ItemStack[] inventory;
 	private static final int maxRadius = 20;
@@ -32,7 +36,7 @@ public class TileEntityAstralBarrier extends TileEntityAMManaPower implements II
 	public static int keystoneSlot = 0;
 
 	public TileEntityAstralBarrier(){
-		super(250);
+		super(250, new PowerTypes[]{LIGHT});
 		inventory = new ItemStack[getSizeInventory()];
 		displayAura = false;
 		particleTickCounter = 0;
@@ -52,19 +56,6 @@ public class TileEntityAstralBarrier extends TileEntityAMManaPower implements II
 
 	public boolean IsActive(){
 		return PowerNodeRegistry.instance.checkPower(this, 0.35f * getRadius()) && worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord) && getRadius() > 0;
-	}
-
-	@Override
-	public Packet getDescriptionPacket(){
-		NBTTagCompound compound = new NBTTagCompound();
-		writeToNBT(compound);
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, worldObj.getBlockMetadata(xCoord, yCoord, zCoord), compound);
-		return packet;
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt){
-		this.readFromNBT(pkt.func_148857_g());
 	}
 
 	@Override
@@ -113,9 +104,9 @@ public class TileEntityAstralBarrier extends TileEntityAMManaPower implements II
 
 	public void onEntityBlocked(EntityLivingBase entity){
 		if (this.worldObj.isRemote){
-			if (PowerNodeRegistry.instance.checkPower(this, PowerTypes.DARK, 50)){
+			if (PowerNodeRegistry.instance.checkPower(this, DARK, 50)){
 				entity.attackEntityFrom(DamageSource.magic, 5);
-				PowerNodeRegistry.instance.consumePower(this, PowerTypes.DARK, 50);
+				PowerNodeRegistry.instance.consumePower(this, DARK, 50);
 			}
 		}
 	}
@@ -227,16 +218,6 @@ public class TileEntityAstralBarrier extends TileEntityAMManaPower implements II
 		nbttagcompound.setTag("AstralBarrierInventory", nbttaglist);
 	}
 
-	@Override
-	public int getCharge(){
-		return 0;
-	}
-
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return false;
-	}
-
 
 	@Override
 	public boolean hasCustomInventoryName(){
@@ -245,11 +226,6 @@ public class TileEntityAstralBarrier extends TileEntityAMManaPower implements II
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack){
-		return false;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
 		return false;
 	}
 

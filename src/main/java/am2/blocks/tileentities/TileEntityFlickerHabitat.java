@@ -23,7 +23,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 public class TileEntityFlickerHabitat extends TileEntityFlickerControllerBase implements IInventory{
 	private static final float FULL_CIRCLE = 360.0f;

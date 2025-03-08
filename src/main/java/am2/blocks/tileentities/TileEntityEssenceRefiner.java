@@ -15,7 +15,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntityEssenceRefiner extends TileEntityAMManaPower implements IInventory, IKeystoneLockable, ISidedInventory{
+public class TileEntityEssenceRefiner extends TileEntityManaConsumer implements IInventory, IKeystoneLockable, ISidedInventory{
 
 	public static final float REFINE_TIME = 400;
 	private static final int OUTPUT_INDEX = 5;
@@ -26,7 +26,10 @@ public class TileEntityEssenceRefiner extends TileEntityAMManaPower implements I
 	public float remainingRefineTime;
 
 	public TileEntityEssenceRefiner(){
-		super(1000);
+		super(1000, new PowerTypes[]{
+				PowerTypes.NEUTRAL,
+				PowerTypes.DARK
+		});
 		inventory = new ItemStack[getSizeInventory()];
 		remainingRefineTime = 0;
 	}
@@ -292,15 +295,6 @@ public class TileEntityEssenceRefiner extends TileEntityAMManaPower implements I
 		return false;
 	}
 
-	@Override
-	public int getCharge(){
-		return 0;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
 
 	@Override
 	public ItemStack[] getRunesInKey(){
@@ -321,13 +315,7 @@ public class TileEntityEssenceRefiner extends TileEntityAMManaPower implements I
 		return false;
 	}
 
-	@Override
-	public PowerTypes[] getValidPowerTypes(){
-		return new PowerTypes[]{
-				PowerTypes.NEUTRAL,
-				PowerTypes.DARK
-		};
-	}
+
 
 
 	@Override

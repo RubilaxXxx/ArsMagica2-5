@@ -56,10 +56,10 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants;
-
 import java.util.*;
+import static am2.api.power.PowerTypes.ALL;
 
-public class TileEntityCraftingAltar extends TileEntityAMManaPower implements IMultiblockStructureController{
+public class TileEntityCraftingAltar extends TileEntityManaConsumer implements IMultiblockStructureController{
 
 	private MultiblockStructureDefinition primary;
 	private MultiblockStructureDefinition secondary;
@@ -123,7 +123,7 @@ public class TileEntityCraftingAltar extends TileEntityAMManaPower implements IM
 	private String currentSpellName = "";
 
 	public TileEntityCraftingAltar(){
-		super(500);
+		super(500, ALL);
 		GenerateStructureData();
 		allAddedItems = new ArrayList<ItemStack>();
 		currentAddedItems = new ArrayList<ItemStack>();

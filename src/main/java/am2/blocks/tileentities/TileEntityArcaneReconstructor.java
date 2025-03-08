@@ -20,13 +20,12 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntityArcaneReconstructor extends TileEntityAMManaPower implements IInventory, ISidedInventory, IKeystoneLockable{
+import static am2.api.power.PowerTypes.DARK;
+
+public class TileEntityArcaneReconstructor extends TileEntityManaConsumer implements IInventory, ISidedInventory, IKeystoneLockable{
 
 	private ItemStack[] inventory;
 	private boolean active;
@@ -49,7 +48,7 @@ public class TileEntityArcaneReconstructor extends TileEntityAMManaPower impleme
 	private boolean isFirstTick = true;
 
 	public TileEntityArcaneReconstructor(){
-		super(500);
+		super(500, new PowerTypes[]{DARK});
 		inventory = new ItemStack[getSizeInventory()];
 		active = false;
 		repairCounter = 0;
@@ -67,18 +66,6 @@ public class TileEntityArcaneReconstructor extends TileEntityAMManaPower impleme
 		return 0.5f;
 	}
 
-	@Override
-	public Packet getDescriptionPacket(){
-		NBTTagCompound compound = new NBTTagCompound();
-		writeToNBT(compound);
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, worldObj.getBlockMetadata(xCoord, yCoord, zCoord), compound);
-		return packet;
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt){
-		this.readFromNBT(pkt.func_148857_g());
-	}
 
 	@Override
 	public void updateEntity(){
@@ -451,15 +438,7 @@ public class TileEntityArcaneReconstructor extends TileEntityAMManaPower impleme
 		return i >= 4 && i < 10 && itemStackIsValid(itemstack);
 	}
 
-	@Override
-	public int getCharge(){
-		return 0;
-	}
 
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return false;
-	}
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int var1){
@@ -476,10 +455,6 @@ public class TileEntityArcaneReconstructor extends TileEntityAMManaPower impleme
 		return i >= 10 && i < 16;
 	}
 
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
 
 	@Override
 	public ItemStack[] getRunesInKey(){

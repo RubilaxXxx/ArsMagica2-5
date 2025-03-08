@@ -16,8 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public class BlockAstralBarrier extends AMSpecialRenderPoweredBlock{
 
 	public BlockAstralBarrier(){

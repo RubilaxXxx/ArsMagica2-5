@@ -68,24 +68,25 @@ public class PowerNodeRegistry{
 
 
 
-	/**
-	* request power to a specific destination
-	* @param destination the block receiving mana
-	 * @param type the type of power requested
-	 * @param amount amount of power requested.
-	 * @return float return 0 if destination has no data otherwise return amount.
-	 */
-	public float requestPower(IManaPower destination, PowerTypes type, float amount){
-		PowerNodeEntry data = getPowerNodeData(destination);
-
-		if (data == null){
-			return 0;
-		}
-
-		float requested = data.requestPower(((TileEntity)destination).getWorldObj(), type, amount, destination.getCapacity());
-
-		return requested;
-	}
+//	/**
+//	* request power to a specific destination
+//	* @param destination the block receiving mana
+//	 * @param type the type of power requested
+//	 * @param amount amount of power requested.
+//	 * @return float return 0 if destination has no data otherwise return amount.
+//	 */
+//	public float requestPower(IManaPower destination, PowerTypes type, float amount){
+//		PowerNodeEntry data = getPowerNodeData(destination);
+//
+//		if (data == null){
+//			return 0;
+//		}
+//
+//		float requested = data.requestPower(((TileEntity)destination).getWorldObj(), type, amount, destination.getCapacity());
+//
+//		return requested;
+//	}
+//
 	/**
 	 * comsume power from a block.
 	 * @param consumer the block consuming mana.

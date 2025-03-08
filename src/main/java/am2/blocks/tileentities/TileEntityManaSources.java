@@ -4,7 +4,6 @@ import am2.api.blocks.MultiblockStructureDefinition;
 
 import am2.api.power.IManaPower;
 import am2.api.power.IBindable;
-import am2.api.power.IPowerSource;
 import am2.api.power.IWrenchable;
 import am2.api.power.PowerTypes;
 import am2.multiblock.IMultiblockStructureController;
@@ -22,12 +21,13 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.HashMap;
 
 import static am2.network.AMNetHandler.sendTiledatatoClient;
 
-public class TileEntityPowerSources extends TileEntity implements IManaPower, IBindable, IMultiblockStructureController, IPowerSource, IWrenchable{
+public class TileEntityManaSources extends TileEntity implements IManaPower, IBindable, IMultiblockStructureController, IWrenchable{
 	protected PowerTypes type;
 	protected int capacity;
 	protected int surroundingCheckTicks;
@@ -41,13 +41,18 @@ public class TileEntityPowerSources extends TileEntity implements IManaPower, IB
 	protected String TAG_POWERAMOUNT = "poweramount";
 
 
-	public TileEntityPowerSources(int capacity, PowerTypes type){
+	public TileEntityManaSources(int capacity, PowerTypes type){
 		this.capacity = capacity;
 		this.type = type;
 
 	}
 	@Override
 	public boolean bindTo(World world, int x, int y, int z, EntityPlayer player){
+		if(player == null || player instanceof FakePlayer){
+			return false;
+		}
+
+
 		return false;
 	}
 	public void GenerateStructureData(){}
@@ -55,6 +60,11 @@ public class TileEntityPowerSources extends TileEntity implements IManaPower, IB
 	@Override
 	public boolean unbind(World world, int x, int y, int z){
 		return false;
+	}
+
+	@Override
+	public TileEntity GetBinded(){
+		return null;
 	}
 
 	@Override
@@ -78,6 +88,11 @@ public class TileEntityPowerSources extends TileEntity implements IManaPower, IB
 	@Override
 	public int getCharge(){
 		return this.poweramount;
+	}
+
+	@Override
+	public void setCharge(PowerTypes type, int amount){
+
 	}
 
 	@Override

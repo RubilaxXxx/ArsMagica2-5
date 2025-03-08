@@ -16,7 +16,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntityEntropicEnervator extends TileEntityAMManaPower implements IInventory{
+import static am2.api.power.PowerTypes.DARK;
+
+public class TileEntityEntropicEnervator extends TileEntityManaConsumer implements IInventory{
 	private ItemStack[] inventory;
 
 	public int rendTimeRemaining = 0;
@@ -25,7 +27,7 @@ public class TileEntityEntropicEnervator extends TileEntityAMManaPower implement
 	private static final byte PK_BURNTIME_CHANGE = 1;
 
 	public TileEntityEntropicEnervator(){
-		super(1000);
+		super(1000, new PowerTypes[]{DARK});
 		inventory = new ItemStack[this.getSizeInventory()];
 	}
 
@@ -150,20 +152,6 @@ public class TileEntityEntropicEnervator extends TileEntityAMManaPower implement
 		}
 	}
 
-	@Override
-	public PowerTypes[] getValidPowerTypes(){
-		return new PowerTypes[]{PowerTypes.DARK};
-	}
-
-	@Override
-	public int getCharge(){
-		return 0;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
 
 	@Override
 	public int getSizeInventory(){

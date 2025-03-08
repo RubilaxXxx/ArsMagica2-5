@@ -1,8 +1,9 @@
 package am2.blocks.tileentities;
 
-import am2.api.power.PowerTypes;
 
-public class TileEntityEssenceConduit extends TileEntityAMManaPower{
+import static am2.api.power.PowerTypes.ALL;
+
+public class TileEntityEssenceConduit extends TileEntityManaConsumer{
 
 	private float rotationX;
 	private float rotationY;
@@ -17,7 +18,7 @@ public class TileEntityEssenceConduit extends TileEntityAMManaPower{
 	private boolean isFirstTick = false;
 
 	public TileEntityEssenceConduit(){
-		super(1);
+		super(1, ALL);
 
 		redstonePowered = false;
 	}
@@ -117,25 +118,5 @@ public class TileEntityEssenceConduit extends TileEntityAMManaPower{
 		if (rotationZ < 0){
 			rotationZ = 359;
 		}
-	}
-
-	@Override
-	public boolean canReceivePower(){
-		return !this.redstonePowered;
-	}
-
-	@Override
-	public int getCharge(){
-		return 0;
-	}
-
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return false;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return true;
 	}
 }

@@ -3,7 +3,7 @@ package am2.blocks.renderers;
 import am2.blocks.tileentities.TileEntityBlackAurem;
 import am2.blocks.tileentities.TileEntityCelestialPrism;
 import am2.blocks.tileentities.TileEntityObelisk;
-import am2.blocks.tileentities.TileEntityPowerSources;
+import am2.blocks.tileentities.TileEntityManaSources;
 import am2.texture.ResourceManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
@@ -41,7 +41,7 @@ public class EssenceGeneratorRenderer extends TileEntitySpecialRenderer{
 		model_celestial = (WavefrontObject)AdvancedModelLoader.loadModel(ResourceManager.getOBJFilePath("celestial_prism.obj"));
 	}
 
-	public void renderAModelAt(TileEntityPowerSources tile, double d, double d1, double d2, float f){
+	public void renderAModelAt(TileEntityManaSources tile, double d, double d1, double d2, float f){
 		//System.out.println("Log RenderTileAt v2");
 		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_TEXTURE_BIT);
@@ -206,6 +206,6 @@ public class EssenceGeneratorRenderer extends TileEntitySpecialRenderer{
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2, float f){
 		//System.out.println("Log RenderTileAt");
-		renderAModelAt((TileEntityPowerSources)tileentity, d, d1, d2, f); //where to render
+		renderAModelAt((TileEntityManaSources)tileentity, d, d1, d2, f); //where to render
 	}
 }

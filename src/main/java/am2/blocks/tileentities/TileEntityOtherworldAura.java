@@ -3,6 +3,7 @@ package am2.blocks.tileentities;
 import am2.api.math.AMVector3;
 import am2.api.power.PowerTypes;
 import am2.entities.EntityShadowHelper;
+import am2.items.ItemEssence;
 import am2.items.ItemsCommonProxy;
 import am2.power.PowerNodeRegistry;
 import am2.utility.InventoryUtilities;
@@ -14,7 +15,10 @@ import net.minecraft.tileentity.TileEntity;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class TileEntityOtherworldAura extends TileEntityAMManaPower{
+import static am2.api.power.PowerTypes.DARK;
+import static am2.api.power.PowerTypes.NEUTRAL;
+
+public class TileEntityOtherworldAura extends TileEntityManaConsumer{
 
 
 	private ArrayList<AMVector3> nearbyInventories;
@@ -25,25 +29,15 @@ public class TileEntityOtherworldAura extends TileEntityAMManaPower{
 	private EntityShadowHelper helper; //the helper entity that actually moves items around
 
 	public TileEntityOtherworldAura(){
-		super(200);
+		super(200, new PowerTypes[]{
+				DARK,
+				NEUTRAL
+		});
 	}
 
 	@Override
 	public int getCharge(){
 		return 0;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
-
-	@Override
-	public PowerTypes[] getValidPowerTypes(){
-		return new PowerTypes[]{
-				PowerTypes.DARK,
-				PowerTypes.NEUTRAL
-		};
 	}
 
 	public void setActive(boolean active, TileEntityCraftingAltar watchMe){
@@ -83,7 +77,7 @@ public class TileEntityOtherworldAura extends TileEntityAMManaPower{
 		while (it.hasNext()){
 			AMVector3 vec = it.next();
 			TileEntity te = worldObj.getTileEntity((int)vec.x, (int)vec.y, (int)vec.z);
-			if (te == null || !(te instanceof IInventory)){
+			if (!(te instanceof IInventory)){
 				//not found, prune list and move on
 				it.remove();
 				continue;
@@ -144,7 +138,7 @@ public class TileEntityOtherworldAura extends TileEntityAMManaPower{
 						return;
 					}
 
-					if (next.getItem() == ItemsCommonProxy.essence && next.getItemDamage() > ItemsCommonProxy.essence.META_MAX){
+					if (next.getItem() == ItemsCommonProxy.essence && next.getItemDamage() > ItemEssence.META_MAX){
 						if (!this.helper.hasSearchLocation())
 							this.helper.setSearchLocationAndItem(new AMVector3(1, 1, 1), next);
 						delayCounter = 100;

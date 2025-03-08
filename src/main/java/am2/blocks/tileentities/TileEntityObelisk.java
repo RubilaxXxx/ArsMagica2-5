@@ -3,15 +3,11 @@ package am2.blocks.tileentities;
 import am2.ObeliskFuelHelper;
 import am2.api.blocks.MultiblockStructureDefinition;
 import am2.api.blocks.MultiblockStructureDefinition.StructureGroup;
-import am2.api.power.IPowerSource;
 import am2.api.power.PowerTypes;
 import am2.blocks.BlocksCommonProxy;
 import am2.buffs.BuffEffectManaRegen;
 import am2.buffs.BuffList;
 import am2.multiblock.IMultiblockStructureController;
-import am2.network.AMDataReader;
-import am2.network.AMDataWriter;
-import am2.network.AMNetHandler;
 import am2.utility.MathUtilities;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TileEntityObelisk extends TileEntityPowerSources implements IMultiblockStructureController, IInventory, IPowerSource{
+public class TileEntityObelisk extends TileEntityManaSources implements IMultiblockStructureController, IInventory{
 	private ItemStack[] inventory;
 
 	public boolean active = false;

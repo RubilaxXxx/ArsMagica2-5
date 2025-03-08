@@ -1,23 +1,15 @@
 package am2.blocks;
 
-import am2.api.power.IManaPower;
 import am2.api.power.PowerTypes;
-import am2.blocks.tileentities.TileEntityAMManaPower;
-import am2.blocks.tileentities.TileEntityManaBattery;
-import am2.blocks.tileentities.TileEntityObelisk;
-import am2.blocks.tileentities.TileEntityPowerSources;
+import am2.blocks.tileentities.TileEntityManaConsumer;
+import am2.blocks.tileentities.TileEntityManaSources;
+import am2.blocks.tileentities.TileEntityManaStorage;
 import am2.items.ItemsCommonProxy;
-import am2.power.PowerNodeRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-
-import java.util.ArrayList;
 
 public abstract class PoweredBlock extends AMBlockContainer{
 	public PoweredBlock(Material material){
@@ -26,7 +18,7 @@ public abstract class PoweredBlock extends AMBlockContainer{
 
 	protected boolean HandleSpecialItems(World world, EntityPlayer player, int x, int y, int z){
 		TileEntity te = world.getTileEntity(x, y, z);
-		if (!((te instanceof TileEntityPowerSources) || te instanceof TileEntityAMManaPower)){
+		if (!((te instanceof TileEntityManaSources) || te instanceof TileEntityManaConsumer || te instanceof TileEntityManaStorage)){
 			return false;
 		}
 

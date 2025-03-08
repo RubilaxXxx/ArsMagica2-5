@@ -16,28 +16,18 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityInertSpawner extends TileEntityAMManaPower implements IInventory, ISidedInventory {
+import static am2.api.power.PowerTypes.DARK;
+
+public class TileEntityInertSpawner extends TileEntityManaConsumer implements IInventory, ISidedInventory {
 
 	private ItemStack phylactery;
 	private float powerConsumed = 0.0f;
-
-	private static final PowerTypes[] valid = new PowerTypes[] {PowerTypes.DARK};
-
 	private static final float SUMMON_REQ = 6000;
 
 	public TileEntityInertSpawner() {
-		super(500);
+		super(500, new PowerTypes[] {DARK});
 	}
 
-	@Override
-	public int getCharge(){
-		return 0;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type) {
-		return false;
-	}
 
 	@Override
 	public int getSizeInventory() {
@@ -180,11 +170,11 @@ public class TileEntityInertSpawner extends TileEntityAMManaPower implements IIn
 		if (!worldObj.isRemote && phylactery != null && phylactery.getItem() instanceof ItemCrystalPhylactery &&
 		        ((ItemCrystalPhylactery)phylactery.getItem()).isFull(phylactery)
 		        && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
-			if (this.powerConsumed < this.SUMMON_REQ) {
+			if (this.powerConsumed < SUMMON_REQ) {
 				this.powerConsumed += PowerNodeRegistry.instance.consumePower(
 						this,
-						PowerTypes.DARK,
-						Math.min(this.getCapacity(), this.SUMMON_REQ - this.powerConsumed)
+						DARK,
+						Math.min(this.getCapacity(), SUMMON_REQ - this.powerConsumed)
 				);
 			} else {
 				this.powerConsumed = 0;
@@ -220,10 +210,5 @@ public class TileEntityInertSpawner extends TileEntityAMManaPower implements IIn
 			}
 		}
 		e.setPosition(xCoord, yCoord, zCoord);
-	}
-
-	@Override
-	public PowerTypes[] getValidPowerTypes() {
-		return valid;
 	}
 }

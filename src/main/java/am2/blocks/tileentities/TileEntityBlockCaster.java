@@ -24,16 +24,15 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInventory {
-   //TAGS
-   public static final String TAG_POWERAMOUNT = "PowerAmount";
+import static am2.api.power.PowerTypes.ALL;
+
+public class TileEntityBlockCaster extends TileEntityManaConsumer implements IInventory {
 
    //Vars
-   private int poweramount;
    protected float rotation = 0.0F;
    protected ItemStack[] casterItemStacks = new ItemStack[4];
-   protected boolean hasRequestedFullUpdate = false;
-   protected int ticksChanneled = 0;
+//   protected boolean hasRequestedFullUpdate = false;
+//   protected int ticksChanneled = 0;
    protected EntityLiving dummyCaster;
    protected boolean hasCast;
    protected boolean redstonePowerLastTick;
@@ -42,7 +41,7 @@ public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInv
    private boolean firstTick = true;
 
    public TileEntityBlockCaster() {
-      super(10000);
+      super(10000, ALL);
       this.dummyCaster = new EntityDummyCaster(this.worldObj);
       this.hasCast = false;
       this.redstonePowerLastTick = false;
@@ -51,15 +50,6 @@ public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInv
    protected ItemStack getCastingScrollStack() {
       return this.casterItemStacks[3] == null ? null : this.casterItemStacks[3];
    }
-
-   public boolean canProvidePower() {
-      return false;
-   }
-
-   public int getCharge() {
-    return this.poweramount;
-   }
-
 
    protected int getHighestFocus() {
       int focusLevel = -1;
@@ -75,17 +65,17 @@ public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInv
       return focusLevel;
    }
 
-   private int numFociOfType(Class type) {
-      int count = 0;
-
-      for(int i = 0; i < 3; ++i) {
-         if (this.casterItemStacks[i] != null && type.isInstance(this.casterItemStacks[i].getItem())) {
-            ++count;
-         }
-      }
-
-      return count;
-   }
+//   private int numFociOfType(Class type) {
+//      int count = 0;
+//
+//      for(int i = 0; i < 3; ++i) {
+//         if (this.casterItemStacks[i] != null && type.isInstance(this.casterItemStacks[i].getItem())) {
+//            ++count;
+//         }
+//      }
+//
+//      return count;
+//   }
 
    protected void setDummyData() {
       this.dummyCaster.worldObj = this.worldObj;
@@ -96,33 +86,33 @@ public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInv
       switch(meta & 3) {
       case 0:
          this.dummyCaster.rotationYaw = 180.0F;
-         this.dummyCaster.setPosition((double)((float)this.xCoord + 0.5F), (double)((float)this.yCoord + 0.8F), (double)((float)this.zCoord - 0.01F));
+         this.dummyCaster.setPosition((float)this.xCoord + 0.5F, (float)this.yCoord + 0.8F, (float)this.zCoord - 0.01F);
          this.pointInFront = new Point3D(this.xCoord, this.yCoord, this.zCoord - 1);
          break;
       case 1:
          this.dummyCaster.rotationYaw = 90.0F;
-         this.dummyCaster.setPosition((double)((float)this.xCoord - 0.01F), (double)((float)this.yCoord + 0.8F), (double)((float)this.zCoord + 0.5F));
+         this.dummyCaster.setPosition((float)this.xCoord - 0.01F, (float)this.yCoord + 0.8F, (float)this.zCoord + 0.5F);
          this.pointInFront = new Point3D(this.xCoord - 1, this.yCoord, this.zCoord);
          break;
       case 2:
          this.dummyCaster.rotationYaw = 0.0F;
-         this.dummyCaster.setPosition((double)((float)this.xCoord + 0.5F), (double)((float)this.yCoord + 0.8F), (double)((float)this.zCoord + 1.01F));
+         this.dummyCaster.setPosition((float)this.xCoord + 0.5F, (float)this.yCoord + 0.8F, (float)this.zCoord + 1.01F);
          this.pointInFront = new Point3D(this.xCoord, this.yCoord, this.zCoord + 1);
          break;
       case 3:
          this.dummyCaster.rotationYaw = 270.0F;
-         this.dummyCaster.setPosition((double)((float)this.xCoord + 1.01F), (double)((float)this.yCoord + 0.8F), (double)((float)this.zCoord + 0.5F));
+         this.dummyCaster.setPosition((float)this.xCoord + 1.01F, (float)this.yCoord + 0.8F, (float)this.zCoord + 0.5F);
          this.pointInFront = new Point3D(this.xCoord + 1, this.yCoord, this.zCoord);
       }
 
       int mV = (meta & 12) >> 2;
       if (mV == 1) {
          this.dummyCaster.rotationPitch = -90.0F;
-         this.dummyCaster.setPosition((double)((float)this.xCoord + 0.5F), (double)((float)this.yCoord + 1.01F), (double)((float)this.zCoord + 0.5F));
+         this.dummyCaster.setPosition((float)this.xCoord + 0.5F, (float)this.yCoord + 1.01F, (float)this.zCoord + 0.5F);
          this.pointInFront = new Point3D(this.xCoord, this.yCoord + 1, this.zCoord);
       } else if (mV == 2) {
          this.dummyCaster.rotationPitch = 90.0F;
-         this.dummyCaster.setPosition((double)((float)this.xCoord + 0.5F), (double)((float)this.yCoord - 0.01F), (double)((float)this.zCoord + 0.5F));
+         this.dummyCaster.setPosition((float)this.xCoord + 0.5F, (float)this.yCoord - 0.01F, (float)this.zCoord + 0.5F);
          this.pointInFront = new Point3D(this.xCoord, this.yCoord - 1, this.zCoord);
       }
 
@@ -172,7 +162,7 @@ public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInv
    @SideOnly(Side.CLIENT)
    private void playSound(ItemStack castingStack) {
       ISpellShape shape = SpellUtils.instance.getShapeForStage(castingStack, 0);
-      net.minecraft.client.Minecraft.getMinecraft().getSoundHandler().stopSound(net.minecraft.client.audio.PositionedSoundRecord.func_147674_a(new ResourceLocation(shape.getSoundForAffinity(SpellUtils.instance.mainAffinityFor(castingStack), castingStack, (World)null)), 1.0F));
+      net.minecraft.client.Minecraft.getMinecraft().getSoundHandler().stopSound(net.minecraft.client.audio.PositionedSoundRecord.func_147674_a(new ResourceLocation(shape.getSoundForAffinity(SpellUtils.instance.mainAffinityFor(castingStack), castingStack, null)), 1.0F));
    }
 
    public boolean hasCharge() {
@@ -183,10 +173,10 @@ public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInv
       float castCost = this.getCastCost();
       if (this.getCharge() > castCost) {
          prepForActivate();
-         if (SpellUtils.instance.spellIsChanneled(castingStack) && SpellHelper.instance.applyStackStageOnUsing(castingStack, caster, caster, (double)this.xCoord, (double)this.yCoord, (double)this.zCoord, this.worldObj, false, false, this.activeTicks++) == SpellCastResult.SUCCESS) {
+         if (SpellUtils.instance.spellIsChanneled(castingStack) && SpellHelper.instance.applyStackStageOnUsing(castingStack, caster, caster, this.xCoord, this.yCoord, this.zCoord, this.worldObj, false, false, this.activeTicks++) == SpellCastResult.SUCCESS) {
             PowerNodeRegistry.instance.consumePower(this, getBestType(), castCost);
             this.hasCast = true;
-         } else if (!this.hasCast && SpellHelper.instance.applyStackStage(castingStack, caster, caster, (double)this.xCoord, (double)this.yCoord, (double)this.zCoord, 0, this.worldObj, false, false, 0) == SpellCastResult.SUCCESS) {
+         } else if (!this.hasCast && SpellHelper.instance.applyStackStage(castingStack, caster, caster, this.xCoord, this.yCoord, this.zCoord, 0, this.worldObj, false, false, 0) == SpellCastResult.SUCCESS) {
             PowerNodeRegistry.instance.consumePower(this, getBestType(), castCost);
             this.hasCast = true;
          }
@@ -206,28 +196,28 @@ public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInv
       switch(meta & 3) {
       case 0:
          caster.rotationYaw = 180.0F;
-         caster.setPosition((double)((float)this.xCoord + 0.5F), (double)((float)this.yCoord + 0.8F), (double)((float)this.zCoord - 0.01F));
+         caster.setPosition((float)this.xCoord + 0.5F, (float)this.yCoord + 0.8F, (float)this.zCoord - 0.01F);
          break;
       case 1:
          caster.rotationYaw = 90.0F;
-         caster.setPosition((double)((float)this.xCoord - 0.01F), (double)((float)this.yCoord + 0.8F), (double)((float)this.zCoord + 0.5F));
+         caster.setPosition((float)this.xCoord - 0.01F, (float)this.yCoord + 0.8F, (float)this.zCoord + 0.5F);
          break;
       case 2:
          caster.rotationYaw = 0.0F;
-         caster.setPosition((double)((float)this.xCoord + 0.5F), (double)((float)this.yCoord + 0.8F), (double)((float)this.zCoord + 1.01F));
+         caster.setPosition((float)this.xCoord + 0.5F, (float)this.yCoord + 0.8F, (float)this.zCoord + 1.01F);
          break;
       case 3:
          caster.rotationYaw = 270.0F;
-         caster.setPosition((double)((float)this.xCoord + 1.01F), (double)((float)this.yCoord + 0.8F), (double)((float)this.zCoord + 0.5F));
+         caster.setPosition((float)this.xCoord + 1.01F, (float)this.yCoord + 0.8F, (float)this.zCoord + 0.5F);
       }
 
       int mV = (meta & 12) >> 2;
       if (mV == 1) {
          caster.rotationPitch = -90.0F;
-         caster.setPosition((double)((float)this.xCoord + 0.5F), (double)((float)this.yCoord + 1.01F), (double)((float)this.zCoord + 0.5F));
+         caster.setPosition((float)this.xCoord + 0.5F, (float)this.yCoord + 1.01F, (float)this.zCoord + 0.5F);
       } else if (mV == 2) {
          caster.rotationPitch = 90.0F;
-         caster.setPosition((double)((float)this.xCoord + 0.5F), (double)((float)this.yCoord - 0.01F), (double)((float)this.zCoord + 0.5F));
+         caster.setPosition((float)this.xCoord + 0.5F, (float)this.yCoord - 0.01F, (float)this.zCoord + 0.5F);
       }
    }
 
@@ -242,9 +232,7 @@ public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInv
       return highestValid;
    }
 
-   protected int getChargeThreshold() {
-      return this.capacity;
-   }
+
 
    public void incrementRotation() {
       this.rotation = (this.rotation + 0.01F) % 360.0F;
@@ -360,62 +348,52 @@ public class TileEntityBlockCaster extends TileEntityAMManaPower implements IInv
       nbttagcompound.setTag("CasterInventory", nbttaglist);
    }
 
-   public String getInvName() {
-      return "Caster";
-   }
+//   public String getInvName() {
+//      return "Caster";
+//   }
 
    public int getInventoryStackLimit() {
       return 1;
    }
 
-   public void openChest() {
-   }
 
-   public void closeChest() {
-   }
+//   public int getPowerPerChargeTick() {
+//      int numFoci = this.numFociOfType(ItemFocusCharge.class);
+//      int base = 10;
+//      if (numFoci > 0) {
+//         base *= 5 * numFoci;
+//      }
+//
+//      return base;
+//   }
+//
+//   public byte[] GetUpdatePacketForClient() {
+//      AMDataWriter writer = new AMDataWriter();
+//      this.writeInventory(writer);
+//      return writer.generate();
+//   }
 
-   public int getPowerPerChargeTick() {
-      int numFoci = this.numFociOfType(ItemFocusCharge.class);
-      int base = 10;
-      if (numFoci > 0) {
-         base *= 5 * numFoci;
-      }
+//   private void writeInventory(AMDataWriter writer) {
+//      ItemStack[] arr$ = this.casterItemStacks;
+//      int len$ = arr$.length;
+//
+//      for(int i$ = 0; i$ < len$; ++i$) {
+//         ItemStack stack = arr$[i$];
+//         if (stack == null) {
+//            writer.add(false);
+//         } else {
+//            writer.add(true);
+//            writer.add(stack);
+//         }
+//      }
+//
+//   }
 
-      return base;
-   }
-
-   public byte[] GetUpdatePacketForClient() {
-      AMDataWriter writer = new AMDataWriter();
-      this.writeInventory(writer);
-      return writer.generate();
-   }
-
-   private void writeInventory(AMDataWriter writer) {
-      ItemStack[] arr$ = this.casterItemStacks;
-      int len$ = arr$.length;
-
-      for(int i$ = 0; i$ < len$; ++i$) {
-         ItemStack stack = arr$[i$];
-         if (stack == null) {
-            writer.add(false);
-         } else {
-            writer.add(true);
-            writer.add(stack);
-         }
-      }
-
-   }
-
-   public boolean isInvNameLocalized() {
-      return false;
-   }
+//   public boolean isInvNameLocalized() {
+//      return false;
+//   }
 
    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-      return true;
-   }
-
-   @Override
-   public boolean canRelayPower(PowerTypes type){
       return true;
    }
 

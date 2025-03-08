@@ -4,7 +4,7 @@ import am2.api.flickers.IFlickerController;
 import am2.api.flickers.IFlickerFunctionality;
 import am2.api.power.PowerTypes;
 import am2.api.spell.enums.Affinity;
-import am2.blocks.tileentities.TileEntityAMManaPower;
+import am2.blocks.tileentities.TileEntityManaConsumer;
 import am2.blocks.tileentities.TileEntityFlickerHabitat;
 import am2.items.ItemsCommonProxy;
 import am2.power.PowerNodeRegistry;
@@ -17,7 +17,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.HashMap;
 
-public class TileEntityFlickerControllerBase extends TileEntityAMManaPower implements IFlickerController{
+import static am2.api.power.PowerTypes.ALL;
+import static am2.api.power.PowerTypes.NONE;
+
+public class TileEntityFlickerControllerBase extends TileEntityManaConsumer implements IFlickerController{
 	private HashMap<Integer, byte[]> sigilMetadata;
 	private IFlickerFunctionality operator;
 	private int tickCounter;
@@ -26,7 +29,7 @@ public class TileEntityFlickerControllerBase extends TileEntityAMManaPower imple
 	private boolean firstOp = true;
 
 	public TileEntityFlickerControllerBase(){
-		super(500);
+		super(500, ALL);
 		sigilMetadata = new HashMap<Integer, byte[]>();
 	}
 
@@ -178,40 +181,13 @@ public class TileEntityFlickerControllerBase extends TileEntityAMManaPower imple
 		}
 	}
 
-	@Override
-	public int getCharge(){
-		return 0;
-	}
 
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return false;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
 
 	@Override
 	public boolean canReceivePower(){
 		return true;
 	}
 
-	@Override
-	public boolean isSource(){
-		return false;
-	}
-
-	@Override
-	public PowerTypes[] getValidPowerTypes(){
-		return PowerTypes.all();
-	}
-
-	@Override
-	public float particleOffset(int axis){
-		return 0.5f;
-	}
 
 	public Affinity[] getNearbyUpgrades(){
 		return this.getUnpoweredNeighbors();

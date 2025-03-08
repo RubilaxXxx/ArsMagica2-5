@@ -2,7 +2,6 @@ package am2.blocks;
 
 import am2.AMCore;
 import am2.blocks.tileentities.TileEntityBlockCaster;
-import am2.blocks.tileentities.TileEntityCasterRune;
 import am2.guis.ArsMagicaGuiIdList;
 import am2.network.AMDataWriter;
 import am2.network.AMNetHandler;
