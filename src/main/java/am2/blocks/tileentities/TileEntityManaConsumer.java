@@ -42,19 +42,6 @@ public  class TileEntityManaConsumer extends TileEntity implements IManaPower, I
 		canRequestPower = true;
 	}
 
-	/***
-	 * Whether the tile entity can provide power.
-	 */
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return false;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
-
 	public boolean unbind(World world, int x, int y, int z){
 		if(GetBinded() == null){
 			return false;
@@ -138,11 +125,6 @@ public  class TileEntityManaConsumer extends TileEntity implements IManaPower, I
 	@Override
 	public boolean canReceivePower(){
 		return this.canRequestPower;
-	}
-
-	@Override
-	public boolean isSource(){
-		return false;
 	}
 
 	@Override

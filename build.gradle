@@ -58,9 +58,10 @@ task devJar(type: Jar) {
 	from sourceSets.main.output
 }
 
+
 task sourceJar(type: Jar) {
 	manifest {}
-	classifier = 'sources'
+	setClassifier('sources')
 	from sourceSets.main.allSource
 }
 
@@ -68,7 +69,7 @@ reobf {
 }
 
 artifacts {
-	archives devJar, sourceJar
+	archives devJar , sourceJar
 }
 
 dependencies {

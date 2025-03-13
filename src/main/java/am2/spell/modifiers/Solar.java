@@ -34,6 +34,7 @@ public class Solar implements ISpellModifier{
 		float burnoutBonus = Math.max(1,properties.getMaxFatigue() / 500);
 
 		return (float) Math.max(1, Math.pow(Math.pow((burnoutRatio * spellBonus), (burnoutRatio+1)),(burnoutRatio+1))* burnoutBonus);
+
 	}
 
 	@SuppressWarnings("incomplete-switch")
@@ -48,24 +49,25 @@ public class Solar implements ISpellModifier{
 
 	@Override
 	public float getManaCostMultiplier(ItemStack spellStack, int stage, int quantity, EntityLivingBase caster){
-		float multiplier = 2.5f;
-		if (caster == null){
-			return quantity * multiplier;
-		}
-		World world = caster.worldObj;
-		if (caster.dimension == -1)
-			multiplier = 1.5f;
-		if(world != null){
-			if (world.provider.hasNoSky && world.isDaytime()){
-				double time = world.getWorldTime() % 24000;
-
-				//Returns a decreasing value between 2.4 and 2.0 as it approaches midday.
-				multiplier = (float)Math.round((
-						1.0f + Math.exp(0.058 * (Math.abs((time - 6000) / 1000)))
-				) * 100) / 100;
-			}
-		}
-		return quantity * multiplier;
+//		float multiplier = 2.5f;
+//		if (caster == null){
+//			return quantity * multiplier;
+//		}
+//		World world = caster.worldObj;
+//		if (caster.dimension == -1)
+//			multiplier = 1.5f;
+//		if(world != null){
+//			if (world.provider.hasNoSky && world.isDaytime()){
+//				double time = world.getWorldTime() % 24000;
+//
+//				//Returns a decreasing value between 2.4 and 2.0 as it approaches midday.
+//				multiplier = (float)Math.round((
+//						1.0f + Math.exp(0.058 * (Math.abs((time - 6000) / 1000)))
+//				) * 100) / 100;
+//			}
+//		}
+//		return quantity * multiplier;
+		return 1;
 	}
 	@Override
 	public byte[] getModifierMetadata(ItemStack[] matchedRecipe){

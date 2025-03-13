@@ -26,7 +26,7 @@ public class BoundItemHandler extends Item{
 	}
 	// return an itemstack usable by spellutils from a stored_spell tag.
 	public static ItemStack getSpellStack(ItemStack stack){
-		if(stack.stackTagCompound.hasKey("stored_spell")){
+		if(stack != null && stack.hasTagCompound() && stack.stackTagCompound.hasKey("stored_spell")){
 			ItemStack spellstack = new ItemStack(stack.getItem(), stack.stackSize, stack.getItemDamage());
 			spellstack.setTagCompound(stack.stackTagCompound.getCompoundTag("stored_spell"));
 			return spellstack;

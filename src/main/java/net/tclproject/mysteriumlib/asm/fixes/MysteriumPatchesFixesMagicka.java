@@ -110,20 +110,21 @@ public class MysteriumPatchesFixesMagicka{
 	}
 
 	// same as last method: prevent ethereal players from being returned
-	@Fix(returnSetting = EnumReturnSetting.ALWAYS, insertOnExit = true)
-	public static List getEntitiesWithinAABBExcludingEntity(World world, Entity p_94576_1_, AxisAlignedBB p_94576_2_, IEntitySelector p_94576_3_, @ReturnedValue List returnedValue)
-	{
-		ArrayList toReturn = new ArrayList();
-		for (int i = 0; i < returnedValue.size(); i++) {
-			if (i >= returnedValue.size()) break; // because we now know how volatile entity lists are.
-			if (!(returnedValue.get(i) instanceof EntityPlayer)) {
-				toReturn.add(returnedValue.get(i));
-			} else { // if player
-				if (!isPlayerEthereal((EntityPlayer)returnedValue.get(i))) toReturn.add(returnedValue.get(i));
-			}
-		}
-		return toReturn;
-	}
+//	@Fix(returnSetting = EnumReturnSetting.ALWAYS, insertOnExit = true)
+//	public static List getEntitiesWithinAABBExcludingEntity(World world, Entity p_94576_1_, AxisAlignedBB p_94576_2_, IEntitySelector p_94576_3_, @ReturnedValue List returnedValue)
+//	{
+//		ArrayList toReturn = new ArrayList();
+//		for (int i = 0; i < returnedValue.size(); i++) {
+//			if (i >= returnedValue.size()) break; // because we now know how volatile entity lists are.
+//			if (!(returnedValue.get(i) instanceof EntityPlayer)) {
+//				System.out.println("DEV TEST !");
+//				toReturn.add(returnedValue.get(i));
+//			} else { // if player
+//				if (!isPlayerEthereal((EntityPlayer)returnedValue.get(i))) toReturn.add(returnedValue.get(i));
+//			}
+//		}
+//		return toReturn;
+//	}
 
 	public static boolean updatingRenderWorld = false;
 	public static boolean orientingCamera = false;

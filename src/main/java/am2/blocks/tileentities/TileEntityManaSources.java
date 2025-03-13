@@ -32,7 +32,7 @@ public class TileEntityManaSources extends TileEntity implements IManaPower, IBi
 	protected int capacity;
 	protected int surroundingCheckTicks;
 	protected int poweramount;
-	protected int powerBase = 5;
+	protected int powerBase = 50;
 	protected int powerMultiplier = 1;
 	protected MultiblockStructureDefinition structure;
 	protected MultiblockStructureDefinition.StructureGroup wizardChalkCircle;
@@ -96,10 +96,6 @@ public class TileEntityManaSources extends TileEntity implements IManaPower, IBi
 	}
 
 	@Override
-	public boolean canSendPower(PowerTypes type){
-		return type == this.type;
-	}
-	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound){
 		super.writeToNBT(nbttagcompound);
 		nbttagcompound.setInteger(TAG_POWERAMOUNT, getCharge());
@@ -108,22 +104,12 @@ public class TileEntityManaSources extends TileEntity implements IManaPower, IBi
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound){
 		super.readFromNBT(nbttagcompound);
-		setPower(nbttagcompound.getInteger(TAG_POWERAMOUNT));
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
+		poweramount = nbttagcompound.getInteger(TAG_POWERAMOUNT);
 	}
 
 	@Override
 	public boolean canReceivePower(){
 		return false;
-	}
-
-	@Override
-	public boolean isSource(){
-		return true;
 	}
 
 	@Override
@@ -159,15 +145,8 @@ public class TileEntityManaSources extends TileEntity implements IManaPower, IBi
 		return this.structure;
 	}
 
-	public void SetChargeRate(int chargerate){
-		this.powerBase = chargerate;
-	}
-
 	@Override
 	public void setCharge(int amount){
 		 this.poweramount = Math.max(0, Math.min(getCharge() + amount, getCapacity()));
-	}
-	private void setPower(int power){
-		this.poweramount = Math.min(power, getCapacity());
 	}
 }

@@ -21,11 +21,6 @@ public class TileEntityManaBattery extends TileEntityManaStorage{
 	}
 
 	@Override
-	public boolean canSendPower(PowerTypes type){
-		return true;
-	}
-
-	@Override
 	public void updateEntity(){
 		super.updateEntity();
 		tick++;

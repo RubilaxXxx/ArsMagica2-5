@@ -25,31 +25,10 @@ public interface IManaPower{
 	void setCharge(int amount);
 
 
-
-
-	/**
-	 * Can this block provide power?
-	 *
-	 * @param type The power type we are checking for
-	 */
-	boolean canSendPower(PowerTypes type);
-
-	/**
-	 * Can this block relay power?
-	 *
-	 * @param type The type of power we are looking for
-	 */
-	boolean canRelayPower(PowerTypes type);
-
 	/**
 	 * Can this block request power?
 	 */
 	boolean canReceivePower();
-
-	/**
-	 * Is this block a Source block (obelisk, prism, dark aurem) ?
-	 */
-	boolean isSource();
 
 	/**
 	 * Gets the current power type of the block.

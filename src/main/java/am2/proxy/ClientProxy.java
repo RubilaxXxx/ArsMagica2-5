@@ -128,10 +128,10 @@ public class ClientProxy extends CommonProxy{
 		blocks.registerRenderInformation();
 
 		simpleBlockRenderHandler = new SimpleBlockRenderHandler();
-		RenderingRegistry.registerBlockHandler(blocks.commonBlockRenderID, simpleBlockRenderHandler);
+		RenderingRegistry.registerBlockHandler(BlocksCommonProxy.commonBlockRenderID, simpleBlockRenderHandler);
 
 		techneBlockRenderHandler = new TechneBlockRenderHandler();
-		RenderingRegistry.registerBlockHandler(blocks.blockRenderID, techneBlockRenderHandler);
+		RenderingRegistry.registerBlockHandler(BlocksCommonProxy.blockRenderID, techneBlockRenderHandler);
 
 
 		MinecraftForgeClient.registerItemRenderer(ItemsCommonProxy.scythe, CustomItemRenderer.instance);
@@ -349,41 +349,41 @@ public class ClientProxy extends CommonProxy{
 		ArcaneCompendium.instance.unlockCategory(id);
 	}
 
-	@Override
-	public void drawPowerOnBlockHighlight(EntityPlayer player, MovingObjectPosition target, float partialTicks){
-		if (AMCore.proxy.getLocalPlayer().getCurrentArmor(3) != null &&
-				(AMCore.proxy.getLocalPlayer().getCurrentArmor(3).getItem() == ItemsCommonProxy.magitechGoggles ||
-						ArmorHelper.isInfusionPreset(AMCore.proxy.getLocalPlayer().getCurrentArmor(3), GenericImbuement.magitechGoggleIntegration))
-				){
-
-			TileEntity te = player.worldObj.getTileEntity(target.blockX, target.blockY, target.blockZ);
-			if (te != null && te instanceof IManaPower){
-				AMCore.proxy.setTrackedLocation(new AMVector3(target.blockX, target.blockY, target.blockZ));
-			}else{
-				AMCore.proxy.setTrackedLocation(AMVector3.zero());
-			}
-
-			if (AMCore.proxy.hasTrackedLocationSynced()){
-				PowerNodeEntry data = AMCore.proxy.getTrackedData();
-				Block block = player.worldObj.getBlock(target.blockX, target.blockY, target.blockZ);
-				float yOff = 0.5f;
-				if (data != null){
-					GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_LIGHTING_BIT);
-					for (PowerTypes type : ((IManaPower)te).getValidPowerTypes()){
-						float pwr = data.getPower(type);
-						float pct = pwr / ((IManaPower)te).getCapacity() * 100;
-						RenderUtilities.drawTextInWorldAtOffset(String.format("%s%.2f (%.2f%%)", type.chatColor(), pwr, pct),
-								target.blockX - (player.prevPosX - (player.prevPosX - player.posX) * partialTicks) + 0.5f,
-								target.blockY + yOff - (player.prevPosY - (player.prevPosY - player.posY) * partialTicks) + block.getBlockBoundsMaxY() * 0.8f,
-								target.blockZ - (player.prevPosZ - (player.prevPosZ - player.posZ) * partialTicks) + 0.5f,
-								0xFFFFFF);
-						yOff += 0.12f;
-					}
-					GL11.glPopAttrib();
-				}
-			}
-		}
-	}
+//	@Override
+//	public void drawPowerOnBlockHighlight(EntityPlayer player, MovingObjectPosition target, float partialTicks){
+//		if (AMCore.proxy.getLocalPlayer().getCurrentArmor(3) != null &&
+//				(AMCore.proxy.getLocalPlayer().getCurrentArmor(3).getItem() == ItemsCommonProxy.magitechGoggles ||
+//						ArmorHelper.isInfusionPreset(AMCore.proxy.getLocalPlayer().getCurrentArmor(3), GenericImbuement.magitechGoggleIntegration))
+//				){
+//
+//			TileEntity te = player.worldObj.getTileEntity(target.blockX, target.blockY, target.blockZ);
+//			if (te != null && te instanceof IManaPower){
+//				AMCore.proxy.setTrackedLocation(new AMVector3(target.blockX, target.blockY, target.blockZ));
+//			}else{
+//				AMCore.proxy.setTrackedLocation(AMVector3.zero());
+//			}
+//
+//			if (AMCore.proxy.hasTrackedLocationSynced()){
+//				PowerNodeEntry data = AMCore.proxy.getTrackedData();
+//				Block block = player.worldObj.getBlock(target.blockX, target.blockY, target.blockZ);
+//				float yOff = 0.5f;
+//				if (data != null){
+//					GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_LIGHTING_BIT);
+//					for (PowerTypes type : ((IManaPower)te).getValidPowerTypes()){
+//						float pwr = data.getPower(type);
+//						float pct = pwr / ((IManaPower)te).getCapacity() * 100;
+//						RenderUtilities.drawTextInWorldAtOffset(String.format("%s%.2f (%.2f%%)", type.chatColor(), pwr, pct),
+//								target.blockX - (player.prevPosX - (player.prevPosX - player.posX) * partialTicks) + 0.5f,
+//								target.blockY + yOff - (player.prevPosY - (player.prevPosY - player.posY) * partialTicks) + block.getBlockBoundsMaxY() * 0.8f,
+//								target.blockZ - (player.prevPosZ - (player.prevPosZ - player.posZ) * partialTicks) + 0.5f,
+//								0xFFFFFF);
+//						yOff += 0.12f;
+//					}
+//					GL11.glPopAttrib();
+//				}
+//			}
+//		}
+//	}
 
 	public void addDeferredTargetSet(EntityLiving ent, EntityLivingBase target){
 		clientTickHandler.addDeferredTarget(ent, target);

@@ -18,6 +18,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -33,9 +34,9 @@ public class TileEntityObelisk extends TileEntityManaSources implements IMultibl
 	public boolean active = false;
 	public float offsetY = 0;
 	public int burnTimeRemaining = 0;
-	public int maxBurnTime = 1;
+	public int maxBurnTime = 0;
 	//TAGS
-
+	private static final String TAG_MAXBURNTIME = "maxburntime";
 	private static final String TAG_BURNTIMEREMAINING = "burntimeremaining";
 	private static final String TAG_BURNINVENTORY = "burninventory";
 
@@ -62,6 +63,9 @@ public class TileEntityObelisk extends TileEntityManaSources implements IMultibl
 
 	@SideOnly(Side.CLIENT)
 	public int getCookProgressScaled(int par1){
+		if(maxBurnTime == 0){
+			maxBurnTime = 200;
+		}
 		return burnTimeRemaining * par1 / maxBurnTime;
 	}
 
@@ -79,19 +83,22 @@ public class TileEntityObelisk extends TileEntityManaSources implements IMultibl
 		//	AMNetHandler.INSTANCE.sendObeliskUpdate(this, new AMDataWriter().add(PK_BURNTIME_CHANGE).add(this.burnTimeRemaining).generate());
 		}
 	}
-	@Override
-	public Packet getDescriptionPacket(){
-		NBTTagCompound nbttagcompound = new NBTTagCompound();
-		super.writeToNBT(nbttagcompound);
-		nbttagcompound.setInteger(TAG_BURNTIMEREMAINING, burnTimeRemaining);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, -888, nbttagcompound);
-	}
+//	@Override
+//	public Packet getDescriptionPacket(){
+//		NBTTagCompound nbttagcompound = new NBTTagCompound();
+//		super.writeToNBT(nbttagcompound);
+//		nbttagcompound.setInteger(TAG_BURNTIMEREMAINING, burnTimeRemaining);
+//		nbttagcompound.setInteger(TAG_MAXBURNTIME, maxBurnTime);
+//		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, -888, nbttagcompound);
+//	}
+//	@Override
+//	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet){
+//		NBTTagCompound tag = packet.func_148857_g();
+//		maxBurnTime = tag.getInteger(TAG_MAXBURNTIME);
+//		burnTimeRemaining = tag.getInteger(TAG_BURNTIMEREMAINING);
+//		super.readFromNBT(tag);
+//	}
 
-	public void handlePacket(byte[] data){
-//		AMDataReader rdr = new AMDataReader(data);
-//		if (rdr.ID == PK_BURNTIME_CHANGE)
-//			this.burnTimeRemaining = rdr.getInt();
-	}
 	protected void checkNearbyBlockState(){
 		ArrayList<StructureGroup> groups = structure.getMatchedGroups(7, worldObj, xCoord, yCoord, zCoord);
 
@@ -121,10 +128,9 @@ public class TileEntityObelisk extends TileEntityManaSources implements IMultibl
 
 	@Override
 	public void updateEntity(){
-		surroundingCheckTicks++;
 		super.updateEntity();
 		active = false;
-		if(surroundingCheckTicks % 100 == 0){
+		if(surroundingCheckTicks++ % 100 == 0){
 			checkNearbyBlockState();
 
 			surroundingCheckTicks = 1;
@@ -179,6 +185,7 @@ public class TileEntityObelisk extends TileEntityManaSources implements IMultibl
 	public void writeToNBT(NBTTagCompound nbttagcompound){
 		super.writeToNBT(nbttagcompound);
 		nbttagcompound.setInteger(TAG_BURNTIMEREMAINING, burnTimeRemaining);
+		nbttagcompound.setInteger(TAG_MAXBURNTIME, maxBurnTime);
 		if (inventory != null){
 			NBTTagList nbttaglist = new NBTTagList();
 			for (int i = 0; i < inventory.length; i++){
@@ -199,6 +206,7 @@ public class TileEntityObelisk extends TileEntityManaSources implements IMultibl
 	public void readFromNBT(NBTTagCompound nbttagcompound){
 		super.readFromNBT(nbttagcompound);
 		burnTimeRemaining = nbttagcompound.getInteger(TAG_BURNTIMEREMAINING);
+		maxBurnTime = nbttagcompound.getInteger(TAG_MAXBURNTIME);
 		if (nbttagcompound.hasKey(TAG_BURNINVENTORY)){
 			NBTTagList nbttaglist = nbttagcompound.getTagList(TAG_BURNINVENTORY, Constants.NBT.TAG_COMPOUND);
 			inventory = new ItemStack[getSizeInventory()];

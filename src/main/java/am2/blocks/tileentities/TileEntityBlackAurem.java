@@ -257,11 +257,6 @@ public class TileEntityBlackAurem extends TileEntityManaSources implements IMult
 	}
 
 	@Override
-	public boolean canSendPower(PowerTypes type) {
-		return type == PowerTypes.DARK;
-	}
-
-	@Override
 	public PowerTypes[] getValidPowerTypes() {
 		return new PowerTypes[]{
 				PowerTypes.DARK

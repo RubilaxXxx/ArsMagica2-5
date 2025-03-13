@@ -55,7 +55,7 @@ public class TileEntityManaStorage extends TileEntity implements IManaPower, IBi
 
 	@Override
 	public int getCharge(){
-		return 0;
+		return poweramount;
 	}
 
 	@Override
@@ -69,22 +69,7 @@ public class TileEntityManaStorage extends TileEntity implements IManaPower, IBi
 	}
 
 	@Override
-	public boolean canSendPower(PowerTypes type){
-		return false;
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
-	}
-
-	@Override
 	public boolean canReceivePower(){
-		return false;
-	}
-
-	@Override
-	public boolean isSource(){
 		return false;
 	}
 

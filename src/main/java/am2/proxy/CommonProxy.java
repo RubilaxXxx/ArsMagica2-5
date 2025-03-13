@@ -398,9 +398,9 @@ public class CommonProxy{
 
 	}
 
-	public void drawPowerOnBlockHighlight(EntityPlayer player, MovingObjectPosition target, float partialTicks){
-
-	}
+//	public void drawPowerOnBlockHighlight(EntityPlayer player, MovingObjectPosition target, float partialTicks){
+//
+//	}
 
 	public void incrementFlickerCount(){
 		this.totalFlickerCount++;

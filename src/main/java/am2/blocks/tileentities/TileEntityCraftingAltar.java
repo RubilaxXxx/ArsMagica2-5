@@ -1119,11 +1119,6 @@ public class TileEntityCraftingAltar extends TileEntityManaConsumer implements I
 		return 0;
 	}
 
-	@Override
-	public boolean canSendPower(PowerTypes type){
-		return false;
-	}
-
 	private boolean compareItemStacks(ItemStack target, ItemStack input){
 		if (target.getItem() == Items.potionitem && input.getItem() == Items.potionitem){
 			return (target.getItemDamage() & 0xF) == (input.getItemDamage() & 0xF);
@@ -1274,11 +1269,6 @@ public class TileEntityCraftingAltar extends TileEntityManaConsumer implements I
 			NBTTagCompound compound = (NBTTagCompound)currentShapeGroups.getCompoundTagAt(i);
 			shapeGroups.get(i).addAll(NBTToISpellPartList(compound));
 		}
-	}
-
-	@Override
-	public boolean canRelayPower(PowerTypes type){
-		return false;
 	}
 
 

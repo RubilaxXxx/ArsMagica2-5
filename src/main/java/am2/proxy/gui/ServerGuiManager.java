@@ -21,6 +21,7 @@ public class ServerGuiManager implements IGuiHandler{
 		if (te == null && ID != ArsMagicaGuiIdList.GUI_SPELL_BOOK && ID != ArsMagicaGuiIdList.GUI_KEYSTONE && ID != ArsMagicaGuiIdList.GUI_ESSENCE_BAG && ID != ArsMagicaGuiIdList.GUI_RUNE_BAG && ID != ArsMagicaGuiIdList.GUI_RIFT && ID != ArsMagicaGuiIdList.GUI_SPELL_CUSTOMIZATION){
 			return null;
 		}
+		ItemStack bagStack = player.getCurrentEquippedItem();
 		switch (ID){
 		case ArsMagicaGuiIdList.GUI_ESSENCE_REFINER:
 			if (!(te instanceof TileEntityEssenceRefiner)){
@@ -79,14 +80,12 @@ public class ServerGuiManager implements IGuiHandler{
 
 			return new ContainerKeystone(player.inventory, player.getCurrentEquippedItem(), runeBag, keystone.ConvertToInventory(keystoneStack), runeBag == null ? null : ItemsCommonProxy.runeBag.ConvertToInventory(runeBag), runeBagSlot);
 		case ArsMagicaGuiIdList.GUI_ESSENCE_BAG:
-			ItemStack bagStack = player.getCurrentEquippedItem();
 			if (bagStack.getItem() == null || !(bagStack.getItem() instanceof ItemEssenceBag)){
 				return null;
 			}
 			ItemEssenceBag bag = (ItemEssenceBag)bagStack.getItem();
 			return new ContainerEssenceBag(player.inventory, player.getCurrentEquippedItem(), bag.ConvertToInventory(bagStack));
 		case ArsMagicaGuiIdList.GUI_RUNE_BAG:
-			bagStack = player.getCurrentEquippedItem();
 			if (bagStack.getItem() == null || !(bagStack.getItem() instanceof ItemRuneBag)){
 				return null;
 			}

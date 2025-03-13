@@ -240,10 +240,10 @@ public class AMPacketProcessorClient extends AMPacketProcessorServer{
 	}
 
 	private void handleObeliskData(byte[] remaining){
-		AMDataReader rdr = new AMDataReader(remaining, false);
-		TileEntity te = Minecraft.getMinecraft().theWorld.getTileEntity(rdr.getInt(), rdr.getInt(), rdr.getInt());
-		if (!(te instanceof TileEntityObelisk)) return;
-		((TileEntityObelisk)te).handlePacket(rdr.getRemainingBytes());
+//		AMDataReader rdr = new AMDataReader(remaining, false);
+//		TileEntity te = Minecraft.getMinecraft().theWorld.getTileEntity(rdr.getInt(), rdr.getInt(), rdr.getInt());
+//		if (!(te instanceof TileEntityObelisk)) return;
+//		((TileEntityObelisk)te).handlePacket(rdr.getRemainingBytes());
 	}
 
 	private void handleCalefactorData(byte[] remaining){
