@@ -46,7 +46,7 @@ public class BlockEverstone extends PoweredBlock{
 	}
 
 	@Override
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z){
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willharvest){
 		TileEntityEverstone everstone = getTE(world, x, y, z);
 		if (everstone == null){
 			if (player.capabilities.isCreativeMode){
@@ -95,7 +95,7 @@ public class BlockEverstone extends PoweredBlock{
 		if (player.getHeldItem() != null){
 			Block block = null;
 			int meta = -1;
-			TileEntityEverstone everstone = getTE(world, x, y, z);
+			TileEntityEverstone everstone =   getTE(world, x, y, z);
 			if (everstone == null) return false;
 
 			if (player.getHeldItem().getItem() == ItemsCommonProxy.crystalWrench){
@@ -112,7 +112,11 @@ public class BlockEverstone extends PoweredBlock{
 			}else if (player.getHeldItem().getItem() instanceof ItemBlock){
 				ItemBlock itemblock = (ItemBlock)player.getHeldItem().getItem();
 				block = itemblock.field_150939_a;
-				if (block.isOpaqueCube()){
+				if(block != null && block.hasTileEntity(itemblock.getMetadata(player.getHeldItem().getItemDamage()))){
+					return false;
+				}
+
+				if (block !=null && block.isOpaqueCube()){
 					meta = itemblock.getMetadata(player.getHeldItem().getItemDamage());
 				}
 			}
