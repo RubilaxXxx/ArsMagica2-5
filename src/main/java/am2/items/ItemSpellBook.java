@@ -184,7 +184,7 @@ public class ItemSpellBook extends ArsMagicaItem{
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack bookstack, World world, EntityPlayer entityplayer){
-		if (entityplayer.isSneaking()){
+		if (entityplayer.isSneaking() && !world.isRemote){
 			FMLNetworkHandler.openGui(entityplayer, AMCore.instance, ArsMagicaGuiIdList.GUI_SPELL_BOOK, world, (int)entityplayer.posX, (int)entityplayer.posY, (int)entityplayer.posZ);
 			return bookstack;
 		}

@@ -202,7 +202,7 @@ public class ItemSpellStaff extends ArsMagicaItem{
 		if (isMagiTechStaff()){
 			if (!world.isRemote){
 				TileEntity te = world.getTileEntity(x, y, z);
-				if (te != null && te instanceof IPowerNode){
+				if (te instanceof IPowerNode){
 					if (player.isSneaking()){
 						AMNetHandler.INSTANCE.syncPowerPaths((IPowerNode)te, (EntityPlayerMP)player);
 					}else{
@@ -211,9 +211,7 @@ public class ItemSpellStaff extends ArsMagicaItem{
 							float power = PowerNodeRegistry.For(world).getPower((IPowerNode)te, type);
 							player.addChatMessage(
 									new ChatComponentText(
-											String.format(
-													StatCollector.translateToLocal("am2.tooltip.det_eth"),
-													type.chatColor(), type.name(), String.format("%.2f", power))));
+											String.format(StatCollector.translateToLocal("am2.tooltip.det_eth"), type.chatColor(), type.name(), String.format("%.2f", power))));
 						}
 					}
 					return true;

@@ -1,5 +1,6 @@
 package am2.entities;
 
+import am2.items.ItemEssence;
 import am2.items.ItemsCommonProxy;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.entity.Entity;
@@ -125,7 +126,7 @@ public class EntityHallucination extends EntityMob {
     }
 
     protected void dropFewItems(boolean recentlyHit, int looting) {
-        if (rand.nextInt(3) == 0) this.entityDropItem(new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_NIGHTMAREESSENCE), 0);
+        if (rand.nextInt(3) == 0) this.entityDropItem(new ItemStack(ItemsCommonProxy.itemOre, 1, ItemEssence.META_NIGHTMARE), 0);
     }
 
 

@@ -83,16 +83,12 @@ public class EntityWinterGuardianArm extends EntityLiving{
 			if (getThrowingEntity() instanceof EntityWinterGuardian){
 				((EntityWinterGuardian)getThrowingEntity()).returnOneArm();
 			}else if (getThrowingEntity() instanceof EntityPlayer && !this.worldObj.isRemote){
-				if (getThrowingEntity().getHealth() <= 0){
-					PlayerTracker.storeSoulboundItemForRespawn((EntityPlayer)getThrowingEntity(), ItemsCommonProxy.winterArmEnchanted.copy());
-				}else{
 					if (!((EntityPlayer)getThrowingEntity()).inventory.addItemStackToInventory(ItemsCommonProxy.winterArmEnchanted.copy())){
 						EntityItem item = new EntityItem(worldObj);
 						item.setPosition(posX, posY, posZ);
 						item.setEntityItemStack(ItemsCommonProxy.winterArmEnchanted.copy());
 						worldObj.spawnEntityInWorld(item);
 					}
-				}
 			}
 		}
 		if (entityHit != null){

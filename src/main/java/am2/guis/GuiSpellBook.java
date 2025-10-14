@@ -61,19 +61,19 @@ public class GuiSpellBook extends GuiContainer{
 
 		int x = 16;
 		int y = 3 + bookActiveSlot * 18;
-		mc.renderEngine.bindTexture(extras);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		drawTexturedModalRect(x, y, 0, 0, 20, 20);
+//		mc.renderEngine.bindTexture(extras);
+//		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+//		drawTexturedModalRect(x, y, 0, 0, 20, 20);
 
 		//special slot
-		int index = ((ContainerSpellBook)this.inventorySlots).specialSlotIndex - 67;
-		x = 48 + 18 * index;
-		y = 229;
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
-		drawTexturedModalRect(x, y, 0, 20, 16, 16);
-		GL11.glDisable(GL11.GL_BLEND);
+//		int index = ((ContainerSpellBook)this.inventorySlots).specialSlotIndex - 67;
+//		x = 48 + 18 * index;
+//		y = 229;
+//		GL11.glEnable(GL11.GL_BLEND);
+//		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+//		GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+//		drawTexturedModalRect(x, y, 0, 20, 16, 16);
+//		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	@Override

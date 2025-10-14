@@ -41,9 +41,8 @@ public class ItemOre extends ArsMagicaItem{
 	public static final int META_RAINROCKROSE = 18;
 	public static final int META_IMBUEDMOONFLOWER = 19;
 	public static final int META_COGNITIVEDUST = 20;
-	public static final int META_NIGHTMAREESSENCE = 21;
-	public static final int META_FRACTALFRAGMENT = 22;
-	public static final int META_SOULFRAGMENT = 23;
+	public static final int META_FRACTALFRAGMENT = 21;
+	public static final int META_SOULFRAGMENT = 22;
 
 	public ItemOre(){
 		super();
@@ -107,8 +106,6 @@ public class ItemOre extends ArsMagicaItem{
 			return StatCollector.translateToLocal("item.arsmagica2:imbuedmoonflower.name");
 		case META_COGNITIVEDUST:
 			return StatCollector.translateToLocal("item.arsmagica2:cognitivedust.name");
-		case META_NIGHTMAREESSENCE:
-			return StatCollector.translateToLocal("item.arsmagica2:nightmareessence.name");
 		case META_FRACTALFRAGMENT:
 			return StatCollector.translateToLocal("item.arsmagica2:fractalfragment.name");
 		case META_SOULFRAGMENT:
@@ -121,20 +118,18 @@ public class ItemOre extends ArsMagicaItem{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister par1IconRegister){
-		textures = new String[]{"vinteum_dust", "arcane_compound", "arcane_ash", "purified_vinteum", "chimerite_gem", "blue_topaz_gem", "sunstone_gem", "moonstone_gem", "animalFat", "celestial_fish", "cosmic_dust", "moonstone_fragment", "sunstone_fragment", "hellfish", "pyrogenic_sediment", "spatial_star", "temporal_cluster", "stormSawtooth_stage_2", "rainRockrose_stage_2", "imbuedMoonflower_stage_2", "cognitive_dust", "nightmare_essence", "fractal_fragment", "soul_fragment"};
+		textures = new String[]{"vinteum_dust", "arcane_compound", "arcane_ash", "purified_vinteum", "chimerite_gem", "blue_topaz_gem", "sunstone_gem", "moonstone_gem", "animalFat", "celestial_fish", "cosmic_dust", "moonstone_fragment", "sunstone_fragment", "hellfish", "pyrogenic_sediment", "spatial_star", "temporal_cluster", "stormSawtooth_stage_2", "rainRockrose_stage_2", "imbuedMoonflower_stage_2", "cognitive_dust", "fractal_fragment", "soul_fragment"};
 
 		icons = new IIcon[textures.length];
-
-		int count = 0;
-		for (String s : textures){
-			icons[count++] = ResourceManager.RegisterTexture(s, par1IconRegister);
+		for(int i = 0; i < textures.length; i++){
+			icons[i] = ResourceManager.RegisterTexture(textures[i], par1IconRegister);
 		}
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int meta){
-		return icons[meta % icons.length];
+		return icons[meta];
 	}
 
 	@Override

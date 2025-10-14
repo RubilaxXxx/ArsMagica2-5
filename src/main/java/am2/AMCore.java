@@ -26,7 +26,6 @@ import am2.playerextensions.RiftStorage;
 import am2.playerextensions.SkillData;
 import am2.power.PowerNodeCache;
 import am2.proxy.CommonProxy;
-import am2.spell.SkillManager;
 import am2.spell.SkillTreeManager;
 import am2.spell.SpellUtils;
 import am2.utility.KeystoneUtilities;
@@ -61,7 +60,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import java.io.File;
 
 //@Mod(modid = "arsmagica2", modLanguage = "java", name = "Ars Magica 2", version = "1.6.7", dependencies = "required-after:AnimationAPI")
-@Mod(modid = "arsmagica2", modLanguage = "java", name = "Ars Magica 2", version = "1.6.7", dependencies = "required-after:AnimationAPI;required-after:CoFHCore")
+@Mod(modid = "arsmagica2", modLanguage = "java", name = "Ars Magica 2", version = "1.6.7", dependencies = "required-after:AnimationAPI;after:CoFHCore")
 public class AMCore{
 
 	@Instance(value = "arsmagica2")
@@ -76,13 +75,16 @@ public class AMCore{
 	public static SimpleNetworkWrapper NETWORK;
 
 	private String compendiumBase;
+	public static boolean thaumcraft = false;
+	public static boolean cofh = false;
 
 	public AMCore(){
 	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
-
+		if(Loader.isModLoaded("CoFHCore"))
+			cofh = true;
 		String configBase = event.getSuggestedConfigurationFile().getAbsolutePath();
 		configBase = popPathFolder(configBase);
 		compendiumBase = popPathFolder(configBase);
@@ -149,8 +151,11 @@ public class AMCore{
 		SeventhSanctum.instance.init();
 //		if (Loader.isModLoaded("BetterDungeons"))
 //			BetterDungeons.init();
-		if (Loader.isModLoaded("Thaumcraft"))
+		if (Loader.isModLoaded("Thaumcraft")){
+			thaumcraft = true;
 			TC4Interop.initialize();
+		}
+
 //		if (Loader.isModLoaded("MineFactoryReloaded"))
 //			MFRInterop.init();
 
@@ -239,6 +244,7 @@ public class AMCore{
 		serverCommandManager.registerCommand(new DumpNBT());
 		serverCommandManager.registerCommand(new Respec());
 		serverCommandManager.registerCommand(new UnlockCompendiumEntry());
+		serverCommandManager.registerCommand(new SetSkillKnown());
 	}
 
 	@EventHandler
@@ -303,7 +309,7 @@ public class AMCore{
 
 	public void initAPI(){
 		LogHelper.info("Initializing API Hooks...");
-		ArsMagicaApi.instance.setSpellPartManager(SkillManager.instance);
+		//ArsMagicaApi.instance.setSpellPartManager(new SpellManager());
 		ArsMagicaApi.instance.setEnchantmentHelper(new AMEnchantmentHelper());
 		ArsMagicaApi.instance.setSkillTreeManager(SkillTreeManager.instance);
 		ArsMagicaApi.instance.setKeystoneHelper(KeystoneUtilities.instance);

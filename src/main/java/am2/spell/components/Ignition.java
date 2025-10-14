@@ -78,9 +78,8 @@ public class Ignition implements ISpellComponent{
 
 	@Override
 	public ItemStack[] reagents(EntityLivingBase caster){
-		return null;
-	}
-
+		return new ItemStack[]{new ItemStack(Items.flint_and_steel)};
+		}
 	@Override
 	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
 		for (int i = 0; i < 5; ++i){

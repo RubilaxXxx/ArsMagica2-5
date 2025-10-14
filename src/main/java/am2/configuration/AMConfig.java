@@ -5,7 +5,10 @@ import am2.api.math.AMVector2;
 import am2.particles.AMParticle;
 import am2.particles.ParticleController;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -498,6 +501,7 @@ public class AMConfig extends Configuration{
 		blacklistAffectTrees = get(CATEGORY_GENERAL, KEY_blacklistAffectTrees, true, "Should Dimension Worldgen Blacklists apply to trees?").getBoolean(true);
 		blacklistAffectPools = get(CATEGORY_GENERAL, KEY_blacklistAffectPools, true, "Should Dimension Worldgen Blacklists apply to essence pools>").getBoolean(true);
 
+		/*Class <? extends Entity > entityClazz = (Class<? extends Entity>) EntityList.stringToClassMapping.get(entityName); */
 		mobBlacklist = new int[split2.length];
 		int count2 = 0;
 		for (String s : split2){
@@ -902,19 +906,19 @@ public class AMConfig extends Configuration{
 	}
 	
 	public int getTopazMinHeight(){
-		return this.vinteumMinHeight;
+		return this.topazMinHeight;
 	}
 	
 	public int getTopazMaxHeight(){
-		return this.vinteumMaxHeight;
+		return this.topazMaxHeight;
 	}
 	
 	public int getTopazVeinSize(){
-		return this.vinteumVeinSize;
+		return this.topazVeinSize;
 	}
 	
 	public int getTopazFrequency(){
-		return this.vinteumFrequency;
+		return this.topazFrequency;
 	}
 	
 	public int getSunstoneMinHeight(){

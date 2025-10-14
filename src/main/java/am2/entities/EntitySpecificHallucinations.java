@@ -1,5 +1,6 @@
 package am2.entities;
 
+import am2.items.ItemEssence;
 import am2.items.ItemsCommonProxy;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -63,11 +64,11 @@ public class EntitySpecificHallucinations {
             {
                 if (itemstack.stackSize-- == 1)
                 {
-                    p_70085_1_.inventory.setInventorySlotContents(p_70085_1_.inventory.currentItem, new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_NIGHTMAREESSENCE));
+                    p_70085_1_.inventory.setInventorySlotContents(p_70085_1_.inventory.currentItem, new ItemStack(ItemsCommonProxy.itemOre, 1, ItemEssence.META_NIGHTMARE));
                 }
-                else if (!p_70085_1_.inventory.addItemStackToInventory(new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_NIGHTMAREESSENCE)))
+                else if (!p_70085_1_.inventory.addItemStackToInventory(new ItemStack(ItemsCommonProxy.itemOre, 1, ItemEssence.META_NIGHTMARE)))
                 {
-                    p_70085_1_.dropPlayerItemWithRandomChoice(new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_NIGHTMAREESSENCE), false);
+                    p_70085_1_.dropPlayerItemWithRandomChoice(new ItemStack(ItemsCommonProxy.itemOre, 1, ItemEssence.META_NIGHTMARE), false);
                 }
 
                 return true;

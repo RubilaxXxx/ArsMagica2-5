@@ -28,15 +28,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class SpellUtils implements ISpellUtils{
 
@@ -383,7 +383,7 @@ public class SpellUtils implements ISpellUtils{
 			for (ISpellComponent component : components){
 				ItemStack[] componentReagents = component.reagents(caster);
 				if (componentReagents != null)
-					for (ItemStack reagentStack : componentReagents) reagents.add(reagentStack);
+					reagents.addAll(Arrays.asList(componentReagents));
 				stageManaCost += component.manaCost(caster);
 				stageBurnout += component.burnout(caster);
 			}
@@ -693,9 +693,15 @@ public class SpellUtils implements ISpellUtils{
 	}
 
 	public boolean casterHasAllReagents(EntityLivingBase caster, ArrayList<ItemStack> reagents){
-		if (caster instanceof EntityPlayer && ((EntityPlayer)caster).capabilities.isCreativeMode)
-			return true;
-		return true;
+		if (caster instanceof EntityPlayer){
+			EntityPlayer player = (EntityPlayer)caster;
+			if(player.capabilities.isCreativeMode || reagents == null ||  reagents.isEmpty())
+				return true;
+			InventoryPlayer inventory = player.inventory;
+			//return Stream.of(inventory.mainInventory).map(ItemStack::getItem).allMatch( item -> reagents.stream().map(ItemStack::getItem).anyMatch(item1 -> item1.equals(item)));
+			return reagents.stream().filter(Objects::nonNull).map(ItemStack::getItem).allMatch(item -> Stream.of(inventory.mainInventory).filter(Objects::nonNull).map(ItemStack::getItem).anyMatch(item::equals));
+		}
+		return false;
 	}
 
 	public boolean casterHasMana(EntityLivingBase caster, float mana){

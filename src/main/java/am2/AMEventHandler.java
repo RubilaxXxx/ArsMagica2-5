@@ -17,9 +17,9 @@ import am2.buffs.BuffEffectScrambleSynapses;
 import am2.buffs.BuffEffectTemporalAnchor;
 import am2.buffs.BuffList;
 import am2.buffs.BuffStatModifiers;
-import am2.configuration.AMConfig;
 import am2.damage.DamageSourceFire;
 import am2.damage.DamageSources;
+import am2.enchantments.AMEnchantments;
 import am2.entities.EntityFlicker;
 import am2.entities.EntityHallucination;
 import am2.entities.EntitySpecificHallucinations;
@@ -42,6 +42,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityBoat;
@@ -54,9 +55,11 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.AchievementList;
@@ -77,7 +80,6 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.tclproject.mysteriumlib.asm.fixes.MysteriumPatchesFixesMagicka;
 
 import java.lang.reflect.Constructor;
@@ -85,8 +87,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static am2.PlayerTracker.soulbound_Storage;
-import static am2.PlayerTracker.storeSoulboundItemsForRespawn;
 import static am2.blocks.liquid.BlockLiquidEssence.liquidEssenceMaterial;
 
 public class AMEventHandler{
@@ -116,11 +116,6 @@ public class AMEventHandler{
 	}
 
 	@SubscribeEvent
-	public void onUnload(WorldEvent.Unload we) {
-		soulbound_Storage.clear();
-	}
-
-	@SubscribeEvent
 	public void onEndermanTeleport(EnderTeleportEvent event){
 		EntityLivingBase ent = event.entityLiving;
 
@@ -146,14 +141,16 @@ public class AMEventHandler{
 
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event){
-		if (event.entity instanceof EntityLivingBase){
-			event.entity.registerExtendedProperties(ExtendedProperties.identifier, new ExtendedProperties());
-			((EntityLivingBase)event.entity).getAttributeMap().registerAttribute(ArsMagicaApi.maxManaBonus);
-			((EntityLivingBase)event.entity).getAttributeMap().registerAttribute(ArsMagicaApi.maxBurnoutBonus);
-			((EntityLivingBase)event.entity).getAttributeMap().registerAttribute(ArsMagicaApi.xpGainModifier);
-			((EntityLivingBase)event.entity).getAttributeMap().registerAttribute(ArsMagicaApi.burnoutReductionRate);
-			((EntityLivingBase)event.entity).getAttributeMap().registerAttribute(ArsMagicaApi.manaRegenTimeModifier);
 
+		if (event.entity instanceof EntityLivingBase){
+			EntityLivingBase entityLB = (EntityLivingBase) event.entity;
+			entityLB.registerExtendedProperties(ExtendedProperties.identifier, new ExtendedProperties());
+			entityLB.getAttributeMap().registerAttribute(ArsMagicaApi.maxManaBonus);
+			entityLB.getAttributeMap().registerAttribute(ArsMagicaApi.maxBurnoutBonus);
+			entityLB.getAttributeMap().registerAttribute(ArsMagicaApi.xpGainModifier);
+			entityLB.getAttributeMap().registerAttribute(ArsMagicaApi.burnoutReductionRate);
+			entityLB.getAttributeMap().registerAttribute(ArsMagicaApi.manaRegenTimeModifier);
+			ExtendedProperties.For(entityLB).register(event.entity.worldObj, entityLB);
 			if (event.entity instanceof EntityPlayer){
 				event.entity.registerExtendedProperties(RiftStorage.identifier, new RiftStorage());
 				event.entity.registerExtendedProperties(AffinityData.identifier, new AffinityData());
@@ -162,6 +159,118 @@ public class AMEventHandler{
 		}else if (event.entity instanceof EntityItemFrame){
 			AMCore.proxy.itemFrameWatcher.startWatchingFrame((EntityItemFrame)event.entity);
 		}
+	}
+
+	@SubscribeEvent
+	public void onclone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event){
+		if (event.original == null || event.entityPlayer == null || event.entityPlayer instanceof FakePlayer) {
+			return;
+		}
+		EntityPlayer original = event.original;
+		EntityPlayer newplayer = event.entityPlayer;
+
+		//ExtendedProp.
+		NBTTagCompound OldNBT = new NBTTagCompound();
+		ExtendedProperties.For(original).saveNBTData(OldNBT);
+		ExtendedProperties.For(newplayer).loadNBTData(OldNBT);
+
+		//skill data.
+		NBTTagCompound OldSkill = new NBTTagCompound();
+		SkillData.For(original).saveNBTData(OldSkill);
+		SkillData.For(newplayer).loadNBTData(OldSkill);
+
+		//Rift storage.
+		NBTTagCompound OldRift = new NBTTagCompound();
+		RiftStorage.For(original).saveNBTData(OldRift);
+		RiftStorage.For(newplayer).loadNBTData(OldRift);
+
+		//Affinity data.
+		NBTTagCompound OldAffinity = new NBTTagCompound();
+		AffinityData.For(original).saveNBTData(OldAffinity);
+		AffinityData.For(newplayer).loadNBTData(OldAffinity);
+
+	}
+
+	//SoulBound Handler (code taken from @EnderIO)
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onPlayerDeath(PlayerDropsEvent evt) {
+		if (evt.entityPlayer == null || evt.entityPlayer instanceof FakePlayer || evt.isCanceled()) {
+			return;
+		}
+		if (evt.entityPlayer.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory")) {
+			return;
+		}
+		ListIterator<EntityItem> iter = evt.drops.listIterator();
+		while (iter.hasNext()) {
+			EntityItem ei = iter.next();
+			ItemStack item = ei.getEntityItem();
+			if (isSoulBound(item)) {
+				if (addToPlayerInventory(evt.entityPlayer, item)) {
+					iter.remove();
+				}
+			}
+		}
+	}
+
+	/*
+	 * This is called when the user presses the "respawn" button. The original inventory would be empty, but
+	 * onPlayerDeath() above placed items in it. Note: Without other death-modifying mods, the content of the old
+	 * inventory would always fit into the new one (both being empty but for soulbound items in the old one) and the old
+	 * one would be discarded just after this method. But better play it safe and assume that an overflow is possible
+	 * and that another mod may move stuff out of the old inventory, too.
+	 */
+	@SubscribeEvent
+	public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone evt) {
+		if (!evt.wasDeath || evt.isCanceled()) {
+			return;
+		}
+		if (evt.original == null || evt.entityPlayer == null || evt.entityPlayer instanceof FakePlayer) {
+			return;
+		}
+		if (evt.entityPlayer.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory")) {
+			return;
+		}
+		for (int i = 0; i < evt.original.inventory.mainInventory.length; i++) {
+			ItemStack item = evt.original.inventory.mainInventory[i];
+			if (isSoulBound(item)) {
+				if (addToPlayerInventory(evt.entityPlayer, item)) {
+					evt.original.inventory.mainInventory[i] = null;
+				}
+			}
+		}
+		for (int i = 0; i < evt.original.inventory.armorInventory.length; i++) {
+			ItemStack item = evt.original.inventory.armorInventory[i];
+			if (isSoulBound(item)) {
+				if (addToPlayerInventory(evt.entityPlayer, item)) {
+					evt.original.inventory.armorInventory[i] = null;
+				}
+			}
+		}
+	}
+
+	private boolean isSoulBound(ItemStack item) {
+		return EnchantmentHelper.getEnchantmentLevel(AMEnchantments.soulbound.effectId, item) > 0;
+	}
+	private boolean addToPlayerInventory(EntityPlayer entityPlayer, ItemStack item) {
+		if (item == null || entityPlayer == null) {
+			return false;
+		}
+		if (item.getItem() instanceof ItemArmor) {
+			ItemArmor arm = (ItemArmor) item.getItem();
+			int index = 3 - arm.armorType;
+			if (entityPlayer.inventory.armorItemInSlot(index) == null) {
+				entityPlayer.inventory.armorInventory[index] = item;
+				return true;
+			}
+		}
+		InventoryPlayer inv = entityPlayer.inventory;
+		for (int i = 0; i < inv.mainInventory.length; i++) {
+			if (inv.mainInventory[i] == null) {
+				inv.mainInventory[i] = item.copy();
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -175,15 +284,17 @@ public class AMEventHandler{
 				buff.stopEffect(soonToBeDead);
 			}
 			soonToBeDead.removePotionEffect(BuffList.temporalAnchor.id);
-			return;
+
 		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onEntityDeathHighPriority(LivingDeathEvent event){
+
 		EntityLivingBase soonToBeDead = event.entityLiving;
 
-		if (soonToBeDead instanceof EntityPlayer) { // soul fragments: die with at least 5 rare items
+		if (soonToBeDead instanceof EntityPlayer) {
+			// soul fragments: die with at least 5 rare items
 			if (soonToBeDead.isPotionActive(BuffList.psychedelic)){
 				if (soonToBeDead.worldObj.provider.dimensionId == 1 && soonToBeDead.getActivePotionEffect(BuffList.psychedelic).getAmplifier() == 1) {
 					EntityPlayer player = (EntityPlayer)soonToBeDead;
@@ -218,10 +329,6 @@ public class AMEventHandler{
 					}
 				}
 			}
-		}
-
-		if (soonToBeDead instanceof EntityPlayer){
-			storeSoulboundItemsForRespawn((EntityPlayer)soonToBeDead);
 		}
 	}
 
@@ -263,10 +370,7 @@ public class AMEventHandler{
 				exProps.addToExtraVariables("karma", "bad");
 			}
 		}
-
-		if (soonToBeDead instanceof EntityPlayer){
-			AMCore.proxy.playerTracker.onPlayerDeath((EntityPlayer)soonToBeDead);
-		}else if (soonToBeDead instanceof EntityCreature){
+		else if (soonToBeDead instanceof EntityCreature){
 			if (!EntityUtilities.isSummon(soonToBeDead) && EntityUtilities.isAIEnabled((EntityCreature)soonToBeDead) && event.source.getSourceOfDamage() instanceof EntityPlayer){
 				EntityUtilities.handleCrystalPhialAdd((EntityCreature)soonToBeDead, (EntityPlayer)event.source.getSourceOfDamage());
 			}
@@ -299,14 +403,6 @@ public class AMEventHandler{
 					}
 				}
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public void onPlayerGetAchievement(AchievementEvent event){
-		if (!event.entityPlayer.worldObj.isRemote && event.achievement == AchievementList.theEnd2){
-			AMCore.instance.proxy.playerTracker.storeExtendedPropertiesForRespawn(event.entityPlayer);
-			// AMCore.instance.proxy.playerTracker.storeSoulboundItemsForRespawn(event.entityPlayer);
 		}
 	}
 
@@ -536,35 +632,6 @@ public class AMEventHandler{
 		extendedProperties.handleSpecialSyncData();
 		extendedProperties.manaBurnoutTick();
 
-		//================================================================================
-		//soulbound items
-		//================================================================================
-		if (ent instanceof EntityPlayer){
-			EntityPlayer player = (EntityPlayer)ent;
-			if (!ent.isDead){
-				if (ent.ticksExisted > 5 && ent.ticksExisted < 10 && !ent.worldObj.isRemote){
-					if (soulbound_Storage.containsKey(player.getUniqueID())){
-						HashMap<Integer, ItemStack> soulboundItems = soulbound_Storage.get(player.getUniqueID());
-						for (Integer i : soulboundItems.keySet()){
-							if (i < player.inventory.getSizeInventory()){
-								player.inventory.setInventorySlotContents(i, soulboundItems.get(i));
-							}else{
-								boolean done = false;
-								for (int l = 0; l < player.inventory.getSizeInventory(); l++){
-									if (player.inventory.getStackInSlot(l) == null){
-										player.inventory.setInventorySlotContents(l, soulboundItems.get(i));
-										done = true;
-										break;
-									}
-								}
-								if (!done) player.entityDropItem(soulboundItems.get(i), 0);
-							}
-						}
-					}
-				}
-			}
-		}
-
 		if (ent instanceof EntityPlayer && extendedProperties.hasExtraVariable("ethereal")) { // ethereal form handling
 			int durationLeft = Integer.valueOf(extendedProperties.getExtraVariable("ethereal"));
 			EntityPlayer player = (EntityPlayer) ent;
@@ -586,54 +653,54 @@ public class AMEventHandler{
 
 		if (ent instanceof EntityPlayer) {
 			// accelerated blocks and entities are done outside of the 5-tick performance optimisation to make them smooth
-			Map<String, String> acceleratedBlocks = extendedProperties.getExtraVariablesContains("accelerated_fast_tile_");
-			for (Map.Entry<String, String> entry : acceleratedBlocks.entrySet()) {
-				if (Integer.valueOf(entry.getValue()) < 3) {
-					extendedProperties.removeFromExtraVariables(entry.getKey());
-				} else {
-					extendedProperties.addToExtraVariables(entry.getKey(), String.valueOf(Integer.valueOf(entry.getValue()) - 1));
-					String[] entryvalues = entry.getKey().split("_");
-					int x = Integer.valueOf(entryvalues[3]);
-					int y = Integer.valueOf(entryvalues[4]);
-					int z = Integer.valueOf(entryvalues[5]);
-					int dim = Integer.valueOf(entryvalues[6]);
-					int power = Integer.valueOf(entryvalues[7]);
-					World wrld = DimensionManager.getWorld(dim);
-					if (wrld != null) {
-						for (int i = 0; i < power; i++) {
-							if (wrld.getTileEntity(x, y, z) != null && wrld.getTileEntity(x, y, z).canUpdate()) {
-								wrld.getTileEntity(x, y, z).updateEntity();
-							}
-							if (wrld.getBlock(x, y, z).getTickRandomly() && wrld.rand.nextInt(100) == 0) {
-								wrld.getBlock(x, y, z).updateTick(wrld, x, y, z, wrld.rand);
-							}
-						}
-					}
-				}
-			}
-			int s1 = DimensionManager.getWorlds().length;
-			try {
-				for (int l = 0; l < s1; l++) { // do this outside of for loop to save performance
-					if (l >= DimensionManager.getWorlds().length) break;
-					int s2 = DimensionManager.getWorlds()[l].loadedEntityList.size();
-					for (int f = 0; f < s2; f++) {
-						if (f >= DimensionManager.getWorlds()[l].loadedEntityList.size())
-							break; // fix for the most obscene bug ever, where it doesn't respect indexes, or arbitrarily chooses to delete entities while I'm iterating over them
-						Object entityobj = DimensionManager.getWorlds()[l].loadedEntityList.get(f);
-						if (entityobj instanceof EntityLivingBase) {
-							if (acceleratedEntitiesUUIDs.containsKey(((EntityLivingBase) entityobj).getUniqueID().toString())) {
-								for (int i = 0; i < acceleratedEntitiesUUIDs.get(((EntityLivingBase) entityobj).getUniqueID().toString()); i++) {
-									((EntityLivingBase) entityobj).onUpdate();
-								}
-							}
-						}
-					}
-				}
-			} catch (IndexOutOfBoundsException e) {
-				; // sometimes it's just unavoidable
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+//			Map<String, String> acceleratedBlocks = extendedProperties.getExtraVariablesContains("accelerated_fast_tile_");
+//			for (Map.Entry<String, String> entry : acceleratedBlocks.entrySet()) {
+//				if (Integer.valueOf(entry.getValue()) < 3) {
+//					extendedProperties.removeFromExtraVariables(entry.getKey());
+//				} else {
+//					extendedProperties.addToExtraVariables(entry.getKey(), String.valueOf(Integer.valueOf(entry.getValue()) - 1));
+//					String[] entryvalues = entry.getKey().split("_");
+//					int x = Integer.valueOf(entryvalues[3]);
+//					int y = Integer.valueOf(entryvalues[4]);
+//					int z = Integer.valueOf(entryvalues[5]);
+//					int dim = Integer.valueOf(entryvalues[6]);
+//					int power = Integer.valueOf(entryvalues[7]);
+//					World wrld = DimensionManager.getWorld(dim);
+//					if (wrld != null) {
+//						for (int i = 0; i < power; i++) {
+//							if (wrld.getTileEntity(x, y, z) != null && wrld.getTileEntity(x, y, z).canUpdate()) {
+//								wrld.getTileEntity(x, y, z).updateEntity();
+//							}
+//							if (wrld.getBlock(x, y, z).getTickRandomly() && wrld.rand.nextInt(100) == 0) {
+//								wrld.getBlock(x, y, z).updateTick(wrld, x, y, z, wrld.rand);
+//							}
+//						}
+//					}
+//				}
+//			}
+//			int s1 = DimensionManager.getWorlds().length;
+//			try {
+//				for (int l = 0; l < s1; l++) { // do this outside of for loop to save performance
+//					if (l >= DimensionManager.getWorlds().length) break;
+//					int s2 = DimensionManager.getWorlds()[l].loadedEntityList.size();
+//					for (int f = 0; f < s2; f++) {
+//						if (f >= DimensionManager.getWorlds()[l].loadedEntityList.size())
+//							break; // fix for the most obscene bug ever, where it doesn't respect indexes, or arbitrarily chooses to delete entities while I'm iterating over them
+//						Object entityobj = DimensionManager.getWorlds()[l].loadedEntityList.get(f);
+//						if (entityobj instanceof EntityLivingBase) {
+//							if (acceleratedEntitiesUUIDs.containsKey(((EntityLivingBase) entityobj).getUniqueID().toString())) {
+//								for (int i = 0; i < acceleratedEntitiesUUIDs.get(((EntityLivingBase) entityobj).getUniqueID().toString()); i++) {
+//									((EntityLivingBase) entityobj).onUpdate();
+//								}
+//							}
+//						}
+//					}
+//				}
+//			} catch (IndexOutOfBoundsException e) {
+//				; // sometimes it's just unavoidable
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 
 			tick++;
 			if (tick > 100000) tick = 0;
@@ -661,6 +728,7 @@ public class AMEventHandler{
 						int y = Integer.valueOf(entryvalues[2]);
 						int z = Integer.valueOf(entryvalues[3]);
 						World thisdim = DimensionManager.getWorld(Integer.valueOf(entryvalues[4]));
+						if(thisdim == null) break;
 						totalenergy[vIndex] = 0;
 						totaletheriumdark[vIndex] = 0;
 						totaletheriumlight[vIndex] = 0;
@@ -905,26 +973,26 @@ public class AMEventHandler{
 					}
 				}
 
-				for (Map.Entry<String, String> entry : acceleratedEntities.entrySet()) {
-					String[] entryvalues = entry.getKey().split("_");
-					if (Integer.valueOf(entry.getValue()) < 3) {
-						extendedProperties.removeFromExtraVariables(entry.getKey());
-						acceleratedEntitiesUUIDs.remove(entryvalues[4]);
-					} else {
-						extendedProperties.addToExtraVariables(entry.getKey(), String.valueOf(Integer.valueOf(entry.getValue()) - 5)); // entryvalue 4 is uuid, 3 is power
-						if (!(acceleratedEntitiesUUIDs.containsKey(entryvalues[4]))) acceleratedEntitiesUUIDs.put(entryvalues[4], Integer.valueOf(entryvalues[3]));
-					}
-				}
-				for (Map.Entry<String, String> entry : slowedEntities.entrySet()) {
-					String[] entryvalues = entry.getKey().split("_");
-					if (Integer.valueOf(entry.getValue()) < 3) {
-						extendedProperties.removeFromExtraVariables(entry.getKey());
-						slowedEntitiesUUIDs.remove(entryvalues[4]);
-					} else {
-						extendedProperties.addToExtraVariables(entry.getKey(), String.valueOf(Integer.valueOf(entry.getValue()) - 5)); // entryvalue 4 is uuid, 3 is power
-						if (!(slowedEntitiesUUIDs.containsKey(entryvalues[4]))) slowedEntitiesUUIDs.put(entryvalues[4], Integer.valueOf(entryvalues[3]));
-					}
-				}
+//				for (Map.Entry<String, String> entry : acceleratedEntities.entrySet()) {
+//					String[] entryvalues = entry.getKey().split("_");
+//					if (Integer.valueOf(entry.getValue()) < 3) {
+//						extendedProperties.removeFromExtraVariables(entry.getKey());
+//						acceleratedEntitiesUUIDs.remove(entryvalues[4]);
+//					} else {
+//						extendedProperties.addToExtraVariables(entry.getKey(), String.valueOf(Integer.valueOf(entry.getValue()) - 5)); // entryvalue 4 is uuid, 3 is power
+//						if (!(acceleratedEntitiesUUIDs.containsKey(entryvalues[4]))) acceleratedEntitiesUUIDs.put(entryvalues[4], Integer.valueOf(entryvalues[3]));
+//					}
+//				}
+//				for (Map.Entry<String, String> entry : slowedEntities.entrySet()) {
+//					String[] entryvalues = entry.getKey().split("_");
+//					if (Integer.valueOf(entry.getValue()) < 3) {
+//						extendedProperties.removeFromExtraVariables(entry.getKey());
+//						slowedEntitiesUUIDs.remove(entryvalues[4]);
+//					} else {
+//						extendedProperties.addToExtraVariables(entry.getKey(), String.valueOf(Integer.valueOf(entry.getValue()) - 5)); // entryvalue 4 is uuid, 3 is power
+//						if (!(slowedEntitiesUUIDs.containsKey(entryvalues[4]))) slowedEntitiesUUIDs.put(entryvalues[4], Integer.valueOf(entryvalues[3]));
+//					}
+//				}
 				for (Map.Entry<String, String> entry : loadedBlocks.entrySet()) {
 					if (Integer.valueOf(entry.getValue()) < 3) {
 						extendedProperties.removeFromExtraVariables(entry.getKey());
@@ -958,17 +1026,17 @@ public class AMEventHandler{
 						extendedProperties.addToExtraVariables(entry.getKey(), String.valueOf(Integer.valueOf(entry.getValue()) - 5));
 					}
 				}
-				for (Map.Entry<String, String> entry : slowedBlocks.entrySet()) {
-					String[] entryvalues = entry.getKey().split("_");
-					if (Integer.valueOf(entry.getValue()) < 3) {
-						extendedProperties.removeFromExtraVariables(entry.getKey());
-						slowedTiles.remove(entryvalues[3] + "_" + entryvalues[4] + "_" + entryvalues[5] + "_" + entryvalues[6]);
-					} else {
-						String represent = Integer.valueOf(entryvalues[3]) + "_" + Integer.valueOf(entryvalues[4]) + "_" + Integer.valueOf(entryvalues[5]) + "_" + Integer.valueOf(entryvalues[6]);
-						if (!(slowedTiles.containsKey(represent))) slowedTiles.put(represent, Integer.valueOf(entryvalues[7])); // 7 is power
-						extendedProperties.addToExtraVariables(entry.getKey(), String.valueOf(Integer.valueOf(entry.getValue()) - 5));
-					}
-				}
+//				for (Map.Entry<String, String> entry : slowedBlocks.entrySet()) {
+//					String[] entryvalues = entry.getKey().split("_");
+//					if (Integer.valueOf(entry.getValue()) < 3) {
+//						extendedProperties.removeFromExtraVariables(entry.getKey());
+//						slowedTiles.remove(entryvalues[3] + "_" + entryvalues[4] + "_" + entryvalues[5] + "_" + entryvalues[6]);
+//					} else {
+//						String represent = Integer.valueOf(entryvalues[3]) + "_" + Integer.valueOf(entryvalues[4]) + "_" + Integer.valueOf(entryvalues[5]) + "_" + Integer.valueOf(entryvalues[6]);
+//						if (!(slowedTiles.containsKey(represent))) slowedTiles.put(represent, Integer.valueOf(entryvalues[7])); // 7 is power
+//						extendedProperties.addToExtraVariables(entry.getKey(), String.valueOf(Integer.valueOf(entry.getValue()) - 5));
+//					}
+//				}
 			}
 		}
 		//================================================================================

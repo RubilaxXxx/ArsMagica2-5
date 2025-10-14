@@ -14,6 +14,7 @@ import am2.blocks.BlocksCommonProxy;
 import am2.blocks.RecipesEssenceRefiner;
 import am2.bosses.IArsMagicaBoss;
 import am2.entities.EntityFlicker;
+import am2.entities.EntityHallucination;
 import am2.guis.AMGuiHelper.CompendiumBreadcrumb;
 import am2.guis.controls.GuiButtonCompendiumNext;
 import am2.guis.controls.GuiButtonCompendiumTab;
@@ -604,10 +605,15 @@ public class GuiArcaneCompendium extends GuiScreen{
 		int i1 = (height - ySize) / 2;
 
 		stackTip = null;
-
+		RenderHelper.disableStandardItemLighting();
+		this.drawDefaultBackground();
+		mc.renderEngine.bindTexture(background);
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		this.drawTexturedModalRect_Classic(l, i1, 0, 0, xSize, ySize, 256, 240);
+		RenderHelper.enableStandardItemLighting();
 		drawLeftPage(l, i1);
 		drawRightPage(l, i1, par1, par2);
-
+		drawRightPageExtras(l, i1);
 		if (this.page == 0)
 			prevPage.visible = false;
 		else
@@ -619,22 +625,7 @@ public class GuiArcaneCompendium extends GuiScreen{
 		else
 			nextPage.visible = true;
 
-		RenderHelper.disableStandardItemLighting();
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef(0, 0, -1);
-
-		this.drawDefaultBackground();
-
-		mc.renderEngine.bindTexture(background);
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
-		this.drawTexturedModalRect_Classic(l, i1, 0, 0, xSize, ySize, 256, 240);
-
-		drawRightPageExtras(l, i1);
-
-		GL11.glPopMatrix();
-
-		RenderHelper.enableStandardItemLighting();
 
 		super.drawScreen(par1, par2, par3);
 
@@ -700,6 +691,7 @@ public class GuiArcaneCompendium extends GuiScreen{
 		mc.renderEngine.bindTexture(extras);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glTranslatef(0,0,10);
 		this.drawTexturedModalRect_Classic(l + 305, i1 + 15, 112, 145, 60, 40, 40, 40);
 		this.drawTexturedModalRect_Classic(l + 180, i1 + 200, 112, 175, 60, 40, 40, 40);
 		GL11.glDisable(GL11.GL_BLEND);
@@ -818,9 +810,12 @@ public class GuiArcaneCompendium extends GuiScreen{
 			if (entryEntity instanceof IArsMagicaBoss){
 				float scaleFactorX = (1 / entryEntity.width);
 				float scaleFactorY = (2 / entryEntity.height);
-				GL11.glScalef(scaleFactorX, scaleFactorY, scaleFactorX);
+				GL11.glScalef(1,1,1);
 			}else if (entryEntity instanceof EntityFlicker){
 				GL11.glTranslatef(0, 1.3f, 0);
+			}
+			if(entryEntity instanceof EntityHallucination){
+				((EntityHallucination)entryEntity).setTarget(mc.thePlayer.getCommandSenderName());
 			}
 			GL11.glRotatef(curRotationH, 0, 1, 0);
 

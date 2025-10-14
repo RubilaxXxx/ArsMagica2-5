@@ -12,18 +12,25 @@ import am2.api.spell.enums.SpellModifiers;
 import am2.blocks.BlocksCommonProxy;
 import am2.buffs.BuffEffectIllumination;
 import am2.buffs.BuffList;
+import am2.items.ItemOre;
+import am2.items.ItemRune;
 import am2.items.ItemsCommonProxy;
 import am2.particles.AMParticle;
 import am2.power.PowerNodeRegistry;
 import am2.spell.SpellUtils;
 import am2.spell.modifiers.Colour;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockFlower;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.world.BlockEvent;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -32,8 +39,8 @@ public class Light implements ISpellComponent, IRitualInteraction{
 
 	@Override
 	public boolean applyEffectBlock(ItemStack stack, World world, int blockx, int blocky, int blockz, int blockFace, double impactX, double impactY, double impactZ, EntityLivingBase caster){
-
-		if (world.getBlock(blockx, blocky, blockz) == BlocksCommonProxy.obelisk){
+		Block block = world.getBlock(blockx, blocky, blockz);
+		if (block == BlocksCommonProxy.obelisk){
 			ItemStack[] reagents = RitualShapeHelper.instance.checkForRitual(this, world, blockx, blocky, blockz);
 			if (reagents != null){
 				if (!world.isRemote){
@@ -41,15 +48,12 @@ public class Light implements ISpellComponent, IRitualInteraction{
 					RitualShapeHelper.instance.consumeRitualShape(this, world, blockx, blocky, blockz);
 					world.setBlock(blockx, blocky, blockz, BlocksCommonProxy.celestialPrism);
 					PowerNodeRegistry.For(world).registerPowerNode((IPowerNode)world.getTileEntity(blockx, blocky, blockz));
-				}else{
-
 				}
-
 				return true;
 			}
 		}
 
-		if (world.getBlock(blockx, blocky, blockz) == Blocks.air) blockFace = -1;
+		if (block == Blocks.air) blockFace = -1;
 		if (blockFace != -1){
 			switch (blockFace){
 			case 0:
@@ -73,12 +77,14 @@ public class Light implements ISpellComponent, IRitualInteraction{
 			}
 		}
 
-		if (world.getBlock(blockx, blocky, blockz) != Blocks.air){
-			return false;
-		}
-
-		if (!world.isRemote){
-			world.setBlock(blockx, blocky, blockz, BlocksCommonProxy.blockMageTorch, getColorMeta(stack), 2);
+		Block blockto = world.getBlock(blockx, blocky, blockz);
+		if (!world.isRemote && (world.isAirBlock(blockx, blocky, blockz) || blockto == Blocks.snow || blockto == Blocks.water || blockto == Blocks.flowing_water || blockto instanceof BlockFlower)){
+			if (caster instanceof EntityPlayer){
+				BlockEvent.PlaceEvent place =  new BlockEvent.PlaceEvent(new BlockSnapshot(world, blockx, blocky, blockz,Blocks.water, 0),block,(EntityPlayer)caster);
+				if(place.isCanceled()) return false;
+				world.setBlock(blockx, blocky, blockz, BlocksCommonProxy.blockMageTorch, getColorMeta(stack), 2);
+				return true;
+			}
 		}
 
 
@@ -100,7 +106,7 @@ public class Light implements ISpellComponent, IRitualInteraction{
 		}
 
 		for (int i = 0; i < 16; ++i){
-			if (((ItemDye)Items.dye).field_150922_c[i] == color){
+			if (ItemDye.field_150922_c[i] == color){
 				meta = i;
 				break;
 			}
@@ -168,7 +174,7 @@ public class Light implements ISpellComponent, IRitualInteraction{
 	@Override
 	public Object[] getRecipeItems(){
 		return new Object[]{
-				new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_WHITE),
+				new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_WHITE),
 				BlocksCommonProxy.cerublossom,
 				Blocks.torch,
 				BlocksCommonProxy.vinteumTorch
@@ -188,7 +194,7 @@ public class Light implements ISpellComponent, IRitualInteraction{
 	@Override
 	public ItemStack[] getReagents(){
 		return new ItemStack[]{
-				new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_MOONSTONE),
+				new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_MOONSTONE),
 				new ItemStack(ItemsCommonProxy.manaFocus)
 		};
 	}

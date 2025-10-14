@@ -13,6 +13,6 @@ public class SlotRuneOnly extends Slot{
 
 	@Override
 	public boolean isItemValid(ItemStack par1ItemStack){
-		return par1ItemStack.getItem() instanceof ItemRune;
+		return par1ItemStack.getItem() instanceof ItemRune && par1ItemStack.getItemDamage() < 17;
 	}
 }

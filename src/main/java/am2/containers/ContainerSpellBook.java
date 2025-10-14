@@ -1,6 +1,7 @@
 package am2.containers;
 
 import am2.api.spell.ItemSpellBase;
+import am2.containers.slots.SlotLock;
 import am2.containers.slots.SlotOneItemClassOnly;
 import am2.items.ItemSpellBook;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +46,8 @@ public class ContainerSpellBook extends Container{
 		//display player action bar
 		for (int j1 = 0; j1 < 9; j1++){
 			if (inventoryplayer.getStackInSlot(j1) == bookStack){
-				specialSlotIndex = j1 + 67;
+				specialSlotIndex = j1;
+				addSlotToContainer(new SlotLock(inventoryplayer,specialSlotIndex,48 + j1 * 18, 229));
 				continue;
 			}
 			addSlotToContainer(new Slot(inventoryplayer, j1, 48 + j1 * 18, 229));
@@ -78,10 +80,25 @@ public class ContainerSpellBook extends Container{
 			ItemSpellBook spellBook = (ItemSpellBook)spellBookItemStack.getItem();
 			ItemStack[] items = GetFullInventory();
 			spellBook.UpdateStackTagCompound(spellBookItemStack, items);
-			entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, spellBookItemStack);
+			if(entityplayer.getHeldItem() != null && entityplayer.getHeldItem().isItemEqual(bookStack)){
+				entityplayer.setCurrentItemOrArmor(0,spellBookItemStack);
+			}
 		}
 
 		super.onContainerClosed(entityplayer);
+	}
+
+	@Override
+	public ItemStack slotClick(int slotId, int keyOrdinal, int clickType, EntityPlayer player) {
+		if(clickType == 2 && keyOrdinal >= 0 && keyOrdinal < 9) {
+			int hotbarSlotIndex = this.inventorySlots.size() - (9 - keyOrdinal);
+			Slot hotbarTargetSlot = getSlot(hotbarSlotIndex);
+			Slot hoverSlot = getSlot(slotId);
+			if(hotbarTargetSlot instanceof SlotLock || hoverSlot instanceof SlotLock) {
+				return null;
+			}
+		}
+		return super.slotClick(slotId, keyOrdinal, clickType, player);
 	}
 
 	@Override

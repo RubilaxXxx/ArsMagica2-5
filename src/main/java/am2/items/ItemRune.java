@@ -18,6 +18,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -281,7 +282,7 @@ public class ItemRune extends ArsMagicaItem{
 	//===========================================
 
 	public void doCurrentDebugOperation(ItemStack stack, World world, EntityPlayer player){
-		displayBlockMeta(stack, world, player);
+		displaymana(player);
 	}
 
 	public void displayBlockMeta(ItemStack stack, World world, EntityPlayer player){
@@ -296,6 +297,13 @@ public class ItemRune extends ArsMagicaItem{
 						));
 			}
 		}
+	}
+	public void displaymana(EntityPlayer player){
+
+			int mana = ExtendedProperties.For(player).getMagicLevel();
+			player.addChatMessage(new ChatComponentText(String.valueOf(mana)));
+
+
 	}
 
 	public void spawnRibbonParticle(ItemStack stack, World world, EntityPlayer player){

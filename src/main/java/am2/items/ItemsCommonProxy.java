@@ -239,17 +239,7 @@ public class ItemsCommonProxy{
 		BoundLeggings = (new BoundArmor(ArmorMaterial.IRON, ArsMagicaArmorMaterial.BOUND, ArmorHelper.getArmorRenderIndex("bound"), 2)).setUnlocalizedAndTextureName("arsmagica2:bound_legs").setCreativeTab(itemTab);
 		BoundBoots = (new BoundArmor(ArmorMaterial.IRON, ArsMagicaArmorMaterial.BOUND, ArmorHelper.getArmorRenderIndex("bound"), 3)).setUnlocalizedAndTextureName("arsmagica2:bound_boots").setCreativeTab(itemTab);
 		archmageHood = (new AMArmor(ArmorMaterial.DIAMOND, ArsMagicaArmorMaterial.ARCHMAGE, ArmorHelper.getArmorRenderIndex("archmage"), 0)).setUnlocalizedAndTextureName("arsmagica2:helmet_archmage").setCreativeTab(itemTab).setMaxDamage(0);
-		archmageArmor = new AMArmor(ArmorMaterial.DIAMOND, ArsMagicaArmorMaterial.ARCHMAGE, ArmorHelper.getArmorRenderIndex("archmage"), 1) {
-			public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack){
-				if (player.ticksExisted % 20 == 0 && player instanceof EntityLivingBase){
-					float abs = ((EntityLivingBase)player).getAbsorptionAmount();
-					if (abs < 38){ // 2 rows of hearts
-						abs++;
-						if (!world.isRemote) ((EntityLivingBase)player).setAbsorptionAmount(abs);
-					}
-				}
-			}
-		}.setUnlocalizedAndTextureName("arsmagica2:chest_archmage").setCreativeTab(itemTab).setMaxDamage(0);
+		archmageArmor = new AMArmor(ArmorMaterial.DIAMOND, ArsMagicaArmorMaterial.ARCHMAGE, ArmorHelper.getArmorRenderIndex("archmage"), 1).setUnlocalizedAndTextureName("arsmagica2:chest_archmage").setCreativeTab(itemTab).setMaxDamage(0);
 		stormSawtoothSeeds = (ItemSeeds)(new ItemSeeds(BlocksCommonProxy.stormSawtooth, Blocks.soul_sand) {
 			@Override
 			public EnumPlantType getPlantType(IBlockAccess world, int x, int y, int z)
@@ -339,13 +329,13 @@ public class ItemsCommonProxy{
 		soulspike = (ItemSoulspike) new ItemSoulspike(soulMat).setUnlocalizedAndTextureName("arsmagica2:soulspike").setCreativeTab(itemTab);
 		etheriumExtractor = (ItemEtheriumExtractor) new ItemEtheriumExtractor().setUnlocalizedAndTextureName("arsmagica2:etheriumExtractor").setCreativeTab(itemTab);
 
-		addItemStackToChestGen(new ItemStack(rune, 1, rune.META_INF_ORB_BLUE), 1, 1, 3, ChestGenHooks.DUNGEON_CHEST, ChestGenHooks.MINESHAFT_CORRIDOR, ChestGenHooks.PYRAMID_DESERT_CHEST, ChestGenHooks.PYRAMID_JUNGLE_CHEST, ChestGenHooks.STRONGHOLD_CORRIDOR, ChestGenHooks.STRONGHOLD_CROSSING);
-		addItemStackToChestGen(new ItemStack(rune, 1, rune.META_INF_ORB_BLUE), 1, 1, 5, ChestGenHooks.STRONGHOLD_LIBRARY);
+		addItemStackToChestGen(new ItemStack(rune, 1, ItemRune.META_INF_ORB_BLUE), 1, 1, 3, ChestGenHooks.DUNGEON_CHEST, ChestGenHooks.MINESHAFT_CORRIDOR, ChestGenHooks.PYRAMID_DESERT_CHEST, ChestGenHooks.PYRAMID_JUNGLE_CHEST, ChestGenHooks.STRONGHOLD_CORRIDOR, ChestGenHooks.STRONGHOLD_CROSSING);
+		addItemStackToChestGen(new ItemStack(rune, 1, ItemRune.META_INF_ORB_BLUE), 1, 1, 5, ChestGenHooks.STRONGHOLD_LIBRARY);
 
-		addItemStackToChestGen(new ItemStack(rune, 1, rune.META_INF_ORB_GREEN), 1, 1, 1, ChestGenHooks.DUNGEON_CHEST, ChestGenHooks.MINESHAFT_CORRIDOR, ChestGenHooks.PYRAMID_DESERT_CHEST, ChestGenHooks.PYRAMID_JUNGLE_CHEST, ChestGenHooks.STRONGHOLD_CORRIDOR, ChestGenHooks.STRONGHOLD_CROSSING);
-		addItemStackToChestGen(new ItemStack(rune, 1, rune.META_INF_ORB_GREEN), 1, 1, 1, ChestGenHooks.STRONGHOLD_LIBRARY);
+		addItemStackToChestGen(new ItemStack(rune, 1, ItemRune.META_INF_ORB_GREEN), 1, 1, 1, ChestGenHooks.DUNGEON_CHEST, ChestGenHooks.MINESHAFT_CORRIDOR, ChestGenHooks.PYRAMID_DESERT_CHEST, ChestGenHooks.PYRAMID_JUNGLE_CHEST, ChestGenHooks.STRONGHOLD_CORRIDOR, ChestGenHooks.STRONGHOLD_CROSSING);
+		addItemStackToChestGen(new ItemStack(rune, 1, ItemRune.META_INF_ORB_GREEN), 1, 1, 1, ChestGenHooks.STRONGHOLD_LIBRARY);
 
-		addItemStackToChestGen(new ItemStack(rune, 1, rune.META_INF_ORB_RED), 1, 1, 6, ChestGenHooks.STRONGHOLD_LIBRARY);
+		addItemStackToChestGen(new ItemStack(rune, 1, ItemRune.META_INF_ORB_RED), 1, 1, 6, ChestGenHooks.STRONGHOLD_LIBRARY);
 
 		protectiveArmors = new Item[]{
 				mageHood, mageArmor, mageLeggings, mageBoots,
@@ -358,17 +348,17 @@ public class ItemsCommonProxy{
 
 		itemTab.setIconItemIndex(itemOre);
 
-		Affinity.NONE.setRepresentItem(essence, essence.META_BASE_CORE);
-		Affinity.AIR.setRepresentItem(essence, essence.META_AIR);
-		Affinity.ARCANE.setRepresentItem(essence, essence.META_ARCANE);
-		Affinity.EARTH.setRepresentItem(essence, essence.META_EARTH);
-		Affinity.ENDER.setRepresentItem(essence, essence.META_ENDER);
-		Affinity.FIRE.setRepresentItem(essence, essence.META_FIRE);
-		Affinity.ICE.setRepresentItem(essence, essence.META_ICE);
-		Affinity.LIFE.setRepresentItem(essence, essence.META_LIFE);
-		Affinity.LIGHTNING.setRepresentItem(essence, essence.META_LIGHTNING);
-		Affinity.NATURE.setRepresentItem(essence, essence.META_NATURE);
-		Affinity.WATER.setRepresentItem(essence, essence.META_WATER);
+		Affinity.NONE.setRepresentItem(essence, ItemEssence.META_BASE_CORE);
+		Affinity.AIR.setRepresentItem(essence, ItemEssence.META_AIR);
+		Affinity.ARCANE.setRepresentItem(essence, ItemEssence.META_ARCANE);
+		Affinity.EARTH.setRepresentItem(essence, ItemEssence.META_EARTH);
+		Affinity.ENDER.setRepresentItem(essence, ItemEssence.META_ENDER);
+		Affinity.FIRE.setRepresentItem(essence, ItemEssence.META_FIRE);
+		Affinity.ICE.setRepresentItem(essence, ItemEssence.META_ICE);
+		Affinity.LIFE.setRepresentItem(essence, ItemEssence.META_LIFE);
+		Affinity.LIGHTNING.setRepresentItem(essence, ItemEssence.META_LIGHTNING);
+		Affinity.NATURE.setRepresentItem(essence, ItemEssence.META_NATURE);
+		Affinity.WATER.setRepresentItem(essence, ItemEssence.META_WATER);
 
 		natureScytheEnchanted = AMEnchantmentHelper.soulbindStack(new ItemStack(scythe));
 		arcaneSpellBookEnchanted = AMEnchantmentHelper.soulbindStack(new ItemStack(arcaneSpellbook));
@@ -527,12 +517,12 @@ public class ItemsCommonProxy{
 
 		//registerItem(boundBow, "boundBow");
 
-		OreDictionary.registerOre("dustVinteum", new ItemStack(itemOre, 1, itemOre.META_VINTEUMDUST));
-		OreDictionary.registerOre("arcaneAsh", new ItemStack(itemOre, 1, itemOre.META_ARCANEASH));
-		OreDictionary.registerOre("gemBlueTopaz", new ItemStack(itemOre, 1, itemOre.META_BLUETOPAZ));
-		OreDictionary.registerOre("gemChimerite", new ItemStack(itemOre, 1, itemOre.META_CHIMERITE));
-		OreDictionary.registerOre("gemMoonstone", new ItemStack(itemOre, 1, itemOre.META_MOONSTONE));
-		OreDictionary.registerOre("gemSunstone", new ItemStack(itemOre, 1, itemOre.META_SUNSTONE));
+		OreDictionary.registerOre("dustVinteum", new ItemStack(itemOre, 1, ItemOre.META_VINTEUMDUST));
+		OreDictionary.registerOre("arcaneAsh", new ItemStack(itemOre, 1, ItemOre.META_ARCANEASH));
+		OreDictionary.registerOre("gemBlueTopaz", new ItemStack(itemOre, 1, ItemOre.META_BLUETOPAZ));
+		OreDictionary.registerOre("gemChimerite", new ItemStack(itemOre, 1, ItemOre.META_CHIMERITE));
+		OreDictionary.registerOre("gemMoonstone", new ItemStack(itemOre, 1, ItemOre.META_MOONSTONE));
+		OreDictionary.registerOre("gemSunstone", new ItemStack(itemOre, 1, ItemOre.META_SUNSTONE));
 	}
 
 	private void registerItem(Item item, String name){
@@ -543,125 +533,125 @@ public class ItemsCommonProxy{
 	public void InitRecipes(){
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(bookAffinity, 1, bookAffinity.META_GENERAL),
+				new ItemStack(bookAffinity, 1, ItemAffinityBook.META_GENERAL),
 				new Object[]
 						{
 								"VGV", "RBR", "VGV",
-								Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM),
-								Character.valueOf('B'), Items.book,
-								Character.valueOf('R'), deficitCrystal,
-								Character.valueOf('G'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_PURE),
+								'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+								'B', Items.book,
+								'R', deficitCrystal,
+								'G', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_PURE),
 						}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(bookAffinity, 1, bookAffinity.META_ARCANE),
+				new ItemStack(bookAffinity, 1, ItemAffinityBook.META_ARCANE),
 				new Object[]
 						{
 								"VGV", "RBR", "VGV",
-								Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM),
-								Character.valueOf('B'), Items.book,
-								Character.valueOf('R'), new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_INF_ORB_RED),
-								Character.valueOf('G'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_ARCANE),
+								'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+								'B', Items.book,
+								'R', new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_INF_ORB_RED),
+								'G', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_ARCANE),
 						}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(bookAffinity, 1, bookAffinity.META_WATER),
+				new ItemStack(bookAffinity, 1, ItemAffinityBook.META_WATER),
 				new Object[]
 						{
 								"VGV", "RBR", "VGV",
-								Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM),
-								Character.valueOf('B'), Items.book,
-								Character.valueOf('R'), new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_INF_ORB_RED),
-								Character.valueOf('G'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_WATER),
+								'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+								'B', Items.book,
+								'R', new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_INF_ORB_RED),
+								'G', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_WATER),
 						}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(bookAffinity, 1, bookAffinity.META_FIRE),
+				new ItemStack(bookAffinity, 1, ItemAffinityBook.META_FIRE),
 				new Object[]
 						{
 								"VGV", "RBR", "VGV",
-								Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM),
-								Character.valueOf('B'), Items.book,
-								Character.valueOf('R'), new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_INF_ORB_RED),
-								Character.valueOf('G'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_FIRE),
+								'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+								'B', Items.book,
+								'R', new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_INF_ORB_RED),
+								'G', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_FIRE),
 						}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(bookAffinity, 1, bookAffinity.META_EARTH),
+				new ItemStack(bookAffinity, 1, ItemAffinityBook.META_EARTH),
 				new Object[]
 						{
 								"VGV", "RBR", "VGV",
-								Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM),
-								Character.valueOf('B'), Items.book,
-								Character.valueOf('R'), new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_INF_ORB_RED),
-								Character.valueOf('G'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_EARTH),
+								'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+								'B', Items.book,
+								'R', new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_INF_ORB_RED),
+								'G', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_EARTH),
 						}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(bookAffinity, 1, bookAffinity.META_AIR),
+				new ItemStack(bookAffinity, 1, ItemAffinityBook.META_AIR),
 				new Object[]
 						{
 								"VGV", "RBR", "VGV",
-								Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM),
-								Character.valueOf('B'), Items.book,
-								Character.valueOf('R'), new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_INF_ORB_RED),
-								Character.valueOf('G'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_AIR),
+								'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+								'B', Items.book,
+								'R', new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_INF_ORB_RED),
+								'G', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_AIR),
 						}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(bookAffinity, 1, bookAffinity.META_LIGHTNING),
+				new ItemStack(bookAffinity, 1, ItemAffinityBook.META_LIGHTNING),
 				new Object[]
 						{
 								"VGV", "RBR", "VGV",
-								Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM),
-								Character.valueOf('B'), Items.book,
-								Character.valueOf('R'), new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_INF_ORB_RED),
-								Character.valueOf('G'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_LIGHTNING),
+								'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+								'B', Items.book,
+								'R', new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_INF_ORB_RED),
+								'G', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_LIGHTNING),
 						}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(bookAffinity, 1, bookAffinity.META_ICE),
+				new ItemStack(bookAffinity, 1, ItemAffinityBook.META_ICE),
 				new Object[]
 						{
 								"VGV", "RBR", "VGV",
-								Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM),
-								Character.valueOf('B'), Items.book,
-								Character.valueOf('R'), new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_INF_ORB_RED),
-								Character.valueOf('G'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_ICE),
+								'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+								'B', Items.book,
+								'R', new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_INF_ORB_RED),
+								'G', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_ICE),
 						}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(bookAffinity, 1, bookAffinity.META_NATURE),
+				new ItemStack(bookAffinity, 1, ItemAffinityBook.META_NATURE),
 				new Object[]
 						{
 								"VGV", "RBR", "VGV",
-								Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM),
-								Character.valueOf('B'), Items.book,
-								Character.valueOf('R'), new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_INF_ORB_RED),
-								Character.valueOf('G'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_NATURE),
+								'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+								'B', Items.book,
+								'R', new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_INF_ORB_RED),
+								'G', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_NATURE),
 						}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(bookAffinity, 1, bookAffinity.META_LIFE),
+				new ItemStack(bookAffinity, 1, ItemAffinityBook.META_LIFE),
 				new Object[]
 						{
 								"VGV", "RBR", "VGV",
-								Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM),
-								Character.valueOf('B'), Items.book,
-								Character.valueOf('R'), new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_INF_ORB_RED),
-								Character.valueOf('G'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_LIFE),
+								'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+								'B', Items.book,
+								'R', new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_INF_ORB_RED),
+								'G', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_LIFE),
 						}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(bookAffinity, 1, bookAffinity.META_ENDER),
+				new ItemStack(bookAffinity, 1, ItemAffinityBook.META_ENDER),
 				new Object[]
 						{
 								"VGV", "RBR", "VGV",
-								Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM),
-								Character.valueOf('B'), Items.book,
-								Character.valueOf('R'), new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_INF_ORB_RED),
-								Character.valueOf('G'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_ENDER),
+								'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+								'B', Items.book,
+								'R', new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_INF_ORB_RED),
+								'G', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_ENDER),
 						}));
 		//crafting recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(itemOre, 1, itemOre.META_ARCANECOMPOUND),
+				new ItemStack(itemOre, 1, ItemOre.META_ARCANECOMPOUND),
 				new Object[]
 						{
 								"BRN", "G G", "NRB",
-								Character.valueOf('B'), "stone",
-								Character.valueOf('R'), "dustRedstone",
-								Character.valueOf('N'), Blocks.netherrack,
-								Character.valueOf('G'), "dustGlowstone"
+								'B', "stone",
+								'R', "dustRedstone",
+								'N', Blocks.netherrack,
+								'G', "dustGlowstone"
 						}));
 
 		//soulspike
@@ -670,10 +660,10 @@ public class ItemsCommonProxy{
 						"FOF",
 						"FOF",
 						"EBE",
-						Character.valueOf('O'), Blocks.obsidian,
-						Character.valueOf('B'), Items.blaze_rod,
-						Character.valueOf('F'), new ItemStack(itemOre, 1, itemOre.META_SOULFRAGMENT),
-						Character.valueOf('E'), liquidEssenceBottle,
+						'O', Blocks.obsidian,
+						'B', Items.blaze_rod,
+						'F', new ItemStack(itemOre, 1, ItemOre.META_SOULFRAGMENT),
+						'E', liquidEssenceBottle,
 				}));
 
 		//spell crafting
@@ -683,8 +673,8 @@ public class ItemsCommonProxy{
 						"S",
 						"P",
 						"S",
-						Character.valueOf('S'), "stickWood",
-						Character.valueOf('P'), Items.paper
+						'S', "stickWood",
+						'P', Items.paper
 				}));
 
 		//spell book
@@ -694,9 +684,9 @@ public class ItemsCommonProxy{
 						"SLL",
 						"SPP",
 						"SLL",
-						Character.valueOf('S'), Items.string,
-						Character.valueOf('L'), Items.leather,
-						Character.valueOf('P'), Items.paper
+						'S', Items.string,
+						'L', Items.leather,
+						'P', Items.paper
 				});
 
 		//crystal wrench
@@ -705,10 +695,10 @@ public class ItemsCommonProxy{
 						"I I",
 						"AVD",
 						" I ",
-						Character.valueOf('I'), "ingotIron",
-						Character.valueOf('A'), BlocksCommonProxy.cerublossom,
-						Character.valueOf('D'), BlocksCommonProxy.desertNova,
-						Character.valueOf('V'), "dustVinteum",
+						'I', "ingotIron",
+						'A', BlocksCommonProxy.cerublossom,
+						'D', BlocksCommonProxy.desertNova,
+						'V', "dustVinteum",
 				}));
 
 		//arcane rod
@@ -717,9 +707,9 @@ public class ItemsCommonProxy{
 						" V ",
 						"ERE",
 						" V ",
-						Character.valueOf('R'), Items.fishing_rod,
-						Character.valueOf('E'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_ENDER),
-						Character.valueOf('V'), "dustVinteum",
+						'R', Items.fishing_rod,
+						'E', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_ENDER),
+						'V', "dustVinteum",
 				}));
 
 		//infernal rod
@@ -728,42 +718,42 @@ public class ItemsCommonProxy{
 						" V ",
 						"ERE",
 						" V ",
-						Character.valueOf('R'), itemArcaneFishingRod,
-						Character.valueOf('E'), new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_FIRE),
-						Character.valueOf('V'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_ARCANEASH),
+						'R', itemArcaneFishingRod,
+						'E', new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_FIRE),
+						'V', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_ARCANEASH),
 				}));
 
 		//temporal cluster
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemOre, 1, itemOre.META_TEMPORALCLUSTER),
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemOre, 1, ItemOre.META_TEMPORALCLUSTER),
 				new Object[]{
 						" D ",
 						"FCF",
 						" D ",
-						Character.valueOf('D'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_CHIMERITE),
-						Character.valueOf('C'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_SPATIALSTAR),
-						Character.valueOf('F'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_FRACTALFRAGMENT),
+						'D', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_CHIMERITE),
+						'C', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_SPATIALSTAR),
+						'F', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_FRACTALFRAGMENT),
 				}));
 
 		//fragments combining & breaking down
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_SUNSTONE),
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_SUNSTONE),
 				new Object[]{
 						"FF",
 						"FF",
-						Character.valueOf('F'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_SUNSTONEFRAGMENT),
+						'F', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_SUNSTONEFRAGMENT),
 				}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_MOONSTONE),
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_MOONSTONE),
 				new Object[]{
 						"FF",
 						"FF",
-						Character.valueOf('F'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_MOONSTONEFRAGMENT),
+						'F', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_MOONSTONEFRAGMENT),
 				}));
 		GameRegistry.addShapelessRecipe(
-				new ItemStack(ItemsCommonProxy.itemOre, 4, ItemsCommonProxy.itemOre.META_MOONSTONEFRAGMENT), new Object[]{
-						new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_MOONSTONE)
+				new ItemStack(ItemsCommonProxy.itemOre, 4, ItemOre.META_MOONSTONEFRAGMENT), new Object[]{
+						new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_MOONSTONE)
 				});
 		GameRegistry.addShapelessRecipe(
-				new ItemStack(ItemsCommonProxy.itemOre, 4, ItemsCommonProxy.itemOre.META_SUNSTONEFRAGMENT), new Object[]{
-						new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_SUNSTONE)
+				new ItemStack(ItemsCommonProxy.itemOre, 4, ItemOre.META_SUNSTONEFRAGMENT), new Object[]{
+						new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_SUNSTONE)
 				});
 
 		//mana stone
@@ -772,9 +762,9 @@ public class ItemsCommonProxy{
 						"PGP",
 						"GDG",
 						"PGP",
-						Character.valueOf('G'), "ingotGold",
-						Character.valueOf('D'), "gemDiamond",
-						Character.valueOf('P'), "dustVinteum",
+						'G', "ingotGold",
+						'D', "gemDiamond",
+						'P', "dustVinteum",
 				}));
 
 		//extractor
@@ -783,9 +773,9 @@ public class ItemsCommonProxy{
 						" T ",
 						"G G",
 						" I ",
-						Character.valueOf('T'), "gemBlueTopaz",
-						Character.valueOf('G'), "blockGlassColorless",
-						Character.valueOf('I'), "ingotIron",
+						'T', "gemBlueTopaz",
+						'G', "blockGlassColorless",
+						'I', "ingotIron",
 				}));
 
 		//spell book colors
@@ -808,77 +798,77 @@ public class ItemsCommonProxy{
 
 		GameRegistry.addRecipe(new ItemStack(runeBag), new Object[]{
 				"LLL", "W W", "LLL",
-				Character.valueOf('L'), Items.leather,
-				Character.valueOf('W'), new ItemStack(Blocks.wool, 1, AMCore.ANY_META),
+				'L', Items.leather,
+				'W', new ItemStack(Blocks.wool, 1, AMCore.ANY_META),
 		});
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(magicBroom, new Object[]{
 				" S ",
 				"ASA",
 				" H ",
-				Character.valueOf('S'), "stickWood",
-				Character.valueOf('A'), "arcaneAsh",
-				Character.valueOf('H'), Blocks.hay_block
+				'S', "stickWood",
+				'A', "arcaneAsh",
+				'H', Blocks.hay_block
 		}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(boxOfIllusions, new Object[]{
 				"WBW",
 				"TCT",
 				"WSW",
-				Character.valueOf('S'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_SOULFRAGMENT),
-				Character.valueOf('B'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_COGNITIVEDUST),
-				Character.valueOf('T'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_BLUETOPAZ),
-				Character.valueOf('C'), Blocks.chest,
-				Character.valueOf('W'), new ItemStack(Blocks.wool, 1, AMCore.ANY_META),
+				'S', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_SOULFRAGMENT),
+				'B', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_COGNITIVEDUST),
+				'T', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_BLUETOPAZ),
+				'C', Blocks.chest,
+				'W', new ItemStack(Blocks.wool, 1, AMCore.ANY_META),
 		}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(woodenLeg, new Object[]{
 				"P",
 				"L",
 				"S",
-				Character.valueOf('P'), "plankWood",
-				Character.valueOf('L'), "slabWood",
-				Character.valueOf('S'), "stickWood"
+				'P', "plankWood",
+				'L', "slabWood",
+				'S', "stickWood"
 		}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(boundCatalystHelmet, new Object[]{
 				"ASA",
 				"EIE",
 				"ASA",
-				Character.valueOf('S'), Items.slime_ball,
-				Character.valueOf('I'), Items.iron_helmet,
-				Character.valueOf('A'), "arcaneAsh",
-				Character.valueOf('E'), Items.ender_eye
+				'S', Items.slime_ball,
+				'I', Items.iron_helmet,
+				'A', "arcaneAsh",
+				'E', Items.ender_eye
 		}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(boundCatalystArmor, new Object[]{
 				"ASA",
 				"BIB",
 				"ASA",
-				Character.valueOf('S'), Items.slime_ball,
-				Character.valueOf('I'), Items.iron_chestplate,
-				Character.valueOf('A'), "arcaneAsh",
-				Character.valueOf('B'), Items.blaze_powder
+				'S', Items.slime_ball,
+				'I', Items.iron_chestplate,
+				'A', "arcaneAsh",
+				'B', Items.blaze_powder
 		}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(boundCatalystLeggings, new Object[]{
 				"ASA",
 				"EIE",
 				"ASA",
-				Character.valueOf('S'), Items.slime_ball,
-				Character.valueOf('I'), Items.iron_leggings,
-				Character.valueOf('A'), "arcaneAsh",
-				Character.valueOf('E'), Items.experience_bottle
+				'S', Items.slime_ball,
+				'I', Items.iron_leggings,
+				'A', "arcaneAsh",
+				'E', Items.experience_bottle
 		}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(boundCatalystBoots, new Object[]{
 				"ASA",
 				"NIN",
 				"ASA",
-				Character.valueOf('S'), Items.slime_ball,
-				Character.valueOf('I'), Items.iron_boots,
-				Character.valueOf('A'), "arcaneAsh",
-				Character.valueOf('N'), Items.gold_nugget
+				'S', Items.slime_ball,
+				'I', Items.iron_boots,
+				'A', "arcaneAsh",
+				'N', Items.gold_nugget
 		}));
 
 		GameRegistry.addShapelessRecipe(
@@ -888,12 +878,12 @@ public class ItemsCommonProxy{
 				});
 
 		GameRegistry.addShapelessRecipe(new ItemStack(playerjournal), new Object[]{
-				new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_ARCANE),
+				new ItemStack(ItemsCommonProxy.essence, 1, ItemEssence.META_ARCANE),
 				new ItemStack(Items.writable_book)
 		});
 
 		GameRegistry.addShapelessRecipe(
-				new ItemStack(manaPotionBundle, 1, (0 << 8) + 3), new Object[]{
+				new ItemStack(manaPotionBundle, 1,  3), new Object[]{
 						new ItemStack(lesserManaPotion, 1, AMCore.ANY_META),
 						new ItemStack(lesserManaPotion, 1, AMCore.ANY_META),
 						new ItemStack(lesserManaPotion, 1, AMCore.ANY_META),
@@ -934,122 +924,122 @@ public class ItemsCommonProxy{
 
 		//blank rune
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(rune, 2, rune.META_BLANK),
+				new ItemStack(rune, 2, ItemRune.META_BLANK),
 				new Object[]{
 						" S ", "SSS", "SS ",
-						Character.valueOf('S'), "cobblestone"
+						'S', "cobblestone"
 				}));
 		//blue rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_BLUE),
+				new ItemStack(rune, 1, ItemRune.META_BLUE),
 				new Object[]{
 						"dyeBlue",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//red rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_RED),
+				new ItemStack(rune, 1, ItemRune.META_RED),
 				new Object[]{
 						"dyeRed",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//yellow rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_YELLOW),
+				new ItemStack(rune, 1, ItemRune.META_YELLOW),
 				new Object[]{
 						"dyeYellow",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//orange rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_ORANGE),
+				new ItemStack(rune, 1, ItemRune.META_ORANGE),
 				new Object[]{
 						"dyeOrange",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//green rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_GREEN),
+				new ItemStack(rune, 1, ItemRune.META_GREEN),
 				new Object[]{
 						"dyeGreen",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//purple rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_PURPLE),
+				new ItemStack(rune, 1, ItemRune.META_PURPLE),
 				new Object[]{
 						"dyePurple",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//white rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_WHITE),
+				new ItemStack(rune, 1, ItemRune.META_WHITE),
 				new Object[]{
 						"dyeWhite",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//black rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_BLACK),
+				new ItemStack(rune, 1, ItemRune.META_BLACK),
 				new Object[]{
 						"dyeBlack",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//brown rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_BROWN),
+				new ItemStack(rune, 1, ItemRune.META_BROWN),
 				new Object[]{
 						"dyeBrown",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//cyan rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_CYAN),
+				new ItemStack(rune, 1, ItemRune.META_CYAN),
 				new Object[]{
 						"dyeCyan",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//gray rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_GRAY),
+				new ItemStack(rune, 1, ItemRune.META_GRAY),
 				new Object[]{
 						"dyeGray",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//light blue rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_LIGHTBLUE),
+				new ItemStack(rune, 1, ItemRune.META_LIGHTBLUE),
 				new Object[]{
 						"dyeLightBlue",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//light gray rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_LIGHTGRAY),
+				new ItemStack(rune, 1, ItemRune.META_LIGHTGRAY),
 				new Object[]{
 						"dyeLightGray",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//magenta rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_MAGENTA),
+				new ItemStack(rune, 1, ItemRune.META_MAGENTA),
 				new Object[]{
 						"dyeMagenta",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//pink rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_PINK),
+				new ItemStack(rune, 1, ItemRune.META_PINK),
 				new Object[]{
 						"dyePink",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 		//pink rune
 		GameRegistry.addRecipe(new ShapelessOreRecipe(
-				new ItemStack(rune, 1, rune.META_LIME),
+				new ItemStack(rune, 1, ItemRune.META_LIME),
 				new Object[]{
 						"dyeLime",
-						new ItemStack(rune, 1, rune.META_BLANK)
+						new ItemStack(rune, 1, ItemRune.META_BLANK)
 				}));
 
 		//wizard chalk
@@ -1070,9 +1060,9 @@ public class ItemsCommonProxy{
 						"NWN",
 						"G G",
 						" G ",
-						Character.valueOf('W'), BlocksCommonProxy.magicWall,
-						Character.valueOf('N'), "nuggetGold",
-						Character.valueOf('G'), "paneGlassColorless"
+						'W', BlocksCommonProxy.magicWall,
+						'N', "nuggetGold",
+						'G', "paneGlassColorless"
 				}));
 
 		//warding candle
@@ -1080,9 +1070,9 @@ public class ItemsCommonProxy{
 				"S",
 				"F",
 				"P",
-				Character.valueOf('S'), Items.string,
-				Character.valueOf('F'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_ANIMALFAT),
-				Character.valueOf('P'), BlocksCommonProxy.witchwoodSingleSlab
+				'S', Items.string,
+				'F', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_ANIMALFAT),
+				'P', BlocksCommonProxy.witchwoodSingleSlab
 		});
 
 		//magitech goggles
@@ -1090,10 +1080,10 @@ public class ItemsCommonProxy{
 				"LLL",
 				"CGC",
 				"TLT",
-				Character.valueOf('C'), "gemChimerite",
-				Character.valueOf('T'), "gemBlueTopaz",
-				Character.valueOf('L'), Items.leather,
-				Character.valueOf('G'), "nuggetGold",
+				'C', "gemChimerite",
+				'T', "gemBlueTopaz",
+				'L', Items.leather,
+				'G', "nuggetGold",
 		}));
 
 		// staves
@@ -1115,8 +1105,8 @@ public class ItemsCommonProxy{
 				" GT",
 				"G G",
 				"GG ",
-				Character.valueOf('T'), "gemBlueTopaz",
-				Character.valueOf('G'), "nuggetGold",
+				'T', "gemBlueTopaz",
+				'G', "nuggetGold",
 		}));
 
 		//armor recipes
@@ -1124,99 +1114,99 @@ public class ItemsCommonProxy{
 		GameRegistry.addRecipe(new ItemStack(mageHood, 1),
 				new Object[]{
 						"WLW", "WRW", " B ",
-						Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 12),
-						Character.valueOf('L'), Items.leather,
-						Character.valueOf('R'), new ItemStack(rune, 1, rune.META_PURPLE),
-						Character.valueOf('B'), new ItemStack(Items.potionitem, 1, 0),
+						'W', new ItemStack(Blocks.wool, 1, 12),
+						'L', Items.leather,
+						'R', new ItemStack(rune, 1, ItemRune.META_PURPLE),
+						'B', new ItemStack(Items.potionitem, 1, 0),
 				});
 		GameRegistry.addRecipe(new ItemStack(mageArmor, 1),
 				new Object[]{
 						"RCR", "WLW", "WWW",
-						Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 12),
-						Character.valueOf('L'), Items.leather,
-						Character.valueOf('R'), new ItemStack(rune, 1, rune.META_WHITE),
-						Character.valueOf('C'), Items.coal
+						'W', new ItemStack(Blocks.wool, 1, 12),
+						'L', Items.leather,
+						'R', new ItemStack(rune, 1, ItemRune.META_WHITE),
+						'C', Items.coal
 				});
 		GameRegistry.addRecipe(new ItemStack(mageLeggings, 1),
 				new Object[]{
 						"WRW", "WGW", "L L",
-						Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 12),
-						Character.valueOf('L'), Items.leather,
-						Character.valueOf('R'), new ItemStack(rune, 1, rune.META_YELLOW),
-						Character.valueOf('G'), Items.gunpowder
+						'W', new ItemStack(Blocks.wool, 1, 12),
+						'L', Items.leather,
+						'R', new ItemStack(rune, 1, ItemRune.META_YELLOW),
+						'G', Items.gunpowder
 				});
 		GameRegistry.addRecipe(new ItemStack(mageBoots, 1),
 				new Object[]{
 						"R R", "L L", "WFW",
-						Character.valueOf('W'), new ItemStack(Blocks.wool, 1, 12),
-						Character.valueOf('L'), Items.leather,
-						Character.valueOf('R'), new ItemStack(rune, 1, rune.META_BLACK),
-						Character.valueOf('F'), Items.feather
+						'W', new ItemStack(Blocks.wool, 1, 12),
+						'L', Items.leather,
+						'R', new ItemStack(rune, 1, ItemRune.META_BLACK),
+						'F', Items.feather
 				});
 		//BATTLEMAGE
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(battlemageHood, 1),
 				new Object[]{
 						"WLW", "WRW", " E ",
-						Character.valueOf('W'), new ItemStack(Blocks.obsidian),
-						Character.valueOf('L'), BlocksCommonProxy.goldInlay,
-						Character.valueOf('R'), new ItemStack(rune, 1, 1),
-						Character.valueOf('E'), new ItemStack(essence, 1, 4)
+						'W', new ItemStack(Blocks.obsidian),
+						'L', BlocksCommonProxy.goldInlay,
+						'R', new ItemStack(rune, 1, 1),
+						'E', new ItemStack(essence, 1, 4)
 				}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(battlemageArmor, 1),
 				new Object[]{
 						"RER", "WLW", "WWW",
-						Character.valueOf('W'), new ItemStack(Blocks.obsidian),
-						Character.valueOf('E'), new ItemStack(essence, 1, 1),
-						Character.valueOf('R'), new ItemStack(rune, 1, 1),
-						Character.valueOf('L'), BlocksCommonProxy.goldInlay
+						'W', new ItemStack(Blocks.obsidian),
+						'E', new ItemStack(essence, 1, 1),
+						'R', new ItemStack(rune, 1, 1),
+						'L', BlocksCommonProxy.goldInlay
 				}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(battlemageLeggings, 1),
 				new Object[]{
 						"WRW", "LEL", "W W",
-						Character.valueOf('W'), new ItemStack(Blocks.obsidian),
-						Character.valueOf('L'), BlocksCommonProxy.goldInlay,
-						Character.valueOf('R'), new ItemStack(rune, 1, 1),
-						Character.valueOf('E'), new ItemStack(essence, 1, 3)
+						'W', new ItemStack(Blocks.obsidian),
+						'L', BlocksCommonProxy.goldInlay,
+						'R', new ItemStack(rune, 1, 1),
+						'E', new ItemStack(essence, 1, 3)
 				}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(battlemageBoots, 1),
 				new Object[]{
 						"R R", "WEW", "WLW",
-						Character.valueOf('W'), new ItemStack(Blocks.obsidian),
-						Character.valueOf('L'), BlocksCommonProxy.goldInlay,
-						Character.valueOf('R'), new ItemStack(rune, 1, 1),
-						Character.valueOf('E'), new ItemStack(essence, 1, 2)
+						'W', new ItemStack(Blocks.obsidian),
+						'L', BlocksCommonProxy.goldInlay,
+						'R', new ItemStack(rune, 1, 1),
+						'E', new ItemStack(essence, 1, 2)
 				}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BoundBoots, 1),
 				new Object[]{
 						"B B", "BEB", " L ",
-						Character.valueOf('L'), new ItemStack(essence, 1, essence.META_LIFE),
-						Character.valueOf('B'), new ItemStack(rune, 1, rune.META_RED),
-						Character.valueOf('E'), boundCatalystBoots
+						'L', new ItemStack(essence, 1, ItemEssence.META_LIFE),
+						'B', new ItemStack(rune, 1, ItemRune.META_RED),
+						'E', boundCatalystBoots
 				}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BoundArmor, 1),
 				new Object[]{
 						"BLB", "BEB", "RBR",
-						Character.valueOf('L'), new ItemStack(essence, 1, essence.META_LIFE),
-						Character.valueOf('B'), new ItemStack(rune, 1, rune.META_RED),
-						Character.valueOf('E'), boundCatalystArmor,
-						Character.valueOf('R'), new ItemStack(BlocksCommonProxy.redstoneInlay)
+						'L', new ItemStack(essence, 1, ItemEssence.META_LIFE),
+						'B', new ItemStack(rune, 1, ItemRune.META_RED),
+						'E', boundCatalystArmor,
+						'R', new ItemStack(BlocksCommonProxy.redstoneInlay)
 				}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BoundLeggings, 1),
 				new Object[]{
 						"RBR", "BEB", "BLB",
-						Character.valueOf('L'), new ItemStack(essence, 1, essence.META_LIFE),
-						Character.valueOf('B'), new ItemStack(rune, 1, rune.META_RED),
-						Character.valueOf('E'), boundCatalystLeggings,
-						Character.valueOf('R'), new ItemStack(BlocksCommonProxy.redstoneInlay)
+						'L', new ItemStack(essence, 1, ItemEssence.META_LIFE),
+						'B', new ItemStack(rune, 1, ItemRune.META_RED),
+						'E', boundCatalystLeggings,
+						'R', new ItemStack(BlocksCommonProxy.redstoneInlay)
 				}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BoundHelmet, 1),
 				new Object[]{
 						"RBR", "BEB", " L ",
-						Character.valueOf('L'), new ItemStack(essence, 1, essence.META_LIFE),
-						Character.valueOf('B'), new ItemStack(rune, 1, rune.META_RED),
-						Character.valueOf('E'), boundCatalystHelmet,
-						Character.valueOf('R'), new ItemStack(BlocksCommonProxy.redstoneInlay)
+						'L', new ItemStack(essence, 1, ItemEssence.META_LIFE),
+						'B', new ItemStack(rune, 1, ItemRune.META_RED),
+						'E', boundCatalystHelmet,
+						'R', new ItemStack(BlocksCommonProxy.redstoneInlay)
 				}));
 
 
@@ -1224,58 +1214,58 @@ public class ItemsCommonProxy{
 		GameRegistry.addRecipe(new ItemStack(archmageHood, 1),
 				new Object[]{
 			"EAE", "WBW", "RPR",
-			Character.valueOf('B'), new ItemStack(battlemageHood),
-			Character.valueOf('A'), fireEarsEnchanted,
-			Character.valueOf('R'), new ItemStack(rune, 1, rune.META_ORANGE),
-			Character.valueOf('E'), new ItemStack(essence, 1, essence.META_FIRE),
-			Character.valueOf('P'), new ItemStack(essence, 1, essence.META_PURE),
-			Character.valueOf('W'), new ItemStack(itemOre, 1, itemOre.META_SUNSTONE),
+						'B', new ItemStack(battlemageHood),
+						'A', fireEarsEnchanted,
+						'R', new ItemStack(rune, 1, ItemRune.META_ORANGE),
+						'E', new ItemStack(essence, 1, ItemEssence.META_FIRE),
+						'P', new ItemStack(essence, 1, ItemEssence.META_PURE),
+						'W', new ItemStack(itemOre, 1, ItemOre.META_SUNSTONE),
 		});
 		GameRegistry.addRecipe(new ItemStack(archmageArmor, 1),
 				new Object[]{
 			"EAE", "WBW", "RPR",
-			Character.valueOf('B'), new ItemStack(battlemageArmor),
-			Character.valueOf('A'), earthArmorEnchanted,
-			Character.valueOf('R'), new ItemStack(rune, 1, rune.META_BROWN),
-			Character.valueOf('E'), new ItemStack(essence, 1, essence.META_EARTH),
-			Character.valueOf('P'), lifeWardEnchanted,
-			Character.valueOf('W'), new ItemStack(Items.nether_star),
+						'B', new ItemStack(battlemageArmor),
+						'A', earthArmorEnchanted,
+						'R', new ItemStack(rune, 1, ItemRune.META_BROWN),
+						'E', new ItemStack(essence, 1, ItemEssence.META_EARTH),
+						'P', lifeWardEnchanted,
+						'W', new ItemStack(Items.nether_star),
 		});
 		GameRegistry.addRecipe(new ItemStack(archmageLeggings, 1),
 				new Object[]{
 			"EAE", "WBW", "RPR",
-			Character.valueOf('B'), new ItemStack(battlemageLeggings),
-			Character.valueOf('A'), waterOrbsEnchanted,
-			Character.valueOf('R'), new ItemStack(rune, 1, rune.META_CYAN),
-			Character.valueOf('E'), new ItemStack(essence, 1, essence.META_WATER),
-			Character.valueOf('P'), new ItemStack(essence, 1, essence.META_PURE),
-			Character.valueOf('W'), new ItemStack(Blocks.diamond_block),
+						'B', new ItemStack(battlemageLeggings),
+						'A', waterOrbsEnchanted,
+						'R', new ItemStack(rune, 1, ItemRune.META_CYAN),
+						'E', new ItemStack(essence, 1, ItemEssence.META_WATER),
+						'P', new ItemStack(essence, 1, ItemEssence.META_PURE),
+						'W', new ItemStack(Blocks.diamond_block),
 		});
 		GameRegistry.addRecipe(new ItemStack(archmageBoots, 1),
 				new Object[]{
 				"EAE", "WBW", "RPR",
-				Character.valueOf('B'), new ItemStack(battlemageBoots),
-				Character.valueOf('A'), enderBootsEnchanted,
-				Character.valueOf('R'), new ItemStack(rune, 1, rune.META_WHITE),
-				Character.valueOf('E'), new ItemStack(essence, 1, essence.META_AIR),
-				Character.valueOf('P'), airSledEnchanted,
-				Character.valueOf('W'), new ItemStack(itemOre, 1, itemOre.META_MOONSTONE),
+						'B', new ItemStack(battlemageBoots),
+						'A', enderBootsEnchanted,
+						'R', new ItemStack(rune, 1, ItemRune.META_WHITE),
+						'E', new ItemStack(essence, 1, ItemEssence.META_AIR),
+						'P', airSledEnchanted,
+						'W', new ItemStack(itemOre, 1, ItemOre.META_MOONSTONE),
 		});
 
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(essenceBag), new Object[]{
 				"LLL", "WNW", "LLL",
-				Character.valueOf('L'), Items.leather,
-				Character.valueOf('W'), new ItemStack(Blocks.wool, 1, AMCore.ANY_META),
-				Character.valueOf('N'), "nuggetGold"
+				'L', Items.leather,
+				'W', new ItemStack(Blocks.wool, 1, AMCore.ANY_META),
+				'N', "nuggetGold"
 		}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(crystalPhylactery), new Object[]{
 				" B ", "GPG", " W ",
-				Character.valueOf('B'), "gemMoonstone",
-				Character.valueOf('W'), BlocksCommonProxy.magicWall,
-				Character.valueOf('G'), "blockGlassColorless",
-				Character.valueOf('P'), new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_PURIFIEDVINTEUM)
+				'B', "gemMoonstone",
+				'W', BlocksCommonProxy.magicWall,
+				'G', "blockGlassColorless",
+				'P', new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_PURIFIEDVINTEUM)
 		}));
 
 		//lesser mana potion
@@ -1285,12 +1275,12 @@ public class ItemsCommonProxy{
 				"GIG",
 				"IVI",
 				"GIG",
-				Character.valueOf('G'), "ingotGold",
-				Character.valueOf('I'), "ingotIron",
-				Character.valueOf('V'), "dustVinteum"
+				'G', "ingotGold",
+				'I', "ingotIron",
+				'V', "dustVinteum"
 		}));
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemOre, 1, itemOre.META_PURIFIEDVINTEUM), new Object[]{
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemOre, 1, ItemOre.META_PURIFIEDVINTEUM), new Object[]{
 				new ItemStack(BlocksCommonProxy.cerublossom),
 				new ItemStack(BlocksCommonProxy.desertNova),
 				"dustVinteum",
@@ -1326,7 +1316,7 @@ public class ItemsCommonProxy{
 		}));
 
 		GameRegistry.addShapelessRecipe(new ItemStack(legendaryManaPotion), new Object[]{
-				new ItemStack(itemOre, 1, itemOre.META_PURIFIEDVINTEUM),
+				new ItemStack(itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
 				new ItemStack(epicManaPotion, 1, AMCore.ANY_META)
 		});
 
@@ -1348,72 +1338,72 @@ public class ItemsCommonProxy{
 		GameRegistry.addRecipe(new ItemStack(creatureFocus), ((ItemFocus)creatureFocus).getRecipeItems());
 
 		//binding catalysts
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, bindingCatalyst.META_AXE), new Object[]{
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, ItemBindingCatalyst.META_AXE), new Object[]{
 				"SVS",
 				"SAS",
 				"SVS",
-				Character.valueOf('V'), "dustVinteum",
-				Character.valueOf('S'), "slimeball",
-				Character.valueOf('A'), Items.golden_axe
+				'V', "dustVinteum",
+				'S', "slimeball",
+				'A', Items.golden_axe
 		}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, bindingCatalyst.META_PICK), new Object[]{
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, ItemBindingCatalyst.META_PICK), new Object[]{
 				"SVS",
 				"SAS",
 				"SVS",
-				Character.valueOf('V'), "dustVinteum",
-				Character.valueOf('S'), "slimeball",
-				Character.valueOf('A'), Items.golden_pickaxe
+				'V', "dustVinteum",
+				'S', "slimeball",
+				'A', Items.golden_pickaxe
 		}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, bindingCatalyst.META_SHOVEL), new Object[]{
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, ItemBindingCatalyst.META_SHOVEL), new Object[]{
 				"SVS",
 				"SAS",
 				"SVS",
-				Character.valueOf('V'), "dustVinteum",
-				Character.valueOf('S'), "slimeball",
-				Character.valueOf('A'), Items.golden_shovel
+				'V', "dustVinteum",
+				'S', "slimeball",
+				'A', Items.golden_shovel
 		}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, bindingCatalyst.META_SWORD), new Object[]{
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, ItemBindingCatalyst.META_SWORD), new Object[]{
 				"SVS",
 				"SAS",
 				"SVS",
-				Character.valueOf('V'), new ItemStack(itemOre, 1, itemOre.META_PURIFIEDVINTEUM),
-				Character.valueOf('S'), "slimeball",
-				Character.valueOf('A'), Items.golden_sword
+				'V', new ItemStack(itemOre, 1, ItemOre.META_PURIFIEDVINTEUM),
+				'S', "slimeball",
+				'A', Items.golden_sword
 		}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, bindingCatalyst.META_HOE), new Object[]{
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, ItemBindingCatalyst.META_HOE), new Object[]{
 				"SVS",
 				"SAS",
 				"SVS",
-				Character.valueOf('V'), "dustVinteum",
-				Character.valueOf('S'), "slimeball",
-				Character.valueOf('A'), Items.golden_hoe
+				'V', "dustVinteum",
+				'S', "slimeball",
+				'A', Items.golden_hoe
 		}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, bindingCatalyst.META_BOW), new Object[]{
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(bindingCatalyst, 1, ItemBindingCatalyst.META_BOW), new Object[]{
 				"SVS",
 				"SAS",
 				"SVS",
-				Character.valueOf('V'), "dustVinteum",
-				Character.valueOf('S'), "slimeball",
-				Character.valueOf('A'), Items.bow
+				'V', "dustVinteum",
+				'S', "slimeball",
+				'A', Items.bow
 		}));
 
-		GameRegistry.addRecipe(new ItemStack(itemKeystoneDoor, 1, itemKeystoneDoor.KEYSTONE_DOOR), new Object[]{
+		GameRegistry.addRecipe(new ItemStack(itemKeystoneDoor, 1, ItemKeystoneDoor.KEYSTONE_DOOR), new Object[]{
 				"PWP",
 				"RRR",
 				"PWP",
-				Character.valueOf('P'), BlocksCommonProxy.witchwoodPlanks,
-				Character.valueOf('R'), new ItemStack(rune, 1, rune.META_BLANK),
-				Character.valueOf('W'), BlocksCommonProxy.magicWall
+				'P', BlocksCommonProxy.witchwoodPlanks,
+				'R', new ItemStack(rune, 1, ItemRune.META_BLANK),
+				'W', BlocksCommonProxy.magicWall
 		});
 
-		GameRegistry.addRecipe(new ItemStack(itemKeystoneDoor, 1, itemKeystoneDoor.SPELL_SEALED_DOOR), new Object[]{
+		GameRegistry.addRecipe(new ItemStack(itemKeystoneDoor, 1, ItemKeystoneDoor.SPELL_SEALED_DOOR), new Object[]{
 				" G ",
 				"SKS",
 				" L ",
-				Character.valueOf('G'), ItemsCommonProxy.greaterFocus,
-				Character.valueOf('S'), ItemsCommonProxy.standardFocus,
-				Character.valueOf('L'), ItemsCommonProxy.lesserFocus,
-				Character.valueOf('K'), new ItemStack(ItemsCommonProxy.itemKeystoneDoor, 1, itemKeystoneDoor.KEYSTONE_DOOR)
+				'G', ItemsCommonProxy.greaterFocus,
+				'S', ItemsCommonProxy.standardFocus,
+				'L', ItemsCommonProxy.lesserFocus,
+				'K', new ItemStack(ItemsCommonProxy.itemKeystoneDoor, 1, ItemKeystoneDoor.KEYSTONE_DOOR)
 		});
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(manaMartini), new Object[]{
@@ -1430,8 +1420,8 @@ public class ItemsCommonProxy{
 				new ItemStack(Blocks.red_flower, 1, 3),
 				new ItemStack(Blocks.red_flower, 1, 5),
 				new ItemStack(Blocks.red_flower, 1, 6),
-				new ItemStack(itemOre, 1, itemOre.META_HELLFISH),
-				new ItemStack(itemOre, 1, itemOre.META_NIGHTMAREESSENCE),
+				new ItemStack(itemOre, 1, ItemOre.META_HELLFISH),
+				new ItemStack(itemOre, 1, ItemEssence.META_NIGHTMARE),
 				new ItemStack(BlocksCommonProxy.wakebloom),
 				new ItemStack(casparazoid)
 		}));
@@ -1440,9 +1430,9 @@ public class ItemsCommonProxy{
 				new ItemStack(Blocks.red_flower, 1, 3),
 				new ItemStack(Blocks.tallgrass, 1, 1),
 				new ItemStack(Blocks.tallgrass, 1, 2),
-				new ItemStack(itemOre, 1, itemOre.META_RAINROCKROSE),
-				new ItemStack(itemOre, 1, itemOre.META_STORMSAWTOOTH),
-				new ItemStack(itemOre, 1, itemOre.META_COSMICDUST),
+				new ItemStack(itemOre, 1, ItemOre.META_RAINROCKROSE),
+				new ItemStack(itemOre, 1, ItemOre.META_STORMSAWTOOTH),
+				new ItemStack(itemOre, 1, ItemOre.META_COSMICDUST),
 				new ItemStack(standardManaPotion)
 		}));
 
@@ -1462,7 +1452,7 @@ public class ItemsCommonProxy{
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(inscriptionUpgrade, 1, 2),
 				new ItemStack(wardingCandle),
 				new ItemStack(Items.flint_and_steel),
-				new ItemStack(itemOre, 1, itemOre.META_ANIMALFAT),
+				new ItemStack(itemOre, 1, ItemOre.META_ANIMALFAT),
 				new ItemStack(Items.glass_bottle),
 				new ItemStack(Items.book)
 		));

@@ -2,6 +2,7 @@ package am2.buffs;
 
 import am2.playerextensions.ExtendedProperties;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.DamageSource;
 
 public class BuffEffectTemporalAnchor extends BuffEffect{
 
@@ -36,14 +37,17 @@ public class BuffEffectTemporalAnchor extends BuffEffect{
 
 	@Override
 	public void stopEffect(EntityLivingBase entityliving){
-		entityliving.setPositionAndUpdate(x, y, z);
-		entityliving.rotationYawHead = rotationYawHead;
-		entityliving.rotationPitch = rotationPitch;
-		entityliving.rotationYaw = rotationYaw;
-		ExtendedProperties.For(entityliving).setCurrentMana(mana);
-
-		entityliving.setHealth(health);
-		entityliving.fallDistance = 0;
+		if (health >= 1) {
+			entityliving.setPositionAndUpdate(x, y, z);
+			entityliving.rotationYawHead = rotationYawHead;
+			entityliving.rotationPitch = rotationPitch;
+			entityliving.rotationYaw = rotationYaw;
+			ExtendedProperties.For(entityliving).setCurrentMana(mana);
+			entityliving.setHealth(Math.max(1, health)); // to only explicitly fix level data resets
+			if (health == 0)
+				entityliving.attackEntityFrom(DamageSource.outOfWorld, Integer.MAX_VALUE); // still kills but avoids broken setHealth() call
+			entityliving.fallDistance = 0;
+		}
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public class SlotInscriptionTable extends Slot{
 		if (par1ItemStack == null || par1ItemStack.getItem() == null){
 			return false;
 		}
-		Class clazz = par1ItemStack.getItem().getClass();
+
 		if (par1ItemStack.getItem() == Items.written_book && (par1ItemStack.getTagCompound() == null || !par1ItemStack.getTagCompound().getBoolean("spellFinalized")))
 			return true;
 		else if (par1ItemStack.getItem() == Items.writable_book)

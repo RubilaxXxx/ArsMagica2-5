@@ -5,6 +5,7 @@ import am2.api.blocks.MultiblockStructureDefinition;
 import am2.api.blocks.MultiblockStructureDefinition.StructureGroup;
 import am2.api.math.AMVector3;
 import am2.api.power.PowerTypes;
+import am2.blocks.BlockAMOre;
 import am2.blocks.BlocksCommonProxy;
 import am2.buffs.BuffEffectManaRegen;
 import am2.buffs.BuffList;
@@ -30,7 +31,7 @@ import java.util.List;
 
 public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblockStructureController{
 
-	private final HashMap arcs;
+	private final HashMap<EntityLivingBase, AMLineArc> arcs;
 
 	private static final int GROUP_CHIMERITE = 0;
 	private static final int GROUP_OBSIDIAN = 1;
@@ -43,7 +44,7 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 	public TileEntityBlackAurem() {
 		super(10000);
 
-		arcs = new HashMap();
+		arcs = new HashMap<>();
 
 		cachedEntities = new ArrayList<EntityLivingBase>();
 
@@ -63,27 +64,27 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 
 		structure.addAllowedBlock(pillars, -2, 0, -2, Blocks.nether_brick);
 		structure.addAllowedBlock(pillars, -2, 1, -2, Blocks.nether_brick);
-		structure.addAllowedBlock(chimerite, -2, 2, -2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_CHIMERITE_BLOCK);
+		structure.addAllowedBlock(chimerite, -2, 2, -2, BlocksCommonProxy.AMOres, BlockAMOre.META_CHIMERITE_BLOCK);
 		structure.addAllowedBlock(obsidian, -2, 2, -2, Blocks.obsidian);
-		structure.addAllowedBlock(sunstone, -2, 2, -2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_SUNSTONE_BLOCK);
+		structure.addAllowedBlock(sunstone, -2, 2, -2, BlocksCommonProxy.AMOres, BlockAMOre.META_SUNSTONE_BLOCK);
 
 		structure.addAllowedBlock(pillars, 2, 0, -2, Blocks.nether_brick);
 		structure.addAllowedBlock(pillars, 2, 1, -2, Blocks.nether_brick);
-		structure.addAllowedBlock(chimerite, 2, 2, -2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_CHIMERITE_BLOCK);
+		structure.addAllowedBlock(chimerite, 2, 2, -2, BlocksCommonProxy.AMOres, BlockAMOre.META_CHIMERITE_BLOCK);
 		structure.addAllowedBlock(obsidian, 2, 2, -2, Blocks.obsidian);
-		structure.addAllowedBlock(sunstone, 2, 2, -2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_SUNSTONE_BLOCK);
+		structure.addAllowedBlock(sunstone, 2, 2, -2, BlocksCommonProxy.AMOres, BlockAMOre.META_SUNSTONE_BLOCK);
 
 		structure.addAllowedBlock(pillars, -2, 0, 2, Blocks.nether_brick);
 		structure.addAllowedBlock(pillars, -2, 1, 2, Blocks.nether_brick);
-		structure.addAllowedBlock(chimerite, -2, 2, 2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_CHIMERITE_BLOCK);
+		structure.addAllowedBlock(chimerite, -2, 2, 2, BlocksCommonProxy.AMOres, BlockAMOre.META_CHIMERITE_BLOCK);
 		structure.addAllowedBlock(obsidian, -2, 2, 2, Blocks.obsidian);
-		structure.addAllowedBlock(sunstone, -2, 2, 2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_SUNSTONE_BLOCK);
+		structure.addAllowedBlock(sunstone, -2, 2, 2, BlocksCommonProxy.AMOres, BlockAMOre.META_SUNSTONE_BLOCK);
 
 		structure.addAllowedBlock(pillars, 2, 0, 2, Blocks.nether_brick);
 		structure.addAllowedBlock(pillars, 2, 1, 2, Blocks.nether_brick);
-		structure.addAllowedBlock(chimerite, 2, 2, 2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_CHIMERITE_BLOCK);
+		structure.addAllowedBlock(chimerite, 2, 2, 2, BlocksCommonProxy.AMOres, BlockAMOre.META_CHIMERITE_BLOCK);
 		structure.addAllowedBlock(obsidian, 2, 2, 2, Blocks.obsidian);
-		structure.addAllowedBlock(sunstone, 2, 2, 2, BlocksCommonProxy.AMOres, BlocksCommonProxy.AMOres.META_SUNSTONE_BLOCK);
+		structure.addAllowedBlock(sunstone, 2, 2, 2, BlocksCommonProxy.AMOres, BlockAMOre.META_SUNSTONE_BLOCK);
 
 		wizardChalkCircle = addWizChalkGroupToStructure(structure, 1);
 	}
@@ -141,10 +142,12 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 				it.remove();
 				continue;
 			}
+			if(EntityUtilities.isSummon(ent))
+				continue;
 
 			MovingObjectPosition mop = this.worldObj.rayTraceBlocks(Vec3.createVectorHelper(xCoord + 0.5, yCoord + 1.5, zCoord + 0.5), Vec3.createVectorHelper(ent.posX, ent.posY + ent.getEyeHeight(), ent.posZ), false);
 
-			if (EntityUtilities.isSummon(ent) || mop != null) {
+			if ( mop != null) {
 				continue;
 			}
 
@@ -194,16 +197,14 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 					}
 					arcs.put(ent, arc);
 				}
-				Iterator arcIterator = arcs.keySet().iterator();
-				ArrayList<Entity> toRemove = new ArrayList<Entity>();
-				while (arcIterator.hasNext()) {
-					Entity arcEnt = (Entity)arcIterator.next();
-					AMLineArc arc = (AMLineArc)arcs.get(arcEnt);
-					if (arcEnt == null || arcEnt.isDead || arc == null || arc.isDead /*|| new AMVector3(ent).distanceSqTo(new AMVector3(xCoord, yCoord, zCoord)) > 100*/)
-					    toRemove.add(arcEnt);
+				ArrayList<EntityLivingBase> toremove = new ArrayList<>();
+				for (EntityLivingBase arcEnt : arcs.keySet()){
+					AMLineArc arc = arcs.get(arcEnt);
+					double distance = new AMVector3(ent).distanceSqTo(new AMVector3(xCoord, yCoord, zCoord));
+					if (arcEnt == null || arcEnt.isDead || arc == null || arc.isDead /*||  distance > 100*/)
+						toremove.add(arcEnt);
 				}
-
-				for (Entity e : toRemove) {
+				for(EntityLivingBase e : toremove){
 					arcs.remove(e);
 				}
 			}
@@ -243,7 +244,6 @@ public class TileEntityBlackAurem extends TileEntityObelisk implements IMultiblo
 					entity instanceof EntityWinterGuardianArm ||
 					entity instanceof EntityThrownSickle ||
 					entity instanceof EntityFlicker ||
-					entity instanceof EntityShadowHelper ||
 					entity instanceof EntityShadowHelper ||
                     entity instanceof EntityThrownRock  ||
                     entity instanceof EntityBroom)

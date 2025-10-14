@@ -25,6 +25,7 @@ import am2.network.AMDataWriter;
 import am2.network.AMNetHandler;
 import am2.network.AMPacketIDs;
 import am2.particles.AMLineArc;
+
 import am2.spell.SkillManager;
 import am2.spell.SkillTreeManager;
 import am2.spell.SpellHelper;
@@ -686,7 +687,8 @@ public class ExtendedProperties implements IExtendedProperties, IExtendedEntityP
 				if (currentFatigue > 950){ // lvl 95+
 					int roll = random.nextInt(3);
 					if (roll == 2){
-						this.entity.setDead();
+						this.entity.setHealth(0);
+						this.entity.onDeath(DamageSource.generic);
 					}
 				}
 			}
@@ -1374,26 +1376,23 @@ public class ExtendedProperties implements IExtendedProperties, IExtendedEntityP
 		return compendium_entries.entrySet().iterator();
 	}
 
+	public void register(World world,EntityLivingBase entityLB){
+		if(world == null)return;
 
-	@Override
-	public void init(Entity entity, World world){
-		if (world == null || entity == null || !(entity instanceof EntityLivingBase)) return;
+		setEntityReference(entityLB);
 
-		setEntityReference((EntityLivingBase)entity);
-
-		if (entity instanceof EntityPlayer){
+		if (entityLB instanceof EntityPlayer){
 			maxMana = 0;
 			currentMana = 0;
 			magicLevel = 0;
-			maxFatigue = 1;
-			currentFatigue = 0;
 		}else{
 			maxMana = 100;
 			currentMana = 100;
 			magicLevel = 1;
-			maxFatigue = 1;
-			currentFatigue = 0;
 		}
+		maxFatigue = 1;
+		currentFatigue = 0;
+
 		numSummons = 0;
 		armorProcCooldowns = new int[4];
 
@@ -1407,6 +1406,12 @@ public class ExtendedProperties implements IExtendedProperties, IExtendedEntityP
 		ticksToSync = world.rand.nextInt(syncTickDelay);
 
 		hasInitialized = true;
+
+	}
+
+	@Override
+	public void init(Entity entity, World world){
+
 	}
 
 	public void deductMana(float manaCost){
@@ -1576,12 +1581,12 @@ public class ExtendedProperties implements IExtendedProperties, IExtendedEntityP
 						setCurrentMana(0);
 					}
 
-					int regenTicks = (int)Math.ceil(ticksForFullRegen * entity.getAttributeMap().getAttributeInstance(ArsMagicaApi.manaRegenTimeModifier).getAttributeValue());
+					float regenTicks = (float)(ticksForFullRegen * entity.getAttributeMap().getAttributeInstance(ArsMagicaApi.manaRegenTimeModifier).getAttributeValue());
 
 					//mana regen buff
 					if (entity.isPotionActive(BuffList.manaRegen.id)){
 						PotionEffect pe = entity.getActivePotionEffect(BuffList.manaRegen);
-						regenTicks *= (1.0f - Math.max(0.9f, (0.25 * (pe.getAmplifier() + 1))));
+						regenTicks *= (float)(1.0f /(1 + 0.25 * (pe.getAmplifier() + 1)));
 					}
 
 					//mana scepter handling - 10% boost to mana regen
@@ -1589,11 +1594,11 @@ public class ExtendedProperties implements IExtendedProperties, IExtendedEntityP
 						EntityPlayer player = (EntityPlayer)entity;
 						int armorSet = ArmorHelper.getFullArsMagicaArmorSet(player);
 						if (armorSet == ArsMagicaArmorMaterial.MAGE.getMaterialID()){
-							regenTicks *= 0.8;
+							regenTicks *= 0.8F;
 						}else if (armorSet == ArsMagicaArmorMaterial.BATTLEMAGE.getMaterialID()){
-							regenTicks *= 0.95;
+							regenTicks *= 0.95F;
 						}else if (armorSet == ArsMagicaArmorMaterial.ARCHMAGE.getMaterialID()){
-							regenTicks *= 0.5;
+							regenTicks *= 0.5F;
 						}
 
 						if (SkillData.For(player).isEntryKnown(SkillTreeManager.instance.getSkillTreeEntry(SkillManager.instance.getSkill("ManaRegenIII")))){

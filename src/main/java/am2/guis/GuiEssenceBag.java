@@ -25,24 +25,23 @@ public class GuiEssenceBag extends GuiContainer{
 
 	public GuiEssenceBag(InventoryPlayer inventoryplayer, ItemStack spellBookStack, InventoryEssenceBag inventorybag){
 		super(new ContainerEssenceBag(inventoryplayer, spellBookStack, inventorybag));
-		bagInventory = inventorybag;
 		xSize = 176;
 		ySize = 140;
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2){
-		mc.renderEngine.bindTexture(extras);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		//special slot
-		int index = ((ContainerEssenceBag)this.inventorySlots).specialSlotIndex - 32;
-		int x = 8 + 18 * index;
-		int y = 211;
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
-		drawTexturedModalRect(x, y, 0, 20, 16, 16);
-		GL11.glDisable(GL11.GL_BLEND);
+//		mc.renderEngine.bindTexture(extras);
+//		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+//		//special slot
+//		int index = ((ContainerEssenceBag)this.inventorySlots).specialSlotIndex - 32;
+//		int x = 8 + 18 * index;
+//		int y = 211;
+//		GL11.glEnable(GL11.GL_BLEND);
+//		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+//		GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+//		drawTexturedModalRect(x, y, 0, 20, 16, 16);
+//		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	@Override
@@ -50,6 +49,4 @@ public class GuiEssenceBag extends GuiContainer{
 		if (!Character.isDigit(par1))
 			super.keyTyped(par1, par2);
 	}
-
-	private InventoryEssenceBag bagInventory;
 }

@@ -7,10 +7,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.world.BlockEvent;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -49,11 +54,15 @@ public class CreateWater implements ISpellComponent{
 			break;
 		}
 
-		block = world.getBlock(blockx, blocky, blockz);
-		if (world.isAirBlock(blockx, blocky, blockz) || block == Blocks.snow || block == Blocks.water || block == Blocks.flowing_water || block instanceof BlockFlower){
-			world.setBlock(blockx, blocky, blockz, Blocks.water);
-			Blocks.water.onNeighborBlockChange(world, blockx, blocky, blockz, Blocks.air);
-			return true;
+		Block blockto = world.getBlock(blockx, blocky, blockz);
+		if (world.isAirBlock(blockx, blocky, blockz) || blockto == Blocks.snow || blockto == Blocks.water || blockto == Blocks.flowing_water || blockto instanceof BlockFlower){
+			if (caster instanceof EntityPlayer){
+				BlockEvent.PlaceEvent place =  new BlockEvent.PlaceEvent(new  BlockSnapshot(world, blockx, blocky, blockz,Blocks.water, 0),block,(EntityPlayer)caster);
+				if(place.isCanceled()) return false;
+				world.setBlock(blockx, blocky, blockz, Blocks.water);
+				Blocks.water.onNeighborBlockChange(world, blockx, blocky, blockz, Blocks.air);
+				return true;
+			}
 		}
 		return false;
 	}

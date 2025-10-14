@@ -22,11 +22,6 @@ public class ItemEssenceBag extends ArsMagicaItem{
 	}
 
 	@Override
-	public boolean getShareTag(){
-		return true;
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack par1ItemStack,
 							   EntityPlayer par2EntityPlayer, List par3List, boolean par4){
@@ -35,10 +30,11 @@ public class ItemEssenceBag extends ArsMagicaItem{
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer entityplayer){
-		FMLNetworkHandler.openGui(entityplayer, AMCore.instance, ArsMagicaGuiIdList.GUI_ESSENCE_BAG, world, (int)entityplayer.posX, (int)entityplayer.posY, (int)entityplayer.posZ);
+		if (!world.isRemote){
+			FMLNetworkHandler.openGui(entityplayer, AMCore.instance, ArsMagicaGuiIdList.GUI_ESSENCE_BAG, world, (int)entityplayer.posX, (int)entityplayer.posY, (int)entityplayer.posZ);
+		}
 		return stack;
 	}
-
 	private ItemStack[] getMyInventory(ItemStack itemStack){
 		return ReadFromStackTagCompound(itemStack);
 	}
@@ -52,21 +48,6 @@ public class ItemEssenceBag extends ArsMagicaItem{
 			if (stack == null){
 				itemStack.stackTagCompound.removeTag("essencebagstacksize" + i);
 				itemStack.stackTagCompound.removeTag("essencebagmeta" + i);
-				continue;
-			}else{
-				itemStack.stackTagCompound.setInteger("essencebagstacksize" + i, stack.stackSize);
-				itemStack.stackTagCompound.setInteger("essencebagmeta" + i, stack.getItemDamage());
-			}
-		}
-	}
-
-	public void UpdateStackTagCompound(ItemStack itemStack, InventoryEssenceBag inventory){
-		if (itemStack.stackTagCompound == null){
-			itemStack.stackTagCompound = new NBTTagCompound();
-		}
-		for (int i = 0; i < inventory.getSizeInventory(); ++i){
-			ItemStack stack = inventory.getStackInSlot(i);
-			if (stack == null){
 				continue;
 			}else{
 				itemStack.stackTagCompound.setInteger("essencebagstacksize" + i, stack.stackSize);

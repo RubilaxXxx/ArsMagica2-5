@@ -1,6 +1,5 @@
 package am2.guis;
 
-import am2.AMCore;
 import am2.api.SkillTreeEntry;
 import am2.api.spell.component.interfaces.ISkillTreeEntry;
 import am2.api.spell.enums.LearnStates;
@@ -15,7 +14,6 @@ import am2.spell.SkillManager;
 import am2.spell.SkillTreeManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.renderer.RenderHelper;

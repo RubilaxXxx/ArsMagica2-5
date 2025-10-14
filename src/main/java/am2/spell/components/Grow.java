@@ -18,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -142,7 +143,7 @@ public class Grow implements ISpellComponent{
 
 	@Override
 	public ItemStack[] reagents(EntityLivingBase caster){
-		return null;
+		return new ItemStack[]{new ItemStack(Items.bone)};
 	}
 
 	@Override

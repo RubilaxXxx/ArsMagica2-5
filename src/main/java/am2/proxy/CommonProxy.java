@@ -7,13 +7,14 @@ import am2.api.power.IPowerNode;
 import am2.api.power.PowerTypes;
 import am2.armor.ArmorEventHandler;
 import am2.armor.infusions.*;
+import am2.blocks.BlockAMOre;
 import am2.blocks.BlocksCommonProxy;
 import am2.blocks.tileentities.TileEntityParticleEmitter;
 import am2.buffs.BuffList;
-import am2.configuration.AMConfig;
 import am2.enchantments.AMEnchantments;
 import am2.entities.EntityManager;
 import am2.entities.ai.MageVillagerTrade;
+import am2.items.ItemOre;
 import am2.items.ItemsCommonProxy;
 import am2.network.AMNetHandler;
 import am2.network.AMPacketProcessorServer;
@@ -132,8 +133,9 @@ public class CommonProxy{
 		blocks.InstantiateBlocks();
 		items.InstantiateItems();
 
-		ObeliskFuelHelper.instance.registerFuelType(new ItemStack(ItemsCommonProxy.itemOre, 0, ItemsCommonProxy.itemOre.META_VINTEUMDUST), 200);
+		ObeliskFuelHelper.instance.registerFuelType(new ItemStack(ItemsCommonProxy.itemOre, 0, ItemOre.META_VINTEUMDUST), 200);
 		ObeliskFuelHelper.instance.registerFuelType(new ItemStack(ItemsCommonProxy.itemAMBucket, 0, Short.MAX_VALUE), 2000);
+		ObeliskFuelHelper.instance.registerFuelType(new ItemStack(ItemOre.getItemFromBlock(BlocksCommonProxy.AMOres),0, BlockAMOre.META_VINTEUM_BLOCK), 2700);
 
 		EnervatorRecipeHelper.instance.registerRecipe(new ItemStack(Blocks.stonebrick), new ItemStack(Blocks.stonebrick, 1, 2));
 		EnervatorRecipeHelper.instance.registerRecipe(new ItemStack(Items.bone), new ItemStack(Items.dye, 1, 15));

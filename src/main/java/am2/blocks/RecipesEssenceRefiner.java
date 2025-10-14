@@ -1,5 +1,6 @@
 package am2.blocks;
 
+import am2.items.ItemEssence;
 import am2.items.ItemsCommonProxy;
 import am2.items.RecipesArsMagica;
 import net.minecraft.init.Blocks;
@@ -195,7 +196,7 @@ public class RecipesEssenceRefiner extends RecipesArsMagica{
 						new ItemStack(Items.gunpowder),
 						new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_COGNITIVEDUST)
 				},
-				new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_NIGHTMAREESSENCE));
+				new ItemStack(ItemsCommonProxy.itemOre, 1, ItemEssence.META_NIGHTMARE));
 		AddRecipe(new ItemStack[]{
 						new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_COGNITIVEDUST),
 						new ItemStack(Items.gunpowder),
@@ -203,7 +204,7 @@ public class RecipesEssenceRefiner extends RecipesArsMagica{
 						new ItemStack(Items.fermented_spider_eye),
 						new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_LIFE)
 				},
-				new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_NIGHTMAREESSENCE));
+				new ItemStack(ItemsCommonProxy.itemOre, 1, ItemEssence.META_NIGHTMARE));
 		//base essence core
 		AddRecipe(new ItemStack[]{
 						new ItemStack(ItemsCommonProxy.essence, 1, ItemsCommonProxy.essence.META_AIR),

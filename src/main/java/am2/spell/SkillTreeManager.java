@@ -233,7 +233,8 @@ public class SkillTreeManager implements ISkillTreeManager{
 
 		RegisterPart(SkillManager.instance.getSkill("Flight"), 222, 270, SkillTrees.Defense, SkillPointTypes.RED, SkillManager.instance.getSkill("Levitate"));
 		RegisterPart(SkillManager.instance.getSkill("Shield"), 357, 270, SkillTrees.Defense, SkillPointTypes.BLUE, SkillManager.instance.getSkill("Zone"));
-		RegisterPart(SkillManager.instance.getSkill("RedstoneFluxDrain"), 312, 270, SkillTrees.Defense, SkillPointTypes.RED, SkillManager.instance.getSkill("ManaDrain"));
+		if(AMCore.cofh)
+			RegisterPart(SkillManager.instance.getSkill("RedstoneFluxDrain"), 312, 270, SkillTrees.Defense, SkillPointTypes.RED, SkillManager.instance.getSkill("ManaDrain"));
 
 		RegisterPart(SkillManager.instance.getSkill("Contingency_Health"), 402, 270, SkillTrees.Defense, SkillPointTypes.RED, SkillManager.instance.getSkill("Shield"));
 

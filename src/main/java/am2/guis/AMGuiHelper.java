@@ -280,6 +280,7 @@ public class AMGuiHelper{
 
 			if (!success){
 				itemRenderer.renderItemIntoGUI(Minecraft.getMinecraft().fontRenderer, Minecraft.getMinecraft().renderEngine, stack, (int)x, (int)y);
+				GL11.glEnable(GL11.GL_ALPHA_TEST);
 			}
 		}
 		GL11.glPopAttrib();

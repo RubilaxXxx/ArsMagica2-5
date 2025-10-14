@@ -5,6 +5,7 @@ import am2.api.ArsMagicaApi;
 import am2.api.spell.component.interfaces.ISpellComponent;
 import am2.api.spell.enums.Affinity;
 import am2.buffs.BuffList;
+import am2.items.ItemEssence;
 import am2.items.ItemsCommonProxy;
 import am2.particles.AMParticle;
 import am2.particles.ParticleOrbitEntity;
@@ -101,7 +102,7 @@ public class Banish implements ISpellComponent {
     public Object[] getRecipeItems(){
         return new Object[]{
                 new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_BLACK),
-                new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_NIGHTMAREESSENCE),
+                new ItemStack(ItemsCommonProxy.itemOre, 1, ItemEssence.META_NIGHTMARE),
                 new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_CELESTIALFISH),
                 Items.compass,
                 Items.ender_pearl

@@ -25,7 +25,8 @@ public class RenderHallucination extends RenderLiving {
     }
 
     public void renderLivingHallucination(EntityHallucination HallucinationEntity, double par2, double par4, double par6, float par8, float par9) {
-        if(Minecraft.getMinecraft().thePlayer.getCommandSenderName().equals(HallucinationEntity.getTargetName())) super.doRender(HallucinationEntity, par2, par4, par6, par8, par9);
+        if(Minecraft.getMinecraft().thePlayer.getCommandSenderName().equals(HallucinationEntity.getTargetName()))
+            super.doRender(HallucinationEntity, par2, par4, par6, par8, par9);
     }
 
     public void doRender(EntityLivingBase par1EntityLivingBase, double par2, double par4, double par6, float par8, float par9) {

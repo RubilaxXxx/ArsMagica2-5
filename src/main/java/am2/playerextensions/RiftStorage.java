@@ -60,10 +60,11 @@ public class RiftStorage implements IExtendedEntityProperties, IInventory{
 			}
 		}
 	}
-
+	public RiftStorage(){
+		inventory = new ItemStack[getSizeInventory()];
+	}
 	@Override
 	public void init(Entity entity, World world){
-		inventory = new ItemStack[getSizeInventory()];
 	}
 
 	@Override

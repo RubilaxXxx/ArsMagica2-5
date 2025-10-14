@@ -13,6 +13,7 @@ import am2.lore.CompendiumEntryTypes;
 import am2.playerextensions.AffinityData;
 import am2.playerextensions.ExtendedProperties;
 import am2.playerextensions.SkillData;
+
 import am2.spell.SkillManager;
 import am2.spell.SkillTreeManager;
 import am2.texture.SpellIconManager;

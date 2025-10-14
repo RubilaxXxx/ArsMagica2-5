@@ -33,7 +33,7 @@ public final class PowerTypes{
 	}
 
 	public static void RegisterPowerType(int id, String name, String chatColor){
-		if (getByID(id) == NONE){
+		if (getByID(id) != NONE){
 			LogHelper.info("Attempted to register power type %s with ID of %d, but that ID is already taken!  The type was NOT registered!", name, id);
 		}else{
 			allPowerTypes.add(new PowerTypes(id, name, chatColor));

@@ -31,10 +31,11 @@ public class ItemEssence extends ArsMagicaItem{
 	public static final int META_LIGHTNING = 7;
 	public static final int META_LIFE = 8;
 	public static final int META_ENDER = 9;
-	public static final int META_PURE = 10;
-	public static final int META_HIGH_CORE = 11;
-	public static final int META_BASE_CORE = 12;
-	public static final int META_MAX = 12;
+	public static final int META_NIGHTMARE = 10;
+	public static final int META_PURE = 11;
+	public static final int META_HIGH_CORE = 12;
+	public static final int META_BASE_CORE = 13;
+	public static final int META_MAX = 13;
 
 	public ItemEssence(){
 		super();
@@ -67,10 +68,12 @@ public class ItemEssence extends ArsMagicaItem{
 		case 9:
 			return StatCollector.translateToLocal("item.arsmagica2:enderEssence.name");
 		case 10:
-			return StatCollector.translateToLocal("item.arsmagica2:pureEssence.name");
+			return StatCollector.translateToLocal("item.arsmagica2:nightmareEssence.name");
 		case 11:
-			return StatCollector.translateToLocal("item.arsmagica2:highEssenceCore.name");
+			return StatCollector.translateToLocal("item.arsmagica2:pureEssence.name");
 		case 12:
+			return StatCollector.translateToLocal("item.arsmagica2:highEssenceCore.name");
+		case 13:
 			return StatCollector.translateToLocal("item.arsmagica2:baseEssenceCore.name");
 		}
 		int mask = meta - META_MAX;
@@ -89,7 +92,7 @@ public class ItemEssence extends ArsMagicaItem{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister){
-		textures = new String[]{"essence_arcane", "essence_earth", "essence_air", "essence_fire", "essence_water", "essence_plant", "essence_ice", "essence_lightning", "essence_life", "essence_ender", "pure_essence", "high_essence_core", "base_essence_core"};
+		textures = new String[]{"essence_arcane", "essence_earth", "essence_air", "essence_fire", "essence_water", "essence_plant", "essence_ice", "essence_lightning", "essence_life","essence_nightmare", "essence_ender", "pure_essence", "high_essence_core", "base_essence_core"};
 		this.icons = new IIcon[this.textures.length];
 
 		for (int i = 0; i < this.textures.length; ++i){
@@ -100,7 +103,7 @@ public class ItemEssence extends ArsMagicaItem{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int damage){
-		if (this.icons != null && damage <= META_MAX){
+		if (this.icons != null && damage <= icons.length){
 			return this.icons[damage];
 		}else{
 			return AMParticleIcons.instance.getIconByName("mystic");
@@ -123,7 +126,7 @@ public class ItemEssence extends ArsMagicaItem{
 			if ((flags & PowerTypes.DARK.ID()) == PowerTypes.DARK.ID()){
 				color |= 0x770000;
 			}
-			if ((flags & PowerTypes.NEUTRAL.ID()) == (flags & PowerTypes.NEUTRAL.ID())){
+			if ((flags & PowerTypes.NEUTRAL.ID())  == (flags & PowerTypes.NEUTRAL.ID())){
 				color |= 0x00AA00;
 			}
 			if ((flags & PowerTypes.LIGHT.ID()) == (flags & PowerTypes.LIGHT.ID())){

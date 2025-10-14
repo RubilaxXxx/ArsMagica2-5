@@ -36,7 +36,7 @@ public abstract class AM2Boss extends EntityMob implements IArsMagicaBoss, IEnti
 	protected BossActions currentAction = BossActions.IDLE;
 	protected int ticksInCurrentAction;
 	protected EntityDragonPart[] parts;
-
+	private ArrayList<Block> disallowedBlocks;
 	public boolean playerCanSee = false;
 	;
 
@@ -55,28 +55,28 @@ public abstract class AM2Boss extends EntityMob implements IArsMagicaBoss, IEnti
 			disallowedBlocks.add(Block.getBlockFromName(i.replace("tile.", "")));
 		}
 	}
-
-	//Bosses should be able to follow players through doors and hallways, so setSize is overridden to instead add a
-	//damageable entity based bounding box of the specified size, unless a boss already uses parts.
-	@Override
-	public void setSize(float width, float height){
-		if (parts == null){
-			parts = new EntityDragonPart[]{new EntityDragonPart(this, "defaultBody", width, height){
-				@Override
-				public void onUpdate(){
-					super.onUpdate();
-					this.isDead = ((Entity)entityDragonObj).isDead;
-				}
-
-				@Override
-				public boolean shouldRenderInPass(int pass){
-					return false;
-				}
-			}};
-		}else{
-			super.setSize(width, height);
-		}
-	}
+//
+//	//Bosses should be able to follow players through doors and hallways, so setSize is overridden to instead add a
+//	//damageable entity based bounding box of the specified size, unless a boss already uses parts.
+//	@Override
+//	public void setSize(float width, float height){
+//		if (parts == null){
+//			parts = new EntityDragonPart[]{new EntityDragonPart(this, "defaultBody", width, height){
+//				@Override
+//				public void onUpdate(){
+//					super.onUpdate();
+//					this.isDead = ((Entity)entityDragonObj).isDead;
+//				}
+//
+//				@Override
+//				public boolean shouldRenderInPass(int pass){
+//					return false;
+//				}
+//			}};
+//		}else{
+//			super.setSize(width, height);
+//		}
+//	}
 
 	@Override
 	protected boolean isAIEnabled(){
@@ -153,18 +153,18 @@ public abstract class AM2Boss extends EntityMob implements IArsMagicaBoss, IEnti
 			ReflectionHelper.setPrivateValue(DamageSource.class, par1DamageSource, false, "isUnblockable", "field_76374_o");
 		} // anti-TiC-rapier
 
-		if (par1DamageSource == DamageSource.inWall){
-			if (!worldObj.isRemote){// dead code? (calling canSnowAt() without using the result) could it be a buggy upgrade to 1.7.10?
-				for (int i = -1; i <= 1; ++i){
-					for (int j = 0; j < 3; ++j){
-						for (int k = -1; k <= 1; ++k){
-							worldObj.func_147478_e(i, j, k, true);
-						}
-					}
-				}
-			}
-			return false;
-		}
+//		if (par1DamageSource == DamageSource.inWall){
+//			if (!worldObj.isRemote){// dead code? (calling canSnowAt() without using the result) could it be a buggy upgrade to 1.7.10?
+//				for (int i = -1; i <= 1; ++i){
+//					for (int j = 0; j < 3; ++j){
+//						for (int k = -1; k <= 1; ++k){
+//							worldObj.func_147478_e(i, j, k, true);
+//						}
+//					}
+//				}
+//			}
+//			return false;
+//		}
 
 		if (par1DamageSource.getSourceOfDamage() != null){
 
@@ -236,31 +236,31 @@ public abstract class AM2Boss extends EntityMob implements IArsMagicaBoss, IEnti
 		}
 
 		// break all non-unbreakable blocks to prevent guardian from being locked up and farmed
-		for (int x = -1; x <= 1; x++){
-			for (int y = 0; y <= 2; y++){
-				for (int z = -1; z <= 1; z++){
-					Block block = this.worldObj.getBlock((int)this.posX + x, (int)this.posY + y, (int)this.posZ + z);
-					if (!this.worldObj.isAirBlock((int)this.posX + x, (int)this.posY + y, (int)this.posZ + z)){
-						if (this.worldObj.rand.nextDouble() > 0.993D &&
-								block.getBlockHardness(this.worldObj, (int)this.posX + x, (int)this.posY + y, (int)this.posZ + z) > 0.1f
-						&& !(block instanceof BlockLiquid) && !(disallowedBlocks.contains(block)) && worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")){
-							block.breakBlock(this.worldObj, (int)this.posX + x, (int)this.posY + y, (int)this.posZ + z,
-									block,
-									this.worldObj.getBlockMetadata((int)this.posX + x, (int)this.posY + y, (int)this.posZ + z));
-							block.dropBlockAsItem(this.worldObj, (int)this.posX + x, (int)this.posY + y, (int)this.posZ + z,
-									this.worldObj.getBlockMetadata((int)this.posX + x, (int)this.posY + y, (int)this.posZ + z),
-									Block.getIdFromBlock(block));
-							worldObj.setBlockToAir((int)this.posX + x, (int)this.posY + y, (int)this.posZ + z);
-						}
-					}
-				}
-			}
-		}
+//		for (int x = -1; x <= 1; x++){
+//			for (int y = 0; y <= 2; y++){
+//				for (int z = -1; z <= 1; z++){
+//					Block block = this.worldObj.getBlock((int)this.posX + x, (int)this.posY + y, (int)this.posZ + z);
+//					if (!this.worldObj.isAirBlock((int)this.posX + x, (int)this.posY + y, (int)this.posZ + z)){
+//						if (this.worldObj.rand.nextDouble() > 0.993D &&
+//								block.getBlockHardness(this.worldObj, (int)this.posX + x, (int)this.posY + y, (int)this.posZ + z) > 0.1f
+//						&& !(block instanceof BlockLiquid) && !(disallowedBlocks.contains(block)) && worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing")){
+//							block.breakBlock(this.worldObj, (int)this.posX + x, (int)this.posY + y, (int)this.posZ + z,
+//									block,
+//									this.worldObj.getBlockMetadata((int)this.posX + x, (int)this.posY + y, (int)this.posZ + z));
+//							block.dropBlockAsItem(this.worldObj, (int)this.posX + x, (int)this.posY + y, (int)this.posZ + z,
+//									this.worldObj.getBlockMetadata((int)this.posX + x, (int)this.posY + y, (int)this.posZ + z),
+//									Block.getIdFromBlock(block));
+//							worldObj.setBlockToAir((int)this.posX + x, (int)this.posY + y, (int)this.posZ + z);
+//						}
+//					}
+//				}
+//			}
+//		}
 
 		super.onUpdate();
 	}
 
-	private ArrayList<Block> disallowedBlocks = new ArrayList<Block>();
+
 
 	@Override
 	public boolean allowLeashing(){

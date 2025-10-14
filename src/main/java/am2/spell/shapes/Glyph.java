@@ -7,25 +7,23 @@ import am2.api.spell.component.interfaces.ISpellShape;
 import am2.api.spell.enums.Affinity;
 import am2.api.spell.enums.SpellCastResult;
 import am2.api.spell.enums.SpellModifiers;
-import am2.items.ItemBindingCatalyst;
 import am2.items.ItemsCommonProxy;
 import am2.network.AMNetHandler;
 import am2.particles.AMParticle;
 import am2.particles.ParticleHoldPosition;
 import am2.playerextensions.ExtendedProperties;
 import am2.playerextensions.SkillData;
+
 import am2.spell.SkillManager;
 import am2.spell.SkillTreeManager;
 import am2.spell.SpellHelper;
 import am2.spell.SpellUtils;
 import am2.spell.modifiers.Colour;
-import am2.utility.InventoryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class Glyph implements ISpellShape {

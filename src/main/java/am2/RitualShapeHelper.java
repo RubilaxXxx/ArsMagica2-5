@@ -65,9 +65,7 @@ public class RitualShapeHelper{
 		if (items.size() != check.length)
 			return false;
 
-		ArrayList<ItemStack> itemList = new ArrayList<ItemStack>();
-		for (ItemStack stack : check)
-			itemList.add(stack);
+		ArrayList<ItemStack> itemList = new ArrayList<ItemStack>(Arrays.asList(check));
 
 		Iterator it = itemList.iterator();
 		while (it.hasNext()){

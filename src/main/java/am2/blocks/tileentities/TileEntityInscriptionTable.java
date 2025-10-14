@@ -605,6 +605,7 @@ public class TileEntityInscriptionTable extends TileEntity implements IInventory
 			stack.stackTagCompound.setString("suggestedName", currentSpellName);
 
 			player.inventory.addItemStackToInventory(stack);
+			player.inventoryContainer.detectAndSendChanges();
 		}
 	}
 
