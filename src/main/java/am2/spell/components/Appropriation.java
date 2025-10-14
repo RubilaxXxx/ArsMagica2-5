@@ -1,16 +1,14 @@
 package am2.spell.components;
 
 import am2.AMCore;
-import am2.api.ArsMagicaApi;
 import am2.api.spell.component.interfaces.ISpellComponent;
 import am2.api.spell.enums.Affinity;
 import am2.blocks.BlocksCommonProxy;
 import am2.items.ItemSpellBook;
+import am2.items.SpellBase;
 import am2.particles.AMParticle;
 import am2.particles.ParticleOrbitPoint;
-import am2.playerextensions.ExtendedProperties;
 import am2.spell.SpellUtils;
-import am2.utility.DummyEntityPlayer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,10 +17,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
@@ -65,7 +61,6 @@ public class Appropriation implements ISpellComponent{
 		if (originalSpellStack == null){
 			return false;
 		}
-
 		if (originalSpellStack.stackTagCompound == null){
 			return false;
 		}
@@ -77,14 +72,13 @@ public class Appropriation implements ISpellComponent{
 		}
 
 		for (String s : AMCore.config.getAppropriationBlockBlacklist()){
-			if (block.getUnlocalizedName() == s){
+			if (block.getUnlocalizedName().equals(s)){
 				return false;
 			}
 		}
 
 		if (!world.isRemote){
 			if (originalSpellStack.stackTagCompound.hasKey(storageKey)){
-
 				if (world.getBlock(blockx, blocky, blockz) == Blocks.air) blockFace = -1;
 				if (blockFace != -1){
 					switch (blockFace){
@@ -118,7 +112,7 @@ public class Appropriation implements ISpellComponent{
 					}
 
 
-					EntityPlayerMP casterPlayer = (EntityPlayerMP)DummyEntityPlayer.fromEntityLiving(caster);
+					EntityPlayer casterPlayer = (EntityPlayer)caster;
 					world.captureBlockSnapshots = true;
 					restore((EntityPlayer)caster, world, originalSpellStack, blockx, blocky, blockz, impactX, impactY, impactZ);
 					world.captureBlockSnapshots = false;
@@ -177,28 +171,28 @@ public class Appropriation implements ISpellComponent{
 					// restore((EntityPlayer)caster, world, originalSpellStack, blockx, blocky, blockz, impactX, impactY, impactZ);
 				}
 			}else{
-
-				if (block == null || block.getBlockHardness(world, blockx, blocky, blockz) == -1.0f){
+				if (block.getBlockHardness(world, blockx, blocky, blockz) == -1.0f){
 					return false;
 				}
-
+				int meta = world.getBlockMetadata(blockx, blocky, blockz);
+//				MultiblockStructureDefinition.BlockDec blockDec = new MultiblockStructureDefinition.BlockDec(block, meta);
 				NBTTagCompound data = new NBTTagCompound();
 				data.setString(storageType, "block");
 				//data.setString("blockName", block.getUnlocalizedName().replace("tile.", ""));
 				data.setInteger("blockID", Block.getIdFromBlock(block));
-				int meta = world.getBlockMetadata(blockx, blocky, blockz);
+
 				data.setInteger("meta", meta);
 
-				EntityPlayerMP casterPlayer = (EntityPlayerMP)DummyEntityPlayer.fromEntityLiving(caster);
-				if (!ForgeEventFactory.doPlayerHarvestCheck(casterPlayer, block, true)){
+
+				if (!ForgeEventFactory.doPlayerHarvestCheck((EntityPlayer)caster, block, true)){
 					return false;
 				}
-
-				BreakEvent event = ForgeHooks.onBlockBreakEvent(world, casterPlayer.theItemInWorldManager.getGameType(), casterPlayer, blockx, blocky, blockz);
-				if (event.isCanceled()){
-					return false;
+				if(!world.isRemote){
+					BreakEvent event = ForgeHooks.onBlockBreakEvent(world, ((EntityPlayerMP)caster).theItemInWorldManager.getGameType(), ((EntityPlayerMP)caster), blockx, blocky, blockz);
+					if (event.isCanceled()){
+						return false;
+					}
 				}
-
 				TileEntity te = world.getTileEntity(blockx, blocky, blockz);
 				if (te != null){
 					NBTTagCompound teData = new NBTTagCompound();
@@ -215,7 +209,7 @@ public class Appropriation implements ISpellComponent{
 
 				originalSpellStack.stackTagCompound.setTag(storageKey, data);
 
-				setOriginalSpellStackData((EntityPlayer)caster, originalSpellStack);
+				((EntityPlayer)caster).setCurrentItemOrArmor(0,originalSpellStack);
 
 				world.setBlockToAir(blockx, blocky, blockz);
 			}
@@ -294,7 +288,7 @@ public class Appropriation implements ISpellComponent{
 			}
 			if (!hasAppropriation)
 				return null;
-		}
+		}else if (!(originalSpellStack.getItem() instanceof SpellBase)) return null;
 
 		return originalSpellStack;
 	}

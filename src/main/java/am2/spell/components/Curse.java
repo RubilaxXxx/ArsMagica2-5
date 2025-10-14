@@ -16,28 +16,22 @@ import am2.items.ItemEssence;
 import am2.items.ItemsCommonProxy;
 import am2.particles.AMParticle;
 import am2.particles.ParticleArcToEntity;
-import am2.spell.SpellHelper;
 import am2.spell.SpellUtils;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-
 import java.util.*;
 
 import static am2.AMEventHandler.summonCreature;
 import static am2.AMEventHandler.tempCurseMap;
-import static am2.buffs.BuffList.buffEffectFromPotionID;
-import static am2.spell.components.Bless.magnifyPotions;
+
 
 public class Curse implements ISpellComponent, IRitualInteraction{
     @Override
@@ -78,7 +72,8 @@ public class Curse implements ISpellComponent, IRitualInteraction{
             int targetDuration = SpellUtils.instance.getModifiedInt_Mul(BuffList.default_buff_duration / 2, stack, caster, target, world, 0, SpellModifiers.DURATION);
 
             while (iter.hasNext()) {
-                Integer potionID = ((PotionEffect) iter.next()).getPotionID();
+                PotionEffect potion = ((PotionEffect)iter.next());
+                int potionID = potion.getPotionID();
                 PotionEffect pe = ((EntityLivingBase) target).getActivePotionEffect(Potion.potionTypes[potionID]);
                 if (!Potion.potionTypes[potionID].isBadEffect) { // method is clientside only; we need the field
                     int magnitudeCost = pe.getAmplifier();
@@ -89,20 +84,25 @@ public class Curse implements ISpellComponent, IRitualInteraction{
                             ((BuffEffect) pe).stopEffect((EntityLivingBase) target);
                         }
                     }
-                } else { // bad effect
-                    effectsToRemove.add(potionID);
-                    if (pe instanceof BuffEffect && !world.isRemote) {
-                        ((BuffEffect) pe).stopEffect((EntityLivingBase) target);
-                    }
-                    effectsToMagnify.put(potionID, pe.getDuration() + ":" + pe.getAmplifier() + ":" + (pe instanceof BuffEffect));
-                }
+                } else {// bad effect
+                    targetDuration = Math.max(targetDuration,potion.getDuration());
+                    targetAmplifier = Math.max(targetAmplifier,potion.getAmplifier());
+                    PotionEffect targetpotion = new PotionEffect(potionID,targetDuration,targetAmplifier);
+                    ((EntityLivingBase)target).addPotionEffect(targetpotion);
+
+//                    effectsToRemove.add(potionID);
+//                    if (pe instanceof BuffEffect && !world.isRemote) {
+//                        ((BuffEffect) pe).stopEffect((EntityLivingBase) target);
+//                    }
+//                    effectsToMagnify.put(potionID, pe.getDuration() + ":" + pe.getAmplifier() + ":" + (pe instanceof BuffEffect));
+             }
             }
 
             if (!world.isRemote) {
                 removePotionEffects((EntityLivingBase) target, effectsToRemove);
-                for (Integer potionID : effectsToMagnify.keySet()) {
-                    magnifyPotions(world, (EntityLivingBase) target, magnitudeLeft, targetAmplifier, targetDuration, potionID, Integer.valueOf(effectsToMagnify.get(potionID).split(":")[0]), Integer.valueOf(effectsToMagnify.get(potionID).split(":")[1]), Boolean.valueOf(effectsToMagnify.get(potionID).split(":")[2]));
-                }
+//                for (Integer potionID : effectsToMagnify.keySet()) {
+//                    magnifyPotions(world, (EntityLivingBase) target, magnitudeLeft, targetAmplifier, targetDuration, potionID, Integer.valueOf(effectsToMagnify.get(potionID).split(":")[0]), Integer.valueOf(effectsToMagnify.get(potionID).split(":")[1]), Boolean.valueOf(effectsToMagnify.get(potionID).split(":")[2]));
+//                }
             }
         }
 

@@ -43,20 +43,6 @@ public abstract class BuffEffect extends PotionEffect{
 	@Override
 	public void performEffect(EntityLivingBase entityliving){
 	}
-
-	@Override
-	public void combine(PotionEffect potioneffect){
-		//don't combine "potion effects" with other buff effects
-		if (!(potioneffect instanceof BuffEffect)){
-			return;
-		}
-		int thisAmplifier = this.getAmplifier();
-		if (thisAmplifier >= potioneffect.getAmplifier()){
-			super.combine(potioneffect);
-			this.HasNotified = false;
-		}
-	}
-
 	@Override
 	public boolean onUpdate(EntityLivingBase entityliving){
 		//check for if we are for the first time applying the effect
@@ -71,7 +57,7 @@ public abstract class BuffEffect extends PotionEffect{
 			HasNotified = true;
 		}
 		performEffect(entityliving);
-		if (AMCore.instance.proxy instanceof CommonProxy){
+		if (AMCore.proxy != null){
 			//run the base
 			return super.onUpdate(entityliving);
 		}else{

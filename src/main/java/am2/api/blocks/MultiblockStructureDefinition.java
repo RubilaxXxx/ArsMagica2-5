@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MultiblockStructureDefinition{
-	public class BlockDec{
+	public static class BlockDec{
 		Block block;
 		int meta;
 

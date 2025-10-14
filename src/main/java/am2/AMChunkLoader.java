@@ -39,7 +39,13 @@ public class AMChunkLoader implements LoadingCallback{
 	}
 
 	private Ticket getTicket(TicketIdentifier identifier){
-		return tickets.get(identifier);
+		for(TicketIdentifier ticket : tickets.keySet()){
+			int comp = identifier.compareTo(ticket);
+			if(comp == 0){
+				return tickets.get(ticket);
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -75,6 +81,7 @@ public class AMChunkLoader implements LoadingCallback{
 
 		ChunkCoordIntPair pair = new ChunkCoordIntPair(x >> 4, z >> 4);
 		ForgeChunkManager.unforceChunk(ticket, pair);
+		LogHelper.warn("unloaded chunk %d %d",pair.chunkXPos, pair.chunkZPos);
 	}
 
 	@Override

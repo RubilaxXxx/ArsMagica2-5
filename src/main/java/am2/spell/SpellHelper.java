@@ -91,7 +91,7 @@ public class SpellHelper{
 								}
 							}
 						}
-						component.spawnParticles(world, blockX, blockY, blockZ, caster, caster, world.rand, color);
+						component.spawnParticles(world, blockX+0.5, blockY+0.5, blockZ+0.5, caster, caster, world.rand, color);
 					}
 					if (consumeMBR)
 						SpellUtils.instance.doAffinityShift(caster, component, stageShape, mana);

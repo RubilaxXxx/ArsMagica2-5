@@ -15,6 +15,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.Language;
 import net.minecraft.entity.Entity;
@@ -73,15 +74,19 @@ public class ArcaneCompendium implements ILoreHelper{
 			return;
 
 		try{
-			if (Minecraft.getMinecraft().thePlayer != null && ExtendedProperties.For(Minecraft.getMinecraft().thePlayer) != null) {
-				System.out.println("Saving Unlock Data!");
-				for (CompendiumEntry entry : compendium.values()){
-					String id = "U";
-					if (entry.isLocked)
-						id += "L";
-					if (entry.isNew)
-						id += "N";
-					ExtendedProperties.For(Minecraft.getMinecraft().thePlayer).setCompendiumEntry(entry.getID(), id);
+			EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+			if(player != null){
+				ExtendedProperties props = ExtendedProperties.For(player);
+				if (props != null){
+					System.out.println("Saving Unlock Data!");
+					for (CompendiumEntry entry : compendium.values()){
+						String id = "U";
+						if (entry.isLocked)
+							id += "L";
+						if (entry.isNew)
+							id += "N";
+						props.setCompendiumEntry(entry.getID(), id);
+					}
 				}
 			}
 		}catch (Exception e){
@@ -293,7 +298,6 @@ public class ArcaneCompendium implements ILoreHelper{
 			entry.setIsLocked(false);
 			if (ExtendedProperties.For(Minecraft.getMinecraft().thePlayer).getMagicLevel() > 0)
 				Minecraft.getMinecraft().guiAchievement.func_146256_a(compendiumData);
-
 			saveUnlockData();
 		}
 	}

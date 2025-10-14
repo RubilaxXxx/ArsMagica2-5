@@ -47,17 +47,6 @@ public class AMArmor extends ItemArmor implements ISpecialArmor{
 		setTextureName(name);
 		return this;
 	}
-	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack){
-		if (player.ticksExisted % 20 == 0){
-			float abs = player.getAbsorptionAmount();
-			if (abs < 38){ // 2 rows of hearts
-				abs++;
-				if (!world.isRemote) player.setAbsorptionAmount(abs);
-			}
-		}
-	}
-
-
 	@Override
 	public int getItemEnchantability(){
 		return material.getEnchantability();

@@ -30,11 +30,6 @@ public class ItemArcaneCompendium extends ArsMagicaItem{
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ){
-		return false;
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister par1IconRegister){
 		this.itemIcon = ResourceManager.RegisterTexture("arcanecompendium", par1IconRegister);

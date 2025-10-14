@@ -46,7 +46,7 @@ public class PlaceBlock implements ISpellComponent{
 
 	private BlockDec getPlaceBlock(ItemStack stack){
 		if (stack.hasTagCompound() && stack.stackTagCompound.hasKey(KEY_BLOCKID)){
-			return RitualShapeHelper.instance.hourglass.new BlockDec(Block.getBlockById(stack.stackTagCompound.getInteger(KEY_BLOCKID)), stack.stackTagCompound.getInteger(KEY_META));
+			return new BlockDec(Block.getBlockById(stack.stackTagCompound.getInteger(KEY_BLOCKID)), stack.stackTagCompound.getInteger(KEY_META));
 		}
 		return null;
 	}

@@ -7,6 +7,8 @@ import am2.api.spell.enums.Affinity;
 import am2.api.spell.enums.SpellModifiers;
 import am2.buffs.BuffEffect;
 import am2.buffs.BuffList;
+import am2.items.ItemOre;
+import am2.items.ItemRune;
 import am2.items.ItemsCommonProxy;
 import am2.particles.AMParticle;
 import am2.particles.ParticleOrbitEntity;
@@ -46,11 +48,12 @@ public class Bless implements ISpellComponent{
 		Iterator iter = ((EntityLivingBase)target).getActivePotionEffects().iterator();
 
 		int magnitudeLeft = 6 + (SpellUtils.instance.countModifiers(SpellModifiers.BUFF_POWER, stack) * 2);
-		int targetAmplifier = 1 + SpellUtils.instance.countModifiers(SpellModifiers.BUFF_POWER, stack);
+		int targetAmplifier = SpellUtils.instance.countModifiers(SpellModifiers.BUFF_POWER, stack);
 		int targetDuration = SpellUtils.instance.getModifiedInt_Mul(BuffList.default_buff_duration / 2, stack, caster, target, world, 0, SpellModifiers.DURATION);
 
 		while (iter.hasNext()){
-			Integer potionID = ((PotionEffect)iter.next()).getPotionID();
+			PotionEffect potion = ((PotionEffect)iter.next());
+			int potionID = potion.getPotionID();
 			PotionEffect pe = ((EntityLivingBase)target).getActivePotionEffect(Potion.potionTypes[potionID]);
 			if (Potion.potionTypes[potionID].isBadEffect) { // method is clientside only; we need the field
 				int magnitudeCost = pe.getAmplifier();
@@ -62,34 +65,38 @@ public class Bless implements ISpellComponent{
 					}
 				}
 			} else { // good effect
-				effectsToRemove.add(potionID);
-				if (pe instanceof BuffEffect && !world.isRemote) {
-					((BuffEffect) pe).stopEffect((EntityLivingBase) target);
-				}
-				effectsToMagnify.put(potionID, pe.getDuration() + ":" + pe.getAmplifier() + ":" + (pe instanceof BuffEffect));
+				targetDuration = Math.max(targetDuration,potion.getDuration());
+				targetAmplifier = Math.max(targetAmplifier,potion.getAmplifier());
+				PotionEffect targetpotion = new PotionEffect(potionID,targetDuration,targetAmplifier);
+				((EntityLivingBase)target).addPotionEffect(targetpotion);
+
+				//effectsToRemove.add(potionID);
+//				if (pe instanceof BuffEffect && !world.isRemote) {
+//					((BuffEffect) pe).stopEffect((EntityLivingBase) target);
+//				}
+//				effectsToMagnify.put(potionID, pe.getDuration() + ":" + pe.getAmplifier() + ":" + (pe instanceof BuffEffect));
 			}
 		}
 
 		if (!world.isRemote){
 			removePotionEffects((EntityLivingBase)target, effectsToRemove);
-			for (Integer potionID : effectsToMagnify.keySet()) {
-				magnifyPotions(world, (EntityLivingBase) target, magnitudeLeft, targetAmplifier, targetDuration, potionID, Integer.valueOf(effectsToMagnify.get(potionID).split(":")[0]), Integer.valueOf(effectsToMagnify.get(potionID).split(":")[1]), Boolean.valueOf(effectsToMagnify.get(potionID).split(":")[2]));
-			}
+//			for (Integer potionID : effectsToMagnify.keySet()) {
+//				magnifyPotions(world, (EntityLivingBase) target, magnitudeLeft, targetAmplifier, targetDuration, potionID, Integer.parseInt(effectsToMagnify.get(potionID).split(":")[0]), Integer.parseInt(effectsToMagnify.get(potionID).split(":")[1]), Boolean.parseBoolean(effectsToMagnify.get(potionID).split(":")[2]));
+//			}
 		}
 		return true;
 	}
 
 	public static int magnifyPotions(World world, EntityLivingBase target, int magnitudeLeft, int targetAmplifier, int targetDuration, Integer potionID, int lastDuration, int lastAmplifier, boolean lastBuffEffect) {
-		int magnitudeCost = lastAmplifier;
-		if (targetAmplifier > magnitudeCost || targetDuration > lastDuration) {
-			if (magnitudeLeft >= magnitudeCost) {
-				magnitudeLeft -= magnitudeCost;
+		if (targetAmplifier > lastAmplifier || targetDuration > lastDuration) {
+			if (magnitudeLeft >= lastAmplifier) {
+				magnitudeLeft -= lastAmplifier;
 				if (!world.isRemote) {
 					// re-add
 					if (lastBuffEffect) {
-						target.addPotionEffect(buffEffectFromPotionID(potionID, Math.max(targetDuration, lastDuration), Math.max(targetAmplifier, magnitudeCost)));
+						target.addPotionEffect(buffEffectFromPotionID(potionID, Math.max(targetDuration, lastDuration), Math.max(targetAmplifier, lastAmplifier)));
 					} else {
-						target.addPotionEffect(new PotionEffect(potionID, Math.max(targetDuration, lastDuration), Math.max(targetAmplifier, magnitudeCost)));
+						target.addPotionEffect(new PotionEffect(potionID, Math.max(targetDuration, lastDuration), Math.max(targetAmplifier, lastAmplifier)));
 					}
 				}
 			}
@@ -149,9 +156,9 @@ public class Bless implements ISpellComponent{
 	@Override
 	public Object[] getRecipeItems(){
 		return new Object[]{
-				new ItemStack(ItemsCommonProxy.rune, 1, ItemsCommonProxy.rune.META_PINK),
-				new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_ARCANEASH),
-				new ItemStack(ItemsCommonProxy.itemOre, 1, ItemsCommonProxy.itemOre.META_BLUETOPAZ),
+				new ItemStack(ItemsCommonProxy.rune, 1, ItemRune.META_PINK),
+				new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_ARCANEASH),
+				new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_BLUETOPAZ),
 				Items.golden_apple
 		};
 	}

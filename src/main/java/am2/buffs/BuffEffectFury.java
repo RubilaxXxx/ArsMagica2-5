@@ -22,11 +22,6 @@ public class BuffEffectFury extends BuffEffect{
 			AMCore.proxy.addDeferredPotionEffect(entityliving, new PotionEffect(Potion.confusion.id, 200, 1));
 		}
 	}
-
-	@Override
-	public void combine(PotionEffect potioneffect){
-	}
-
 	@Override
 	protected String spellBuffName(){
 		return "Fury";
