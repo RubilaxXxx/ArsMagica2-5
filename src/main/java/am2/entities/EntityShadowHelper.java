@@ -3,6 +3,8 @@ package am2.entities;
 import am2.AMCore;
 import am2.api.math.AMVector3;
 import am2.blocks.tileentities.TileEntityCraftingAltar;
+import am2.damage.DamageSourceUnsummon;
+import am2.damage.DamageSources;
 import am2.entities.ai.EntityAISpellmaking;
 import am2.particles.AMParticle;
 import am2.particles.ParticleFloatUpward;
@@ -181,12 +183,17 @@ public class EntityShadowHelper extends EntityLiving{
 	}
 
 	@Override
+	public boolean attackEntityFrom(DamageSource source, float p_70097_2_){
+		return source == DamageSources.unsummon && super.attackEntityFrom(source, p_70097_2_);
+	}
+
+	@Override
 	protected String getHurtSound(){
 		return null;
 	}
 
 	public void unSummon(){
-		this.attackEntityFrom(DamageSource.generic, 5000);
+		this.attackEntityFrom(DamageSources.unsummon, 5000);
 	}
 
 	public ResourceLocation getLocationSkin(){

@@ -1,5 +1,6 @@
 package am2.items;
 
+import am2.particles.AMParticleIcons;
 import am2.texture.ResourceManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -129,7 +130,10 @@ public class ItemOre extends ArsMagicaItem{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int meta){
-		return icons[meta];
+		if(meta < icons.length){
+			return icons[meta];
+		}
+		return AMParticleIcons.instance.getIconByName("mystic");
 	}
 
 	@Override

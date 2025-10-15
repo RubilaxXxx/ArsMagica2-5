@@ -834,7 +834,7 @@ public class GuiArcaneCompendium extends GuiScreen{
 		int i1 = (height - ySize) / 2;
 
 		if (craftingComponents == null){
-			AMGuiHelper.instance.DrawItemAtXY(renderStack, cx, cy, this.zLevel);
+			AMGuiHelper.DrawItemAtXY(renderStack, cx, cy, this.zLevel);
 			if (mousex > cx && mousex < cx + 16){
 				if (mousey > cy && mousey < cy + 16){
 					stackTip = this.renderStack;

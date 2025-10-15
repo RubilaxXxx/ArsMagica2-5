@@ -877,16 +877,11 @@
         <relatedEntries></relatedEntries>
       </subitem>
       <subitem id="itemOre@21">
-        <name>Nightmare Essence</name>
-        <desc>An inverted essence, its nature being not of our world but the fractal one.  One can be obtained by killing the inhabitants of the latter (no easy task), or trading with select ones by offering them any of the overworld essences.  For this purpose it is important to note that some inhabitants of the fractal world are not native to it, and are materialized by your own imagination - these cannot be traded with.</desc>
-        <relatedEntries></relatedEntries>
-      </subitem>
-      <subitem id="itemOre@22">
         <name>Fractal Fragment</name>
         <desc>A fragment of the fractal world itself, only reachable when you are most connected to it.  Can be obtained by killing small, purple manifestations of it, or trading with tall purple elves for Spatial Stars.</desc>
         <relatedEntries></relatedEntries>
       </subitem>
-      <subitem id="itemOre@23">
+      <subitem id="itemOre@22">
         <name>Soul Fragment</name>
         <desc>A fragment of a soul of a living being.  Can only be acquired by forcefully separating it from one's soul during psychedelic experiences (in other words, attempting to die while in the Higher fractal world).  During such an act, one must possess a significant amount (about a half-dozen should suffice) of rare (for example, enchanted) items - these will be drained and lost during the process.  In return, one will gain a fragment of a soul - something with a will and agency, capable of making its own decisions and even casting spells.</desc>
         <relatedEntries></relatedEntries>
@@ -947,21 +942,26 @@
         <relatedEntries>essence_bag,essence_refiner</relatedEntries>
       </subitem>
       <subitem id="essence@10">
+        <name>Nightmare Essence</name>
+        <desc>An inverted essence, its nature being not of our world but the fractal one.  One can be obtained by killing the inhabitants of the latter (no easy task), or trading with select ones by offering them any of the overworld essences.  For this purpose it is important to note that some inhabitants of the fractal world are not native to it, and are materialized by your own imagination - these cannot be traded with.</desc>
+        <relatedEntries></relatedEntries>
+      </subitem>
+      <subitem id="essence@11">
         <name>Pure Essence</name>
         <desc></desc>
         <relatedEntries>essence_bag,essence_refiner</relatedEntries>
       </subitem>
-      <subitem id="essence@11">
+      <subitem id="essence@12">
         <name>High Essence Core</name>
         <desc></desc>
         <relatedEntries>essence_bag,essence_refiner</relatedEntries>
       </subitem>
-      <subitem id="essence@12">
+      <subitem id="essence@13">
         <name>Base Essence Core</name>
         <desc></desc>
         <relatedEntries>essence_bag,essence_refiner</relatedEntries>
       </subitem>
-      <subitem id="essence@13">
+      <subitem id="essence@14">
         <name>Etherium</name>
         <desc>This represents etherium, AM2's power, and will be shown as part of certain spell recipes.  When this appears, ensure your crafting altar is connected to the right kind of Etherium type (check the book on the Lectern, and by color), and flip the lever on the crafting altar.</desc>
         <relatedEntries>altarOfCreation</relatedEntries>

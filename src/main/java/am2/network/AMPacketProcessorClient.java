@@ -416,9 +416,9 @@ public class AMPacketProcessorClient extends AMPacketProcessorServer{
 	}
 
 	private void handleSetMagicicansWorkbenchRecipe(EntityPlayer player){
-		if (player.openContainer != null && player.openContainer instanceof ContainerMagiciansWorkbench){
+		if (player.openContainer instanceof ContainerMagiciansWorkbench){
 			((ContainerMagiciansWorkbench)player.openContainer).updateCraftingMatrices();
-			((ContainerMagiciansWorkbench)player.openContainer).onCraftMatrixChanged(((ContainerMagiciansWorkbench)player.openContainer).getWorkbench());
+			player.openContainer.onCraftMatrixChanged(((ContainerMagiciansWorkbench)player.openContainer).getWorkbench());
 		}
 	}
 

@@ -103,7 +103,7 @@ public class ItemEssence extends ArsMagicaItem{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int damage){
-		if (this.icons != null && damage <= icons.length){
+		if (this.icons != null && damage < icons.length){
 			return this.icons[damage];
 		}else{
 			return AMParticleIcons.instance.getIconByName("mystic");

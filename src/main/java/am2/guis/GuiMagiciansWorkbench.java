@@ -36,7 +36,7 @@ public class GuiMagiciansWorkbench extends GuiContainer{
 	private int hoverRecipeIndex = -1;
 
 	public GuiMagiciansWorkbench(InventoryPlayer playerInventory, TileEntityMagiciansWorkbench tileEntity){
-		super(new ContainerMagiciansWorkbench(playerInventory, tileEntity));
+		super(new ContainerMagiciansWorkbench(playerInventory, tileEntity,tileEntity.getWorldObj()));
 		this.workbenchInventory = tileEntity;
 		xSize = 220;
 		ySize = 251;

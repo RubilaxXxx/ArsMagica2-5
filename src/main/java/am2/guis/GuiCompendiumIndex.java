@@ -389,7 +389,7 @@ public class GuiCompendiumIndex extends GuiScreen implements GuiYesNoCallback{
 		int l = (width - xSize) / 2;
 		int i1 = (height - ySize) / 2;
 
-		boolean entryHasDescription = !entry.getDescription().equals("");
+		boolean entryHasDescription = !entry.getDescription().isEmpty();
 		int buttonXStart = entryHasDescription ? l + 185 : l + 40;
 
 		int buttonX = buttonXStart;

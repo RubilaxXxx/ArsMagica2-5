@@ -20,12 +20,9 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.LinkedList;
 
-public class TileEntityMagiciansWorkbench extends TileEntity implements IInventory, IKeystoneLockable, ISidedInventory{
+public class TileEntityMagiciansWorkbench extends TileEntity implements IKeystoneLockable, ISidedInventory{
 
 	private ItemStack[] inventory;
-	public IInventory firstCraftResult;
-	public IInventory secondCraftResult;
-
 	private final LinkedList<RememberedRecipe> rememberedRecipes;
 	private byte upgradeState = 0;
 	public static final byte UPG_CRAFT = 0x1;
@@ -44,12 +41,8 @@ public class TileEntityMagiciansWorkbench extends TileEntity implements IInvento
 
 	public TileEntityMagiciansWorkbench(){
 		inventory = new ItemStack[getSizeInventory()];
-		firstCraftResult = new InventoryCraftResult();
-		secondCraftResult = new InventoryCraftResult();
-
 		rememberedRecipes = new LinkedList<RememberedRecipe>();
 	}
-
 	@Override
 	public void updateEntity(){
 		setPrevDrawerOffset(getDrawerOffset());
@@ -187,7 +180,8 @@ public class TileEntityMagiciansWorkbench extends TileEntity implements IInvento
 	@Override
 	public ItemStack decrStackSize(int i, int j){
 		if (inventory[i] != null){
-			if (inventory[i].stackSize <= j){
+			if (inventory[i].stackSize <= j)
+			{
 				ItemStack itemstack = inventory[i];
 				inventory[i] = null;
 				return itemstack;
@@ -238,17 +232,12 @@ public class TileEntityMagiciansWorkbench extends TileEntity implements IInvento
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer){
-		if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != this){
-			return false;
-		}
-		return entityplayer.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
+		return  true;
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack){
-		if (i > getStorageStart())
-			return true;
-		return false;
+		return i > getStorageStart();
 	}
 
 	public class RememberedRecipe{
@@ -434,16 +423,12 @@ public class TileEntityMagiciansWorkbench extends TileEntity implements IInvento
 
 	@Override
 	public boolean canInsertItem(int i, ItemStack itemstack, int j){
-		if (i > getStorageStart())
-			return true;
-		return false;
+		return i > getStorageStart();
 	}
 
 
 	@Override
 	public boolean canExtractItem(int i, ItemStack itemstack, int j){
-		if (i > getStorageStart())
-			return true;
-		return false;
+		return i > getStorageStart();
 	}
 }

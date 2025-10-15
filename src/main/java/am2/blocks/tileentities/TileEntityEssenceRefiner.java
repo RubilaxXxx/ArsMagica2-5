@@ -22,7 +22,7 @@ public class TileEntityEssenceRefiner extends TileEntityAMPower implements IInve
 	private static final int FUEL_INDEX = 2;
 	public static final float TICK_REFINE_COST = 12.5f;
 
-	private ItemStack inventory[];
+	private ItemStack[] inventory;
 	public float remainingRefineTime;
 
 	public TileEntityEssenceRefiner(){
@@ -289,7 +289,7 @@ public class TileEntityEssenceRefiner extends TileEntityAMPower implements IInve
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack){
-		return false;
+		return i < 5;
 	}
 
 	@Override
@@ -332,13 +332,13 @@ public class TileEntityEssenceRefiner extends TileEntityAMPower implements IInve
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side){
-		return new int[]{5};
+		return new int[]{0,1,2,3,4,5};
 	}
 
 
 	@Override
-	public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_, int p_102007_3_){
-		return false;
+	public boolean canInsertItem(int slot, ItemStack stack, int side){
+		return slot < 5;
 	}
 
 

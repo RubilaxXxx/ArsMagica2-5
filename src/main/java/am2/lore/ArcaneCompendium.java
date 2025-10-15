@@ -418,21 +418,7 @@ public class ArcaneCompendium implements ILoreHelper{
 			LogHelper.warn("The parent ID %s was not found.  Entry %s will be added with no parent.", parent, entryKey);
 		}
 
-		CompendiumEntry newEntry = null;
-
-		if (entryItem instanceof Item){
-			newEntry = new CompendiumEntryItem();
-		}else if (entryItem instanceof Block){
-			newEntry = new CompendiumEntryBlock();
-		}else if (entryItem instanceof ISpellShape){
-			newEntry = new CompendiumEntrySpellShape();
-		}else if (entryItem instanceof ISpellComponent){
-			newEntry = new CompendiumEntrySpellComponent();
-		}else if (entryItem instanceof ISpellModifier){
-			newEntry = new CompendiumEntrySpellModifier();
-		}else if (entryItem instanceof Entity){
-			newEntry = new CompendiumEntryMob();
-		}
+		CompendiumEntry newEntry = getCompendiumEntry(entryItem);
 
 		newEntry.id = entryKey;
 		newEntry.name = entryName;
@@ -440,8 +426,7 @@ public class ArcaneCompendium implements ILoreHelper{
 		newEntry.isLocked = true;
 		newEntry.isNew = true;
 		newEntry.parent = parentEntry;
-		for (String s : relatedKeys)
-			newEntry.relatedItems.add(s);
+		newEntry.relatedItems.addAll(Arrays.asList(relatedKeys));
 
 		if (parentEntry != null){
 			parentEntry.subItems.add(newEntry);
@@ -461,5 +446,24 @@ public class ArcaneCompendium implements ILoreHelper{
 		} catch (Exception e) {e.printStackTrace();}
 
 		LogHelper.debug("Successfully added compendium entry %s", entryKey);
+	}
+
+	public static CompendiumEntry getCompendiumEntry(Object entryItem){
+		CompendiumEntry newEntry = null;
+
+		if (entryItem instanceof Item){
+			newEntry = new CompendiumEntryItem();
+		}else if (entryItem instanceof Block){
+			newEntry = new CompendiumEntryBlock();
+		}else if (entryItem instanceof ISpellShape){
+			newEntry = new CompendiumEntrySpellShape();
+		}else if (entryItem instanceof ISpellComponent){
+			newEntry = new CompendiumEntrySpellComponent();
+		}else if (entryItem instanceof ISpellModifier){
+			newEntry = new CompendiumEntrySpellModifier();
+		}else if (entryItem instanceof Entity){
+			newEntry = new CompendiumEntryMob();
+		}
+		return newEntry;
 	}
 }

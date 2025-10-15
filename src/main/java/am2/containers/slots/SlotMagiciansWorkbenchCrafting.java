@@ -1,6 +1,7 @@
 package am2.containers.slots;
 
 import am2.containers.ContainerMagiciansWorkbench;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -87,70 +88,109 @@ public class SlotMagiciansWorkbenchCrafting extends Slot{
 
 	@Override
 	public void onSlotChange(ItemStack par1ItemStack, ItemStack par2ItemStack){
-		if (par1ItemStack != null && par2ItemStack != null){
-			if (par1ItemStack.getItem() == par2ItemStack.getItem()){
-				int i = par2ItemStack.stackSize - par1ItemStack.stackSize;
-
-				if (i > 0){
-					this.onCrafting(par1ItemStack, i);
-					doComponentDecrements();
-				}
-			}
-		}
+		super.onSlotChange(par1ItemStack,par2ItemStack);
+//		if (par1ItemStack != null && par2ItemStack != null){
+//			if (par1ItemStack.getItem() == par2ItemStack.getItem()){
+//				int i = par2ItemStack.stackSize - par1ItemStack.stackSize;
+//
+//				if (i > 0){
+//					this.onCrafting(par1ItemStack, i);
+//					doComponentDecrements();
+//				}
+//			}
+//		}
 	}
 
 	@Override
-	public void onPickupFromSlot(EntityPlayer par1EntityPlayer, ItemStack par2ItemStack){
-		this.onCrafting(par2ItemStack);
-		ItemCraftedEvent event = new ItemCraftedEvent(par1EntityPlayer, par2ItemStack, craftMatrix);
-		MinecraftForge.EVENT_BUS.post(event);
-		doComponentDecrements();
-	}
+	public void onPickupFromSlot(EntityPlayer player, ItemStack itemstack){
 
-	private void doComponentDecrements(){
-		for (int i = 0; i < this.craftMatrix.getSizeInventory(); ++i){
+		FMLCommonHandler.instance().firePlayerCraftingEvent(player, itemstack, craftMatrix);
+		this.onCrafting(itemstack);
+
+		for (int i = 0; i < this.craftMatrix.getSizeInventory(); ++i)
+		{
 			ItemStack itemstack1 = this.craftMatrix.getStackInSlot(i);
 
-			if (itemstack1 != null){
-				if (itemstack1.stackSize > 1 || !searchAndDecrement(itemstack1)){
-					doStandardDecrement(this.craftMatrix, itemstack1, i);
-				}else{
-					this.workbench.onCraftMatrixChanged(craftMatrix);
+			if (itemstack1 != null)
+			{
+				this.craftMatrix.decrStackSize(i, 1);
+
+				if (itemstack1.getItem().hasContainerItem(itemstack1))
+				{
+					ItemStack itemstack2 = itemstack1.getItem().getContainerItem(itemstack1);
+
+					if (itemstack2 != null && itemstack2.isItemStackDamageable() && itemstack2.getItemDamage() > itemstack2.getMaxDamage())
+					{
+						MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(thePlayer, itemstack2));
+						continue;
+					}
+
+					if (!itemstack1.getItem().doesContainerItemLeaveCraftingGrid(itemstack1) || !this.thePlayer.inventory.addItemStackToInventory(itemstack2))
+					{
+						if (this.craftMatrix.getStackInSlot(i) == null)
+						{
+							this.craftMatrix.setInventorySlotContents(i, itemstack2);
+						}
+						else
+						{
+							this.thePlayer.dropPlayerItemWithRandomChoice(itemstack2, false);
+						}
+					}
 				}
 			}
 		}
+		workbench.detectAndSendChanges();
 	}
-
-	private boolean searchAndDecrement(ItemStack itemstack1){
-		for (int n = this.workbench.getWorkbench().getStorageStart(); n < this.workbench.getWorkbench().getStorageStart() + this.workbench.getWorkbench().getStorageSize(); ++n){
-			ItemStack wbStack = workbench.getWorkbench().getStackInSlot(n);
-			if (wbStack != null && itemstack1.isItemEqual(wbStack)){
-				doStandardDecrement(workbench.getWorkbench(), wbStack, n);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private void doStandardDecrement(IInventory inventory, ItemStack itemstack1, int i){
-
-		if (itemstack1.getItem().hasContainerItem(itemstack1)){
-			ItemStack itemstack2 = itemstack1.getItem().getContainerItem(itemstack1);
-
-			if (itemstack2.isItemStackDamageable() && itemstack2.getItemDamage() > itemstack2.getMaxDamage()){
-				MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(thePlayer, itemstack2));
-				itemstack2 = null;
-			}
-			
-			if (itemstack2 != null){
-			        inventory.setInventorySlotContents(i, itemstack2);
-			}else{
-			        inventory.decrStackSize(i, 1);
-			}
-			
-		}else{
-			inventory.decrStackSize(i, 1);
-		}
-	}
+//		this.onCrafting(par2ItemStack);
+//		ItemCraftedEvent event = new ItemCraftedEvent(par1EntityPlayer, par2ItemStack, craftMatrix);
+//		MinecraftForge.EVENT_BUS.post(event);
+//		doComponentDecrements();
+//	}
+//
+//	private void doComponentDecrements(){
+//		for (int i = 0; i < this.craftMatrix.getSizeInventory(); ++i){
+//			ItemStack itemstack1 = this.craftMatrix.getStackInSlot(i);
+//
+//			if (itemstack1 != null){
+//				if (itemstack1.stackSize > 1 || !searchAndDecrement(itemstack1)){
+//					doStandardDecrement(this.craftMatrix, itemstack1, i);
+//				}else{
+//					this.workbench.onCraftMatrixChanged(craftMatrix);
+//				}
+//			}
+//		}
+//	}
+//
+//	private boolean searchAndDecrement(ItemStack itemstack1){
+//		for (int n = this.workbench.getWorkbench().getStorageStart(); n < this.workbench.getWorkbench().getStorageStart() + this.workbench.getWorkbench().getStorageSize(); ++n){
+//			ItemStack wbStack = workbench.getWorkbench().getStackInSlot(n);
+//			if (wbStack != null && itemstack1.isItemEqual(wbStack)){
+//				doStandardDecrement(workbench.getWorkbench(), wbStack, n);
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+//
+//	private void doStandardDecrement(IInventory inventory, ItemStack itemstack1, int i){
+//
+//		if (itemstack1.getItem().hasContainerItem(itemstack1)){
+//			ItemStack itemstack2 = itemstack1.getItem().getContainerItem(itemstack1);
+//
+//			if (itemstack2.isItemStackDamageable() && itemstack2.getItemDamage() > itemstack2.getMaxDamage()){
+//				MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(thePlayer, itemstack2));
+//				itemstack2 = null;
+//			}
+//
+//			if (itemstack2 != null){
+//			        inventory.setInventorySlotContents(i, itemstack2);
+//			}else{
+//			        inventory.decrStackSize(i, 1);
+//			}
+//
+//		}else{
+//			inventory.decrStackSize(i, 1);
+//		}
+//	}
 
 }

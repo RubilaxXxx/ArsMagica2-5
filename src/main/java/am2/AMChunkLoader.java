@@ -1,5 +1,6 @@
 package am2;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -7,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.tclproject.mysteriumlib.asm.core.MiscUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +83,7 @@ public class AMChunkLoader implements LoadingCallback{
 
 		ChunkCoordIntPair pair = new ChunkCoordIntPair(x >> 4, z >> 4);
 		ForgeChunkManager.unforceChunk(ticket, pair);
-		LogHelper.warn("unloaded chunk %d %d",pair.chunkXPos, pair.chunkZPos);
+		LogHelper.trace("Unloaded chunk at: %d, %d",pair.chunkXPos, pair.chunkZPos);
 	}
 
 	@Override
@@ -109,7 +111,7 @@ public class AMChunkLoader implements LoadingCallback{
 		}
 	}
 
-	private class TicketIdentifier implements Comparable<TicketIdentifier>{
+	private static class TicketIdentifier implements Comparable<TicketIdentifier>{
 		public final int dimension;
 		public final int x;
 		public final int y;
@@ -121,7 +123,6 @@ public class AMChunkLoader implements LoadingCallback{
 			this.y = y;
 			this.z = z;
 		}
-
 		@Override
 		public int compareTo(TicketIdentifier o){
 			if (o.x == this.x && o.y == this.y && o.z == this.z && o.dimension == this.dimension)

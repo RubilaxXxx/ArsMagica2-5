@@ -70,21 +70,22 @@ public class EntityAISpellmaking extends EntityAIBase{
 			}else if (action_state == 0 && hostLocation.distanceSqTo(targetLocation) < DISTANCE_THRESHOLD){
 				host.getNavigator().clearPathEntity();
 				TileEntity te = host.worldObj.getTileEntity((int)targetLocation.x, (int)targetLocation.y, (int)targetLocation.z);
-				if (te == null || !(te instanceof IInventory)){
+				if (!(te instanceof IInventory)){
 					resetTask();
 					return;
 				}
 				((IInventory)te).openInventory();
 				if (!host.worldObj.isRemote)
-					InventoryUtilities.deductFromInventory(((IInventory)te), host.getSearchItem(), 1);
-				host.setHeldItem(host.getSearchItem());
-				action_state = 1;
+					if(InventoryUtilities.deductFromInventory(((IInventory)te), host.getSearchItem(), 1)){
+						host.setHeldItem(host.getSearchItem());
+						action_state = 1;
+					}
 			}else if (action_state == 1 && host.getNavigator().noPath() && wait_counter < WAIT_TIME){
 				wait_counter++;
 			}else if (action_state == 1 && host.getNavigator().noPath() && wait_counter >= WAIT_TIME){
 				wait_counter = 0;
 				TileEntity te = host.worldObj.getTileEntity((int)targetLocation.x, (int)targetLocation.y, (int)targetLocation.z);
-				if (te == null || !(te instanceof IInventory)){
+				if (!(te instanceof IInventory)){
 					resetTask();
 					return;
 				}

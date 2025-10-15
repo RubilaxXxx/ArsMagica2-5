@@ -114,7 +114,7 @@ public class ServerGuiManager implements IGuiHandler{
 			if (!(te instanceof TileEntityMagiciansWorkbench)){
 				return null;
 			}
-			return new ContainerMagiciansWorkbench(player.inventory, (TileEntityMagiciansWorkbench)te);
+			return new ContainerMagiciansWorkbench(player.inventory, (TileEntityMagiciansWorkbench)te, world);
 		case ArsMagicaGuiIdList.GUI_RIFT:
 			return new ContainerRiftStorage(player.inventory, RiftStorage.For(player));
 		case ArsMagicaGuiIdList.GUI_SPELL_CUSTOMIZATION:

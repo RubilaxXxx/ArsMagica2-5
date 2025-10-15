@@ -69,7 +69,7 @@ public abstract class CompendiumEntry implements Comparable<CompendiumEntry>{
 	}
 
 	public final String getDescription(){
-		if (this.description == null || this.description.equals("")){
+		if (this.description == null || this.description.isEmpty()){
 			if (this.parent != null){
 				return this.parent.getDescription();
 			}

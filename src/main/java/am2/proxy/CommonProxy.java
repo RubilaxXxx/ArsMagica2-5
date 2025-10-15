@@ -57,6 +57,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import static am2.blocks.BlocksCommonProxy.AMOres;
+import static net.minecraft.item.Item.getItemById;
+import static net.minecraft.item.Item.getItemFromBlock;
+
 public class CommonProxy{
 	private ArrayList<AMVector3> pendingFlickerLinks;
 
@@ -132,10 +136,12 @@ public class CommonProxy{
 
 		blocks.InstantiateBlocks();
 		items.InstantiateItems();
+		blocks.RegisterBlocks();
+		blocks.RegisterTileEntities();
 
 		ObeliskFuelHelper.instance.registerFuelType(new ItemStack(ItemsCommonProxy.itemOre, 0, ItemOre.META_VINTEUMDUST), 200);
 		ObeliskFuelHelper.instance.registerFuelType(new ItemStack(ItemsCommonProxy.itemAMBucket, 0, Short.MAX_VALUE), 2000);
-		ObeliskFuelHelper.instance.registerFuelType(new ItemStack(ItemOre.getItemFromBlock(BlocksCommonProxy.AMOres),0, BlockAMOre.META_VINTEUM_BLOCK), 2700);
+		ObeliskFuelHelper.instance.registerFuelType(new ItemStack(AMOres, 0, BlockAMOre.META_VINTEUM_BLOCK), 2700);
 
 		EnervatorRecipeHelper.instance.registerRecipe(new ItemStack(Blocks.stonebrick), new ItemStack(Blocks.stonebrick, 1, 2));
 		EnervatorRecipeHelper.instance.registerRecipe(new ItemStack(Items.bone), new ItemStack(Items.dye, 1, 15));
@@ -161,8 +167,7 @@ public class CommonProxy{
 
 		registerInfusions();
 
-		blocks.RegisterBlocks();
-		blocks.RegisterTileEntities();
+
 	}
 
 	public void init(){
