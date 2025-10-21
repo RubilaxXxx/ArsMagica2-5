@@ -24,20 +24,7 @@ public class BytecodeTransformers implements IClassTransformer{
 	public byte[] transform(String name, String transformedName, byte[] bytes){
 		boolean is_obfuscated = !CustomLoadingPlugin.isDevEnvironment;
 		
-		if (transformedName.equals("am2.armor.ItemMageHood") && (CustomLoadingPlugin.foundThaumcraft || checkIsThaumcraftFilePresent())){
-			LogHelper.info("Core: Altering definition of " + transformedName + " to be thaumcraft compatible.");
-			ClassReader cr = new ClassReader(bytes);
-			ClassNode cn = new ClassNode();
-			cr.accept(cn, 0);
-
-			cn.interfaces.add("thaumcraft/api/IGoggles");
-			cn.interfaces.add("thaumcraft/api/nodes/IRevealer");
-
-			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-			cn.accept(cw);
-
-			bytes = cw.toByteArray();
-		}else if (transformedName.equals("net.minecraft.client.renderer.EntityRenderer")) {
+		if (transformedName.equals("net.minecraft.client.renderer.EntityRenderer")) {
 			LogHelper.info("Core: Altering definition of " + transformedName + ", " + (is_obfuscated ? " (obfuscated)" : "(not obfuscated)"));
 			bytes = alterEntityRenderer(bytes, is_obfuscated);
 		}else if(name.equals("net.minecraft.server.MinecraftServer") || transformedName.equals("net.minecraft.server.MinecraftServer")) {

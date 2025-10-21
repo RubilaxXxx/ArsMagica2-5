@@ -6,12 +6,12 @@ import net.minecraft.item.ItemStack;
 import java.util.HashMap;
 
 public class ObeliskFuelHelper implements IObeliskFuelHelper{
-	private HashMap<ItemStack, Integer> validFuels;
+	private final HashMap<ItemStack, Integer> validFuels;
 
 	public static final ObeliskFuelHelper instance = new ObeliskFuelHelper();
 
 	private ObeliskFuelHelper(){
-		validFuels = new HashMap<ItemStack, Integer>();
+		validFuels = new HashMap<>();
 	}
 
 	@Override

@@ -178,7 +178,7 @@ public class TileEntityObelisk extends TileEntityAMPower implements IMultiblockS
 
 	public void handlePacket(byte[] data){
 		AMDataReader rdr = new AMDataReader(data);
-		if (rdr.ID == this.PK_BURNTIME_CHANGE)
+		if (rdr.ID == PK_BURNTIME_CHANGE)
 			this.burnTimeRemaining = rdr.getInt();
 	}
 

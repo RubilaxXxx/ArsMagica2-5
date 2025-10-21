@@ -54,7 +54,7 @@ public class PowerNodeEntry{
 		if (getPower(type) >= capacity)
 			return 0f;
 		ArrayList<LinkedList<AMVector3>> paths = nodePaths.get(type);
-		if (paths == null || paths.size() == 0){
+		if (paths == null || paths.isEmpty()){
 			//AMCore.log.info("No Paths!");
 			return 0;
 		}

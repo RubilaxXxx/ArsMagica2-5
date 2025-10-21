@@ -119,7 +119,7 @@ public class AMArmor extends ItemArmor implements ISpecialArmor{
 	public boolean hasEffect(ItemStack stack, int pass){
 		if (stack.hasTagCompound() && stack.stackTagCompound.hasKey(NBT_KEY_AMPROPS)){
 			String s = ((NBTTagCompound)stack.stackTagCompound.getTag(NBT_KEY_AMPROPS)).getString(NBT_KEY_EFFECTS);
-			return s != null && s.length() > 0;
+			return s != null && !s.isEmpty();
 		}
 		return false;
 

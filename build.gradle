@@ -85,24 +85,3 @@ processResources
     }
 }
 
-if (!hasProperty("mavenUsername")) {
-	ext.mavenUsername="${System.getenv().MAVEN_USERNAME}"
-}
-
-if (!hasProperty("mavenPassword")) {
-	ext.mavenPassword="${System.getenv().MAVEN_PASSWORD}"
-}
-
-if (!hasProperty("mavenURL")) {
-	ext.mavenURL="${System.getenv().MAVEN_URL}"
-}
-
-uploadArchives {
-	repositories {
-		mavenDeployer {
-			repository(url: mavenURL) {
-				authentication(userName: mavenUsername, password: mavenPassword)
-			}
-		}
-	}
-}

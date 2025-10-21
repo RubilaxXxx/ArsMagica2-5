@@ -1,10 +1,12 @@
 package am2.armor;
 
+import am2.api.items.armor.IManaGoggle;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 
-public class ItemMagitechGoggles extends AMArmor{
+public class ItemMagitechGoggles extends AMArmor implements IManaGoggle{
 
 	public ItemMagitechGoggles(int renderIndex){
 		super(ArmorMaterial.CLOTH, ArsMagicaArmorMaterial.UNIQUE, renderIndex, 0);
@@ -28,5 +30,10 @@ public class ItemMagitechGoggles extends AMArmor{
 	@Override
 	public int GetDamageReduction(){
 		return 2;
+	}
+
+	@Override
+	public boolean showingameHUD(World world, ItemStack stack, EntityPlayer player){
+		return true;
 	}
 }

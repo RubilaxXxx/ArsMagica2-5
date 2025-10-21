@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 public final class PowerTypes{
 
-	public static final PowerTypes NONE = new PowerTypes(0, "None", "\u00A7f");
-	public static final PowerTypes LIGHT = new PowerTypes(1, "Light", "\u00A7b");
-	public static final PowerTypes NEUTRAL = new PowerTypes(2, "Neutral", "\u00A71");
-	public static final PowerTypes DARK = new PowerTypes(4, "Dark", "\u00A74");
+	public static final PowerTypes NONE = new PowerTypes(0, "None", "§f");
+	public static final PowerTypes LIGHT = new PowerTypes(1, "Light", "§b");
+	public static final PowerTypes NEUTRAL = new PowerTypes(2, "Neutral", "§1");
+	public static final PowerTypes DARK = new PowerTypes(4, "Dark", "§4");
 
 	private static final ArrayList<PowerTypes> allPowerTypes = new ArrayList<PowerTypes>(){{
 		add(LIGHT);
