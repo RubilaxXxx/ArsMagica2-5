@@ -39,6 +39,17 @@ public class ServerTickHandler{
 	public static String lastWorldName;
 
 	private void gameTick_Start(){
+
+		if (MinecraftServer.getServer().getFolderName() != lastWorldName){
+			lastWorldName = MinecraftServer.getServer().getFolderName();
+			firstTick = true;
+		}
+
+		if (firstTick){
+			ItemsCommonProxy.crystalPhylactery.getSpawnableEntities(MinecraftServer.getServer().worldServers[0]);
+			firstTick = false;
+		}
+
 		AMCore.proxy.itemFrameWatcher.checkWatchedFrames();
 	}
 
