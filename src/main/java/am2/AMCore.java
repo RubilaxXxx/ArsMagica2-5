@@ -60,7 +60,10 @@ import net.minecraftforge.fluids.FluidRegistry;
 import java.io.File;
 
 //@Mod(modid = "arsmagica2", modLanguage = "java", name = "Ars Magica 2", version = "1.6.7", dependencies = "required-after:AnimationAPI")
-@Mod(modid = "arsmagica2", modLanguage = "java", name = "Ars Magica 2", version = "1.8", dependencies = "required-after:AnimationAPI;after:CoFHCore")
+@Mod(modid = "arsmagica2",
+		name = "Ars Magica 2",
+		version = "1.8.4",
+		dependencies = "required-after:AnimationAPI;after:CoFHCore")
 public class AMCore{
 
 	@Instance(value = "arsmagica2")
@@ -75,19 +78,22 @@ public class AMCore{
 	public static SimpleNetworkWrapper NETWORK;
 
 	private String compendiumBase;
-	public static boolean thaumcraft = false;
-	public static boolean cofh = false;
+	public static boolean thaumcraft = Loader.isModLoaded("Thaumcraft");
+	public static boolean cofh = Loader.isModLoaded("CoFHCore");
+	public static boolean forestry = Loader.isModLoaded("Forestry");
+	public static boolean magicbees = Loader.isModLoaded("Magicbees");
 
 	public AMCore(){
 	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
-		if(Loader.isModLoaded("CoFHCore"))
-			cofh = true;
 		String configBase = event.getSuggestedConfigurationFile().getAbsolutePath();
 		configBase = popPathFolder(configBase);
 		compendiumBase = popPathFolder(configBase);
+		if(cofh){
+			LogHelper.info("COFH Core compat loaded successfully.");
+		}
 
 		configBase += File.separatorChar + "AM2" + File.separatorChar;
 
@@ -151,23 +157,21 @@ public class AMCore{
 		SeventhSanctum.instance.init();
 //		if (Loader.isModLoaded("BetterDungeons"))
 //			BetterDungeons.init();
-		if (Loader.isModLoaded("Thaumcraft")){
-			thaumcraft = true;
+		if (thaumcraft){
+			LogHelper.info("Thaumcraft compat loaded successfully.");
 			TC4Interop.initialize();
 		}
 
 //		if (Loader.isModLoaded("MineFactoryReloaded"))
 //			MFRInterop.init();
 
-		try {
-			Class.forName("forestry.api.recipes.RecipeManagers", false, getClass().getClassLoader());
-			Class.forName("magicbees.bees.BeeProductHelper", false, getClass().getClassLoader());
-			Class.forName("magicbees.bees.BeeSpecies", false, getClass().getClassLoader());
-			AMBeeCompat.init();
-		} catch (ClassNotFoundException e) {
-			LogHelper.info("A compatible MagicBees version was not found, compat not loading.");
-		}
 
+		if(forestry && magicbees){
+				LogHelper.info("Magic bees compat loaded successfully.");
+				AMBeeCompat.init();
+		}else{
+				LogHelper.info("A compatible MagicBees version was not found, compat not loading.");
+		}
 		// Reduce onEntityLiving() lag by skipping unnecessary tasks if disabled.
 		AMEventHandler.enabled_accelerate = AMCore.skillConfig.isSkillEnabled("Accelerate");
 		AMEventHandler.enabled_slow = AMCore.skillConfig.isSkillEnabled("Slow");

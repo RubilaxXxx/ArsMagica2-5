@@ -1370,7 +1370,11 @@ public class ExtendedProperties implements IExtendedProperties, IExtendedEntityP
 
 	public void register(World world,EntityLivingBase entityLB){
 		if(entityLB == null)return;
-		if(world == null && !(entityLB instanceof EntityDummyCaster)){
+		if(world == null ){
+			if((entityLB instanceof EntityDummyCaster)){
+				setEntityReference(entityLB);
+				return;
+			}
 			return;
 		}
 

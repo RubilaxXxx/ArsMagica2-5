@@ -62,11 +62,6 @@ public class SpellBase extends ItemSpellBase{
 	}
 
 	@Override
-	public boolean getShareTag(){
-		return true;
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean requiresMultipleRenderPasses(){
 		return true;
