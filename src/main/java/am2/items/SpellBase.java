@@ -47,6 +47,7 @@ public class SpellBase extends ItemSpellBase{
 	public SpellBase(){
 		super();
 		this.setMaxDamage(0);
+		this.maxStackSize = 1;
 	}
 
 	@Override

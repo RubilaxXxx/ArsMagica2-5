@@ -5,6 +5,7 @@ import am2.api.ArsMagicaApi;
 import am2.api.events.ManaCostEvent;
 import am2.api.power.IPowerNode;
 import am2.api.power.PowerTypes;
+import am2.api.spell.component.interfaces.ISkillTreeEntry;
 import am2.api.spell.enums.Affinity;
 import am2.api.spell.enums.BuffPowerLevel;
 import am2.armor.ArmorHelper;
@@ -84,7 +85,6 @@ import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.world.BlockEvent;
 import net.tclproject.mysteriumlib.asm.fixes.MysteriumPatchesFixesMagicka;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -1526,7 +1526,7 @@ public class AMEventHandler{
 	}
 
 
-	
+
 	@SubscribeEvent
 	public void onBucketFill(FillBucketEvent event){
 		ItemStack result = attemptFill(event.world, event.target);
@@ -1777,6 +1777,15 @@ public class AMEventHandler{
 			AMNetHandler.INSTANCE.sendCompendiumUnlockPacket((EntityPlayerMP)event.entityPlayer, "modifiers", true);
 			ExtendedProperties.For(event.entityPlayer).setMagicLevelWithMana(1);
 			ExtendedProperties.For(event.entityPlayer).forceSync();
+			if(AMCore.config.isEasyStart()){
+				ISkillTreeEntry touch = SkillManager.instance.getSkill("Touch");
+				ISkillTreeEntry self = SkillManager.instance.getSkill("Self");
+				ISkillTreeEntry proj = SkillManager.instance.getSkill("Projectile");
+				SkillData.For(event.entityPlayer).learn(touch);
+				SkillData.For(event.entityPlayer).learn(self);
+				SkillData.For(event.entityPlayer).learn(proj);
+			}
+
 			return;
 		}
 

@@ -4,6 +4,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 
 public class EnchantMagicResist extends Enchantment{
@@ -17,15 +18,12 @@ public class EnchantMagicResist extends Enchantment{
 	public int getMaxLevel(){
 		return 5;
 	}
-
-	public static int ApplyEnchantment(ItemStack[] inventory, int damage){
-		int maxEnchantLevel = EnchantmentHelper.getMaxEnchantmentLevel(AMEnchantments.magicResist.effectId, inventory);
-
-		if (maxEnchantLevel > 0){
-			damage -= MathHelper.floor_float((float)damage * (float)maxEnchantLevel * 0.15F);
+	public int calcModifierDamage(int level, DamageSource source){
+		if(!source.isMagicDamage()) return 0;
+		else {
+			float f = (float)(6 + level * level) / 3.0F;
+			return MathHelper.floor_float(f * 0.75F);
 		}
 
-		return damage;
 	}
-
 }
