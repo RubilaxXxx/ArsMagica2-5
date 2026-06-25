@@ -65,8 +65,7 @@ public class BlockGroundRuneSpell extends BlockGroundRune{
 	}
 
 	private int getTextureForAffinity(Affinity aff){
-		int texIndex = aff.ordinal();
-		return texIndex;
+		return aff.ordinal();
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public class TileEntityBlockCaster extends TileEntityAMPower implements IInvento
    protected ItemStack[] casterItemStacks = new ItemStack[4];
    protected boolean hasRequestedFullUpdate = false;
    protected int ticksChanneled = 0;
-   protected EntityLiving dummyCaster;
+   protected EntityDummyCaster dummyCaster;
    protected boolean hasCast;
    protected boolean redstonePowerLastTick;
    protected Point3D pointInFront;

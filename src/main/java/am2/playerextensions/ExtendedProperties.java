@@ -16,6 +16,7 @@ import am2.armor.infusions.ImbuementRegistry;
 import am2.bosses.EntityLifeGuardian;
 import am2.buffs.BuffList;
 import am2.damage.DamageSources;
+import am2.entities.EntityDummyCaster;
 import am2.guis.AMGuiHelper;
 import am2.items.ItemManaStone;
 import am2.items.ItemSoulspike;
@@ -1368,7 +1369,10 @@ public class ExtendedProperties implements IExtendedProperties, IExtendedEntityP
 	}
 
 	public void register(World world,EntityLivingBase entityLB){
-		if(world == null || entityLB == null)return;
+		if(entityLB == null)return;
+		if(world == null && !(entityLB instanceof EntityDummyCaster)){
+			return;
+		}
 
 		setEntityReference(entityLB);
 

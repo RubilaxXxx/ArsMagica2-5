@@ -5,6 +5,7 @@ import am2.particles.AMParticle;
 import am2.particles.ParticleFloatUpward;
 import am2.particles.ParticlePendulum;
 import am2.texture.ResourceManager;
+import am2.utility.BFSLeafDecay;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockLeaves;
@@ -141,20 +142,8 @@ public class BlockWitchwoodLeaves extends BlockLeaves{
 
 	public void updateTick(World world, int xx, int yy, int zz, Random p_149674_5_){ // rework inefficient and needlessly complex minecraft algorithm for detecting leaves to drop
 		if (!world.isRemote){
-			boolean toRemove = true;
-			for (int x = -7; x <= 7; x++) {
-				for (int y = -7; y <= 7; y++) {
-					for (int z = -7; z <= 7; z++) {
-						if (world.getBlock(x + xx, y + yy, z + zz).canSustainLeaves(world, xx, yy, zz)) {
-							toRemove = false;
-						}
-					}
-				}
-			}
-			if (toRemove) {
-				this.dropBlockAsItemWithChance(world, xx, yy, zz, 0, 0 ,0);
-				world.setBlock(xx, yy, zz, Blocks.air);
-			}
+			int meta = this.getDamageValue(world,xx,yy,zz);
+			BFSLeafDecay.handleDecayChecked(this, world,xx,yy,zz,meta,7);
 		}
 	}
 

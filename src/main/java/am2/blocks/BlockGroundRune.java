@@ -20,7 +20,6 @@ import java.util.Random;
 
 public abstract class BlockGroundRune extends AMBlockContainer{
 	private EntityPlayer placedBy;
-	private Block blockBelow;
 
 	protected BlockGroundRune(){
 		super(Material.wood);
@@ -86,10 +85,6 @@ public abstract class BlockGroundRune extends AMBlockContainer{
 		return par5 == 1 || par5 == 0;
 	}
 
-	public int tickRate(){
-		return 20;
-	}
-
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k){
 		return null;
 	}
@@ -112,19 +107,14 @@ public abstract class BlockGroundRune extends AMBlockContainer{
 		return true;
 	}
 
-	public void onBlockAdded(World world, int i, int j, int k){
-		blockBelow = world.getBlock(i, j, k);
-	}
+
 
 	public void updateTick(World world, int i, int j, int k, Random random){
 		if (world.isRemote){
 			return;
 		}
-		if (world.getBlockMetadata(i, j, k) == 0){
-			return;
-		}else{
+		if (world.getBlockMetadata(i, j, k) != 0){
 			setStateIfMobInteractsWithPlate(world, i, j, k);
-			return;
 		}
 	}
 
@@ -133,17 +123,15 @@ public abstract class BlockGroundRune extends AMBlockContainer{
 			return;
 		}
 		setStateIfMobInteractsWithPlate(world, i, j, k);
-		return;
 	}
 
 	private void setStateIfMobInteractsWithPlate(World world, int i, int j, int k){
 		float f = 0.125F;
-		List list = null;
-		list = world.getEntitiesWithinAABBExcludingEntity(null, AxisAlignedBB.getBoundingBox((float)i - f, j, (float)k - f, (float)(i + 1 + f), (double)j + 2D, (float)(k + 1 + f)));
-		if (!triggerOnCaster() && list.contains(placedBy)){
+		List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, AxisAlignedBB.getBoundingBox((float)i - f, j, (float)k - f, (float)(i + 1 + f), (double)j + 2D, (float)(k + 1 + f)));
+		if (!triggerOnCaster()){
 			list.remove(placedBy);
 		}
-		if (list.size() > 0){
+		if (!list.isEmpty()){
 			if (ActivateRune(world, list, i, j, k)){
 				int meta = world.getBlockMetadata(i, j, k);
 				if (!isPermanent(world, i, j, k, meta)){

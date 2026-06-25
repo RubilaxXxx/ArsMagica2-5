@@ -889,8 +889,8 @@
       <relatedEntries>calefactor</relatedEntries>
     </item>
     <item id="essence">
-      <name>Essences / Essence Bag</name>
-      <desc>Essences are used both in crafting magical items, as well as reagents for spells.  Elemental essences are dropped by their respective guardians, and all essences can also be crafted using the #5Essence Refiner#0.</desc>
+      <name>Essences</name>
+      <desc>Essences are used both in crafting magical items, and reagents for spells.  Elemental essences are dropped by their respective guardians, and all essences can also be crafted using the #5Essence Refiner#0.</desc>
       <subitem id="essence@0">
         <name>Arcane Essence</name>
         <desc/>
@@ -962,16 +962,27 @@
         <relatedEntries>essence_bag,essence_refiner</relatedEntries>
       </subitem>
       <subitem id="essence@14">
-        <name>Etherium</name>
+        <name>Light Etherium</name>
         <desc>This represents etherium, AM2's power, and will be shown as part of certain spell recipes.  When this appears, ensure your crafting altar is connected to the right kind of Etherium type (check the book on the Lectern, and by color), and flip the lever on the crafting altar.</desc>
         <relatedEntries>altarOfCreation</relatedEntries>
       </subitem>
-      <subitem id="essence_bag">
-        <name>Essence Bag</name>
-        <desc>The essence bag can be crafted to allow additional storage when adventuring.</desc>
-        <relatedEntries>essence_refiner</relatedEntries>
+      <subitem id="essence@15">
+        <name>Neutral Etherium</name>
+        <desc>This represents etherium, AM2's power, and will be shown as part of certain spell recipes.  When this appears, ensure your crafting altar is connected to the right kind of Etherium type (check the book on the Lectern, and by color), and flip the lever on the crafting altar.</desc>
+        <relatedEntries>altarOfCreation</relatedEntries>
       </subitem>
+      <subitem id="essence@17">
+        <name>Dark Etherium</name>
+        <desc>This represents etherium, AM2's power, and will be shown as part of certain spell recipes.  When this appears, ensure your crafting altar is connected to the right kind of Etherium type (check the book on the Lectern, and by color), and flip the lever on the crafting altar.</desc>
+        <relatedEntries>altarOfCreation</relatedEntries>
+      </subitem>
+
       <relatedEntries/>
+    </item>
+    <item id="essence_bag">
+      <name>Essence Bag</name>
+      <desc>The essence bag can be crafted to allow additional storage when adventuring.</desc>
+      <relatedEntries>essence_refiner</relatedEntries>
     </item>
     <item id="runes">
       <name>Runes</name>
@@ -3167,7 +3178,10 @@
     </guide>
     <guide id="powerTypes" order="9">
       <name>Types of Etherium</name>
-      <desc>There are three types of Etherium, by default.  Addons to the mod can register new Etherium types, but the defaults are Light, Neutral, and Dark.  See structures for crafting and variations of each of these.  Each type of Etherium affects machines in a different way, and has advantages and disadvantages.  You will also need all three types of Etherium available for spell crafting, as certain shapes, components, and modifiers can require different types of Etherium.  Certain machines can only run on certain types of Etherium, and some machines require multiple types simultaneously.</desc>
+      <desc>
+        There are three types of Etherium, by default.  Addons to the mod can register new Etherium types, but the defaults are Light, Neutral, and Dark.  See structures for crafting and variations of each of these.  Each type of Etherium affects machines in a different way, and has advantages and disadvantages.  You will also need all three types of Etherium available for spell crafting, as certain shapes, components, and modifiers can require different types of Etherium.  Certain machines can only run on certain types of Etherium, and some machines require multiple types simultaneously.
+      </desc>
+
     </guide>
   </guides>
 </compendium>

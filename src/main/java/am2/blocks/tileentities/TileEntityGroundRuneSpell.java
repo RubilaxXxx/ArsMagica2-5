@@ -51,15 +51,14 @@ public class TileEntityGroundRuneSpell extends TileEntity{
 		}
 	}
 
-	public boolean applySpellEffect(EntityLivingBase target){
-		if (spellStack == null) return false;
+	public void applySpellEffect(EntityLivingBase target){
+		if (spellStack == null) return;
 		prepForActivate();
 		SpellHelper.instance.applyStackStage(spellStack, caster, target, target.posX, target.posY, target.posZ, 0, worldObj, false, false, 0);
-		return true;
 	}
 
 	public void setPlacedBy(EntityLivingBase caster){
-		if (caster instanceof EntityPlayer) this.placedByName = ((EntityPlayer)caster).getCommandSenderName();
+		if (caster instanceof EntityPlayer) this.placedByName = caster.getCommandSenderName();
 	}
 
 	@Override

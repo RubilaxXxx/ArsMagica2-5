@@ -15,11 +15,11 @@ public class BuffStatModifiers{
 
 	public void applyStatModifiersBasedOnBuffs(EntityLivingBase entity){
 		//entangled
-		applyOrRemoveModifiersForBuff(entity, BuffList.entangled.id, new KeyValuePair(SharedMonsterAttributes.movementSpeed, entangled));
+		applyOrRemoveModifiersForBuff(entity, BuffList.entangled.id, new KeyValuePair<>(SharedMonsterAttributes.movementSpeed, entangled));
 		//frost slow
 		applyOrRemoveScalingModifiersForBuff(entity, BuffList.frostSlowed.id, SharedMonsterAttributes.movementSpeed, frostSlow_Diminished, frostSlow_Normal, frostSlow_Augmented);
 		//fury
-		applyOrRemoveModifiersForBuff(entity, BuffList.fury.id, new KeyValuePair(SharedMonsterAttributes.movementSpeed, furyMoveMod), new KeyValuePair(SharedMonsterAttributes.attackDamage, furyDmgMod));
+		applyOrRemoveModifiersForBuff(entity, BuffList.fury.id, new KeyValuePair<>(SharedMonsterAttributes.movementSpeed, furyMoveMod), new KeyValuePair<>(SharedMonsterAttributes.attackDamage, furyDmgMod));
 		//haste
 		applyOrRemoveScalingModifiersForBuff(entity, BuffList.haste.id, SharedMonsterAttributes.movementSpeed, hasteSpeedBoost_Diminished, hasteSpeedBoost_Normal, hasteSpeedBoost_Augmented);
 	}

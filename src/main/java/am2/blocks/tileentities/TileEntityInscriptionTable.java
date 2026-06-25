@@ -71,14 +71,14 @@ public class TileEntityInscriptionTable extends TileEntity implements IInventory
 		inscriptionTableItemStacks = new ItemStack[getSizeInventory()];
 		currentPlayerUsing = null;
 		currentSpellName = "";
-		currentRecipe = new ArrayList<ISpellPart>();
-		shapeGroups = new ArrayList<ArrayList<ISpellPart>>();
+		currentRecipe = new ArrayList<>();
+		shapeGroups = new ArrayList<>();
 
 		for (int i = 0; i < MAX_STAGE_GROUPS; ++i){
-			shapeGroups.add(new ArrayList<ISpellPart>());
+			shapeGroups.add(new ArrayList<>());
 		}
 
-		modifierCount = new HashMap<SpellModifiers, Integer>();
+		modifierCount = new HashMap<>();
 		resetModifierCount();
 	}
 
@@ -313,8 +313,8 @@ public class TileEntityInscriptionTable extends TileEntity implements IInventory
 		NBTTagList nbttaglist = par1NBTTagCompound.getTagList("InscriptionTableInventory", Constants.NBT.TAG_COMPOUND);
 		inscriptionTableItemStacks = new ItemStack[getSizeInventory()];
 		for (int i = 0; i < nbttaglist.tagCount(); i++){
-			String tag = String.format("ArrayIndex", i);
-			NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.getCompoundTagAt(i);
+			String tag = String.format("ArrayIndex:%s", i);
+			NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
 			byte byte0 = nbttagcompound1.getByte(tag);
 			if (byte0 >= 0 && byte0 < inscriptionTableItemStacks.length){
 				inscriptionTableItemStacks[byte0] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
@@ -330,7 +330,7 @@ public class TileEntityInscriptionTable extends TileEntity implements IInventory
 		NBTTagList nbttaglist = new NBTTagList();
 		for (int i = 0; i < inscriptionTableItemStacks.length; i++){
 			if (inscriptionTableItemStacks[i] != null){
-				String tag = String.format("ArrayIndex", i);
+				String tag = String.format("ArrayIndex:%s", i);
 				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 				nbttagcompound1.setByte(tag, (byte)i);
 				inscriptionTableItemStacks[i].writeToNBT(nbttagcompound1);

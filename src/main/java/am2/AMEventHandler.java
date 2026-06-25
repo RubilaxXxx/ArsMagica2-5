@@ -626,12 +626,11 @@ public class AMEventHandler{
 
 		if (!SkillTreeManager.instance.isSkillDisabled(SkillManager.instance.getSkill("DiluteTime"))) {
 			String UUID = ent.getUniqueID().toString();
-			if (slowedEntitiesUUIDs.containsKey(UUID)) {
-				if (ent.ticksExisted % slowedEntitiesUUIDs.get(UUID) != 0) {
+				Integer entity = slowedEntitiesUUIDs.get(UUID);
+				if (entity != null && ent.ticksExisted % entity != 0) {
 					event.setCanceled(true);
 					return;
 				}
-			}
 		}
 
 		World world = ent.worldObj;

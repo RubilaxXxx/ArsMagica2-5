@@ -58,7 +58,7 @@ public class ArcaneReconstructorRenderer extends TileEntitySpecialRenderer{
 
 		try{
 			model.renderPart("Main");
-		}catch (Throwable t){
+		}catch (Throwable ignored){
 
 		}
 		GL11.glTranslatef(0, 0.22f + floatingOffset, 0);

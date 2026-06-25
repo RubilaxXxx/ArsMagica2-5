@@ -39,6 +39,19 @@ public class BlockArcaneDeconstructor extends PoweredBlock{
 	public TileEntity createNewTileEntity(World world, int i){
 		return new TileEntityArcaneDeconstructor();
 	}
+	@Override
+	public int getRenderBlockPass(){
+		return 1;
+	}
+
+	@Override
+	public int getRenderType(){
+		return BlocksCommonProxy.commonBlockRenderID;
+	}
+	@Override
+	public boolean canRenderInPass(int pass) {
+		return pass == 0 || pass == 1;
+	}
 
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5){
@@ -120,11 +133,11 @@ public class BlockArcaneDeconstructor extends PoweredBlock{
 	}
 
 	@Override
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z){
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z,boolean willharvest){
 		IKeystoneLockable lockable = (IKeystoneLockable)world.getTileEntity(x, y, z);
 		if (!KeystoneUtilities.instance.canPlayerAccess(lockable, player, KeystoneAccessType.BREAK)) return false;
 
-		return super.removedByPlayer(world, player, x, y, z);
+		return super.removedByPlayer(world, player, x, y, z, willharvest);
 	}
 
 	@Override

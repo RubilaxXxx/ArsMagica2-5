@@ -16,7 +16,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.8.2-RE"
+version = "1.8.3-RE"
 group= "am2" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AM2.5-LTS"
 sourceCompatibility = 1.8

@@ -241,10 +241,31 @@ public class SimpleBlockRenderHandler implements ISimpleBlockRenderingHandler{
 		}else if (block == BlocksCommonProxy.brokenLinkBlock){
 			RenderBrokenPowerLink(renderer, x, y, z);
 			return true;
+		}else if (block == BlocksCommonProxy.arcaneDeconstructor){
+			RenderArcaneDeconstructor(block, renderer,x, y, z);
+			return true;
 		}
 		return false;
 	}
-
+	private void RenderArcaneDeconstructor(Block block, RenderBlocks renderer, int x, int y, int z){
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		renderer.renderFromInside = true;
+		renderer.renderFaceYPos(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(1, 0));
+		renderer.renderFaceYNeg(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(0, 0));
+		renderer.renderFaceXPos(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(2, 0));
+		renderer.renderFaceXNeg(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(3, 0));
+		renderer.renderFaceZPos(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(4, 0));
+		renderer.renderFaceZNeg(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(5, 0));
+		renderer.renderFromInside = false;
+		renderer.renderFaceYPos(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(1, 0));
+		renderer.renderFaceYNeg(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(0, 0));
+		renderer.renderFaceXPos(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(2, 0));
+		renderer.renderFaceXNeg(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(3, 0));
+		renderer.renderFaceZPos(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(4, 0));
+		renderer.renderFaceZNeg(block, x, y, z, BlocksCommonProxy.arcaneDeconstructor.getIcon(5, 0));
+		GL11.glPopAttrib();
+	}
 	private void RenderBrokenPowerLink(RenderBlocks renderer, int x, int y, int z){
 		EntityPlayer player = AMCore.proxy.getLocalPlayer();
 		if ((x == 0 && y == 0 && z == 0) || (player != null && player.getCurrentArmor(3) != null && player.getCurrentArmor(3).getItem() instanceof IManaGoggle)){

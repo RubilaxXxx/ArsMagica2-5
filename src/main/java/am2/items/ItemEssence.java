@@ -66,9 +66,9 @@ public class ItemEssence extends ArsMagicaItem{
 		case 8:
 			return StatCollector.translateToLocal("item.arsmagica2:lifeEssence.name");
 		case 9:
-			return StatCollector.translateToLocal("item.arsmagica2:enderEssence.name");
-		case 10:
 			return StatCollector.translateToLocal("item.arsmagica2:nightmareEssence.name");
+		case 10:
+			return StatCollector.translateToLocal("item.arsmagica2:enderEssence.name");
 		case 11:
 			return StatCollector.translateToLocal("item.arsmagica2:pureEssence.name");
 		case 12:

@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
@@ -37,18 +38,16 @@ public class Knockback implements ISpellComponent{
 			double vertSpeed = 0.325;
 
 			EntityLivingBase curEntity = (EntityLivingBase)target;
-
-			double deltaZ = curEntity.posZ - caster.posZ;
-			double deltaX = curEntity.posX - caster.posX;
-			double angle = Math.atan2(deltaZ, deltaX);
-
-			double radians = angle;
+			Vec3 look = caster.getLookVec();
 
 			if (curEntity instanceof EntityPlayer){
-				AMNetHandler.INSTANCE.sendVelocityAddPacket(world, curEntity, speed * Math.cos(radians), vertSpeed, speed * Math.sin(radians));
+				if(curEntity == caster){
+					AMNetHandler.INSTANCE.sendVelocityAddPacket(world, curEntity, speed * -look.xCoord, vertSpeed, speed * -look.zCoord);
+				}else
+					AMNetHandler.INSTANCE.sendVelocityAddPacket(world, curEntity, speed * look.xCoord, vertSpeed, speed * look.zCoord);
 			}else{
-				curEntity.motionX += (speed * Math.cos(radians));
-				curEntity.motionZ += (speed * Math.sin(radians));
+				curEntity.motionX += (speed * look.xCoord);
+				curEntity.motionZ += (speed * look.zCoord);
 				curEntity.motionY += vertSpeed;
 			}
 			return true;

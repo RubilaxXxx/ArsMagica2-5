@@ -39,7 +39,7 @@ public class ItemCrystalPhylactery extends ArsMagicaItem{
 
 	public ItemCrystalPhylactery(){
 		super();
-		spawnableEntities = new HashMap<String, Integer>();
+		spawnableEntities = new HashMap<>();
 		setMaxDamage(0);
 		setMaxStackSize(1);
 	}
@@ -51,8 +51,7 @@ public class ItemCrystalPhylactery extends ArsMagicaItem{
 			String className = par1ItemStack.stackTagCompound.getString("SpawnClassName");
 			if (className != null){
 				par3List.add(String.format(StatCollector.translateToLocal("am2.tooltip.phyEss"), StatCollector.translateToLocal("entity." + className + ".name")));
-				Float f = par1ItemStack.stackTagCompound.getFloat("PercentFilled");
-				float pct = f == null ? 0 : f.floatValue();
+				float pct = par1ItemStack.stackTagCompound.getFloat("PercentFilled");
 				par3List.add(String.format(StatCollector.translateToLocal("am2.tooltip.pctFull"), pct));
 			}else{
 				par3List.add(StatCollector.translateToLocal("am2.tooltip.empty"));
@@ -76,8 +75,7 @@ public class ItemCrystalPhylactery extends ArsMagicaItem{
 		if (stack.hasTagCompound()){
 			String className = stack.stackTagCompound.getString("SpawnClassName");
 			if (className != null){
-				Float f = stack.stackTagCompound.getFloat("PercentFilled");
-				float pct = f == null ? 0 : f.floatValue();
+				float pct = stack.stackTagCompound.getFloat("PercentFilled");
 				pct += itemRand.nextFloat() * 5;
 				if (pct > 100) pct = 100;
 				stack.stackTagCompound.setFloat("PercentFilled", pct);
@@ -98,8 +96,7 @@ public class ItemCrystalPhylactery extends ArsMagicaItem{
 		if (stack.hasTagCompound()){
 			String className = stack.stackTagCompound.getString("SpawnClassName");
 			if (className != null){
-				Float f = stack.stackTagCompound.getFloat("PercentFilled");
-				float pct = f == null ? 0 : f.floatValue();
+				float pct = stack.stackTagCompound.getFloat("PercentFilled");
 				pct += amt;
 				if (pct > 100) pct = 100;
 				stack.stackTagCompound.setFloat("PercentFilled", pct);
@@ -202,7 +199,7 @@ public class ItemCrystalPhylactery extends ArsMagicaItem{
 						for (Object info : EntityList.entityEggs.values()){
 							EntityEggInfo eei = (EntityEggInfo)info;
 							Class spawnClass = EntityList.getClassFromID(eei.spawnedID);
-							if (spawnClass == (Class)clazz){
+							if (spawnClass == clazz){
 								color = eei.primaryColor;
 								found = true;
 								break;
