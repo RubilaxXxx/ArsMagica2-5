@@ -18,7 +18,6 @@ public class ItemArcaneCompendium extends ArsMagicaItem{
 	public ItemArcaneCompendium(){
 		super();
 	}
-
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player){
 		if (world.isRemote){
@@ -28,11 +27,14 @@ public class ItemArcaneCompendium extends ArsMagicaItem{
 	}
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
-		if(player.isSneaking()) {
-			Block block = world.getBlock(x, y, z);
-			if(block instanceof ICompendium) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiArcaneCompendium(block));
+		if(world.isRemote){
+			if(player.isSneaking()){
+				Block block = world.getBlock(x, y, z);
+				if(block instanceof ICompendium) {
+					AMGuiHelper.OpenCompendiumGUI(block);
+				}
 			}
+			return true;
 		}
 		return false;
 	}

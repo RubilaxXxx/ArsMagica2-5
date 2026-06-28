@@ -106,11 +106,6 @@ public abstract class AM2Boss extends EntityMob implements IArsMagicaBoss, IEnti
 	}
 
 	@Override
-	public boolean canBeCollidedWith(){
-		return false;
-	}
-
-	@Override
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2){
 		if (par1DamageSource.getSourceOfDamage() != null){
 			if (par1DamageSource.getSourceOfDamage() instanceof EntityPlayer){

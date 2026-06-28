@@ -4,6 +4,7 @@ import am2.LogHelper;
 import am2.buffs.BuffList;
 import am2.playerextensions.ExtendedProperties;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
@@ -207,6 +208,9 @@ public class AMGuiHelper{
 		}else{
 			Minecraft.getMinecraft().displayGuiScreen(new GuiCompendiumIndex());
 		}
+	}
+	public static void OpenCompendiumGUI(Block block){
+		Minecraft.getMinecraft().displayGuiScreen(new GuiArcaneCompendium(block));
 	}
 
 	public static void DrawIconAtXY(IIcon IIcon, float x, float y, float zLevel, int w, int h, boolean semitransparent){

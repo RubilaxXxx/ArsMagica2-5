@@ -199,11 +199,11 @@ public class SkillData implements IExtendedEntityProperties, ISkillData{
 			writer.add(this.entity.getEntityId());
 			int id = entry.getID();
 			if (entry instanceof ISpellComponent)
-				id += SkillManager.instance.COMPONENT_OFFSET;
+				id += SkillManager.COMPONENT_OFFSET;
 			else if (entry instanceof ISpellModifier)
-				id += SkillManager.instance.MODIFIER_OFFSET;
+				id += SkillManager.MODIFIER_OFFSET;
 			else if (!(entry instanceof ISpellShape))
-				id += SkillManager.instance.TALENT_OFFSET;
+				id += SkillManager.TALENT_OFFSET;
 			writer.add(id);
 			if (entry instanceof ISpellShape) writer.add(0);
 			else if (entry instanceof ISpellComponent) writer.add(1);
@@ -214,11 +214,11 @@ public class SkillData implements IExtendedEntityProperties, ISkillData{
 		}else{
 			int id = entry.getID();
 			if (entry instanceof ISpellComponent)
-				id += SkillManager.instance.COMPONENT_OFFSET;
+				id += SkillManager.COMPONENT_OFFSET;
 			else if (entry instanceof ISpellModifier)
-				id += SkillManager.instance.MODIFIER_OFFSET;
+				id += SkillManager.MODIFIER_OFFSET;
 			else if (!(entry instanceof ISpellShape))
-				id += SkillManager.instance.TALENT_OFFSET;
+				id += SkillManager.TALENT_OFFSET;
 
 			int type = 3;
 			if (entry instanceof ISpellShape) type = 0;
@@ -288,36 +288,36 @@ public class SkillData implements IExtendedEntityProperties, ISkillData{
 	public Integer[] getKnownShapes(){
 		if (this.entity instanceof EntityPlayer && ((EntityPlayer)entity).capabilities.isCreativeMode){
 			ArrayList<Integer> allKnownShapes = SkillManager.instance.getAllShapes();
-			return allKnownShapes.toArray(new Integer[allKnownShapes.size()]);
+			return allKnownShapes.toArray(new Integer[0]);
 		}
-		return shapesKnown.toArray(new Integer[shapesKnown.size()]);
+		return shapesKnown.toArray(new Integer[0]);
 	}
 
 	@Override
 	public Integer[] getKnownComponents(){
 		if (this.entity instanceof EntityPlayer && ((EntityPlayer)entity).capabilities.isCreativeMode){
 			ArrayList<Integer> allKnownComponents = SkillManager.instance.getAllComponents();
-			return allKnownComponents.toArray(new Integer[allKnownComponents.size()]);
+			return allKnownComponents.toArray(new Integer[0]);
 		}
-		return componentsKnown.toArray(new Integer[componentsKnown.size()]);
+		return componentsKnown.toArray(new Integer[0]);
 	}
 
 	@Override
 	public Integer[] getKnownModifiers(){
 		if (this.entity instanceof EntityPlayer && ((EntityPlayer)entity).capabilities.isCreativeMode){
 			ArrayList<Integer> allKnownModifiers = SkillManager.instance.getAllModifiers();
-			return allKnownModifiers.toArray(new Integer[allKnownModifiers.size()]);
+			return allKnownModifiers.toArray(new Integer[0]);
 		}
-		return modifiersKnown.toArray(new Integer[modifiersKnown.size()]);
+		return modifiersKnown.toArray(new Integer[0]);
 	}
 
 	@Override
 	public Integer[] getKnownTalents(){
 		if (this.entity instanceof EntityPlayer && ((EntityPlayer)entity).capabilities.isCreativeMode){
 			ArrayList<Integer> allKnownTalents = SkillManager.instance.getAllTalents();
-			return allKnownTalents.toArray(new Integer[allKnownTalents.size()]);
+			return allKnownTalents.toArray(new Integer[0]);
 		}
-		return talentsKnown.toArray(new Integer[talentsKnown.size()]);
+		return talentsKnown.toArray(new Integer[0]);
 	}
 
 	public boolean handlePacketData(byte[] data){

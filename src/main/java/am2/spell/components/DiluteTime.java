@@ -36,13 +36,13 @@ public class DiluteTime implements ISpellComponent {
                 ExtendedProperties ep = ExtendedProperties.For(caster);
                 if (SpellUtils.instance.casterHasMana(caster, 200000)) { // above normal max. mana, but there are multiple possible ways to achieve it.
                     ep.deductMana(200000);
-                    MinecraftServer server = MinecraftServer.getServer();
-                    if((server != null) && (server.getConfigurationManager() != null)) { // server side, or client side singleplayer
-                        MysteriumPatchesFixesMagicka.changeTickrate((int) (20 / ((SpellUtils.instance.countModifiers(SpellModifiers.BUFF_POWER, stack, 0) + 1) * 1.5)));
-                        int duration = (int)(SpellUtils.instance.getModifiedInt_Mul(BuffList.default_buff_duration, stack, caster, caster, world, 0, SpellModifiers.DURATION) / 2);
-                        duration = SpellUtils.instance.modifyDurationBasedOnArmor(caster, duration);
-                        MysteriumPatchesFixesMagicka.countdownToChangeBack = duration; // if the server is reset, this will reset anyway, so there's no issues with not storing this in nbt
-                    }  // 1.5, 3, 4.5 times slower
+//                    MinecraftServer server = MinecraftServer.getServer();
+//                    if((server != null) && (server.getConfigurationManager() != null)) { // server side, or client side singleplayer
+//                        MysteriumPatchesFixesMagicka.changeTickrate((int) (20 / ((SpellUtils.instance.countModifiers(SpellModifiers.BUFF_POWER, stack, 0) + 1) * 1.5)));
+//                        int duration = (int)(SpellUtils.instance.getModifiedInt_Mul(BuffList.default_buff_duration, stack, caster, caster, world, 0, SpellModifiers.DURATION) / 2);
+//                        duration = SpellUtils.instance.modifyDurationBasedOnArmor(caster, duration);
+//                        MysteriumPatchesFixesMagicka.countdownToChangeBack = duration; // if the server is reset, this will reset anyway, so there's no issues with not storing this in nbt
+//                    }  // 1.5, 3, 4.5 times slower
                 }
                 return false;
             }

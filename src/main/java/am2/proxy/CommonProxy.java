@@ -60,8 +60,8 @@ import java.util.LinkedList;
 import static am2.blocks.BlocksCommonProxy.AMOres;
 
 public class CommonProxy{
-	private ArrayList<AMVector3> pendingFlickerLinks;
 
+	private ArrayList<AMVector3> pendingFlickerLinks;
 	public BlocksCommonProxy blocks;
 	public ItemsCommonProxy items;
 	public static HashMap<String, String> teamHostility;
@@ -69,7 +69,6 @@ public class CommonProxy{
 	public NBTTagCompound cwCopyLoc;
 	public AM2WorldDecorator worldGen;
 	public AMEnchantments enchantments;
-
 	public ItemFrameWatcher itemFrameWatcher;
 	protected ProxyUtilitiesCommon utils;
 	public static EntityManager entities;
@@ -106,6 +105,9 @@ public class CommonProxy{
 		FMLCommonHandler.instance().bus().register(new ArmorEventHandler());
 		MinecraftForge.EVENT_BUS.register(EntityManager.instance);
 		MinecraftForge.EVENT_BUS.register(new AMWorldEventHandler());
+		serverTickHandler = new ServerTickHandler();
+		FMLCommonHandler.instance().bus().register(new ServerTickHandler());
+		MinecraftForge.EVENT_BUS.register(new ServerTickHandler());
 
 		if (!SkillTreeManager.instance.isSkillDisabled(SkillManager.instance.getSkill("Shrink")))
 			MinecraftForge.EVENT_BUS.register(new ShrinkHandler());
@@ -192,12 +194,6 @@ public class CommonProxy{
 	public void InitializeAndRegisterHandlers(){
 		guiManager = new ServerGuiManager();
 		NetworkRegistry.INSTANCE.registerGuiHandler(AMCore.instance, guiManager);
-
-		serverTickHandler = new ServerTickHandler();
-
-		FMLCommonHandler.instance().bus().register(serverTickHandler);
-		MinecraftForge.EVENT_BUS.register(serverTickHandler);
-
 		AMNetHandler.INSTANCE.registerChannels(new AMPacketProcessorServer());
 	}
 

@@ -115,7 +115,6 @@ public class ClientTickHandler{
 			ArcaneCompendium.instance.loadUnlockData();
 			compendiumLoad = false;
 		}
-		AMCore.proxy.itemFrameWatcher.checkWatchedFrames();
 	}
 
 	private void applyDeferredPotionEffects(){

@@ -407,8 +407,7 @@ public class MysteriumPatchesFixesMagicka{
 	@Fix(returnSetting = EnumReturnSetting.ON_TRUE)
 	public static boolean setLivingAnimations(ModelSkeleton mmc, EntityLivingBase elb, float p_78086_2_, float p_78086_3_, float p_78086_4_)
 	{
-		if (elb instanceof EntityHallucination) return true;
-		return false;
+		return elb instanceof EntityHallucination;
 	}
 
 	public static long servertickrate = 50L; // changing
@@ -419,33 +418,33 @@ public class MysteriumPatchesFixesMagicka{
 
 	// a few of the following methods are courtesy of Guichaguri (TickrateChanger mod)
 
-	public static void changeTickrate(float ticksPerSecond) {
-		if (AMCore.config.isGlobalTimeManipulationEnabled()) {
-			changeServerTickrate(ticksPerSecond);
-			changeClientTickratePublic(ticksPerSecond);
-		}
-	}
+//	public static void changeTickrate(float ticksPerSecond) {
+//		if (AMCore.config.isGlobalTimeManipulationEnabled()) {
+//			changeServerTickrate(ticksPerSecond);
+//			changeClientTickratePublic(ticksPerSecond);
+//		}
+//	}
 
-	public static void changeClientTickratePublic(float ticksPerSecond) {
-		MinecraftServer server = MinecraftServer.getServer();
-		if((server != null) && (server.getConfigurationManager() != null)) { // Is a server or singleplayer
-			for(EntityPlayer p : (List<EntityPlayer>)server.getConfigurationManager().playerEntityList) {
-				changeClientTickratePublic(p, ticksPerSecond);
-			}
-		} else { // Is in menu or a player connected in a server. We can say this is client.
-			changeClientTickratePublic(null, ticksPerSecond);
-		}
-	}
+//	public static void changeClientTickratePublic(float ticksPerSecond) {
+//		MinecraftServer server = MinecraftServer.getServer();
+//		if((server != null) && (server.getConfigurationManager() != null)) { // Is a server or singleplayer
+//			for(EntityPlayer p : (List<EntityPlayer>)server.getConfigurationManager().playerEntityList) {
+//				changeClientTickratePublic(p, ticksPerSecond);
+//			}
+//		} else { // Is in menu or a player connected in a server. We can say this is client.
+//			changeClientTickratePublic(null, ticksPerSecond);
+//		}
+//	}
 
-	public static void changeClientTickratePublic(EntityPlayer player, float ticksPerSecond) {
-		if((player == null) || (player.worldObj.isRemote)) { // Client
-			if(FMLCommonHandler.instance().getSide() != Side.CLIENT) return;
-			if((player != null) && (player != Minecraft.getMinecraft().thePlayer)) return;
-			changeClientTickrate(ticksPerSecond);
-		} else { // Server
-			AMCore.NETWORK.sendTo(new TickrateMessage(ticksPerSecond), (EntityPlayerMP)player);
-		}
-	}
+//	public static void changeClientTickratePublic(EntityPlayer player, float ticksPerSecond) {
+//		if((player == null) || (player.worldObj.isRemote)) { // Client
+//			if(FMLCommonHandler.instance().getSide() != Side.CLIENT) return;
+//			if((player != null) && (player != Minecraft.getMinecraft().thePlayer)) return;
+//			changeClientTickrate(ticksPerSecond);
+//		} else { // Server
+//			AMCore.NETWORK.sendTo(new TickrateMessage(ticksPerSecond), (EntityPlayerMP)player);
+//		}
+//	}
 
 //	private static final MethodHandle isDrawingGet = createIsDrawingGet();
 //

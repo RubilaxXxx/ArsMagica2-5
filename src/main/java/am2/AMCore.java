@@ -16,10 +16,7 @@ import am2.entities.EntityManager;
 import am2.entities.SpawnBlacklists;
 import am2.interop.TC4Interop;
 import am2.items.ItemsCommonProxy;
-import am2.network.AMNetHandler;
-import am2.network.SeventhSanctum;
-import am2.network.TickrateMessage;
-import am2.network.TickrateMessageHandler;
+import am2.network.*;
 import am2.playerextensions.AffinityData;
 import am2.playerextensions.ExtendedProperties;
 import am2.playerextensions.RiftStorage;
@@ -62,7 +59,7 @@ import java.io.File;
 //@Mod(modid = "arsmagica2", modLanguage = "java", name = "Ars Magica 2", version = "1.6.7", dependencies = "required-after:AnimationAPI")
 @Mod(modid = "arsmagica2",
 		name = "Ars Magica 2",
-		version = "1.8.4",
+		version = "1.8.5",
 		dependencies = "required-after:AnimationAPI;after:CoFHCore")
 public class AMCore{
 
@@ -76,6 +73,7 @@ public class AMCore{
 	public static SkillConfiguration skillConfig;
 	public static final int ANY_META = 32767;
 	public static SimpleNetworkWrapper NETWORK;
+	public static SimpleNetworkWrapper ITEMFRAMENETWORK;
 
 	private String compendiumBase;
 	public static boolean thaumcraft = Loader.isModLoaded("Thaumcraft");
@@ -103,6 +101,9 @@ public class AMCore{
 
 		NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel("AM2TickrateChanger");
 		NETWORK.registerMessage(TickrateMessageHandler.class, TickrateMessage.class, 0, Side.CLIENT);
+
+		ITEMFRAMENETWORK = NetworkRegistry.INSTANCE.newSimpleChannel("AM2ItemFrameWatcher");
+		ITEMFRAMENETWORK.registerMessage(CompendiumProgressMessageHandler.class, CompendiumProgressMessage.class, 0, Side.CLIENT);
 
 		AMNetHandler.INSTANCE.init();
 

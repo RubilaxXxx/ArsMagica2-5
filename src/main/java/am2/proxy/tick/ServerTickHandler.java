@@ -39,7 +39,7 @@ public class ServerTickHandler{
 
 	private void gameTick_Start(){
 
-		if (MinecraftServer.getServer().getFolderName() != lastWorldName){
+		if (MinecraftServer.getServer().getFolderName().equals(lastWorldName)){
 			lastWorldName = MinecraftServer.getServer().getFolderName();
 			firstTick = true;
 		}
@@ -48,7 +48,6 @@ public class ServerTickHandler{
 			ItemsCommonProxy.crystalPhylactery.getSpawnableEntities(MinecraftServer.getServer().worldServers[0]);
 			firstTick = false;
 		}
-
 		AMCore.proxy.itemFrameWatcher.checkWatchedFrames();
 	}
 
@@ -78,7 +77,7 @@ public class ServerTickHandler{
 		}
 
 		//update lingering spells
-		if (lingeringSpellList.size() > 0){
+		if (!lingeringSpellList.isEmpty()){
 			SpellHelper.LingeringSpell[] toRemove = new SpellHelper.LingeringSpell[lingeringSpellList.size()];
 			for (int i = 0; i < lingeringSpellList.size(); i++){
 				boolean toRemoveThis = lingeringSpellList.get(i).doUpdate();
@@ -86,9 +85,9 @@ public class ServerTickHandler{
 				else toRemove[i] = null;
 			}
 
-			for (int j = 0; j < toRemove.length; j++){
-				if (toRemove[j] != null){
-					lingeringSpellList.remove(toRemove[j]);
+			for (SpellHelper.LingeringSpell lingeringSpell : toRemove){
+				if (lingeringSpell != null){
+					lingeringSpellList.remove(lingeringSpell);
 				}
 			}
 		}
@@ -102,22 +101,11 @@ public class ServerTickHandler{
 			if (value <= 3) toRemove.add(key);
 			else toChange.put(key, value-1);
 		}
-		for (Map.Entry<EntityCreature, Integer> entry : toChange.entrySet()) {
-			tempCurseMap.put(entry.getKey(), entry.getValue()); // overwrite with new value
-		}
+		// overwrite with new value
+		tempCurseMap.putAll(toChange);
 		for (EntityCreature ec : toRemove) {
 			tempCurseMap.remove(ec);
 			ec.setDead();
-		}
-
-		MinecraftServer server = MinecraftServer.getServer();
-		if((server != null) && (server.getConfigurationManager() != null)) {
-			if (MysteriumPatchesFixesMagicka.countdownToChangeBack >= 3) {
-				MysteriumPatchesFixesMagicka.countdownToChangeBack--;
-			} else if (MysteriumPatchesFixesMagicka.countdownToChangeBack != -1) {
-				MysteriumPatchesFixesMagicka.countdownToChangeBack = -1;
-				MysteriumPatchesFixesMagicka.changeTickrate(20);
-			}
 		}
 	}
 

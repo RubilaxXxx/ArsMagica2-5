@@ -883,8 +883,8 @@
       </subitem>
       <subitem id="itemOre@22">
         <name>Soul Fragment</name>
-        <desc>A fragment of a soul of a living being.  Can only be acquired by forcefully separating it from one's soul during psychedelic experiences (in other words, attempting to die while in the Higher fractal world).  During such an act, one must possess a significant amount (about a half-dozen should suffice) of rare (for example, enchanted) items - these will be drained and lost during the process.  In return, one will gain a fragment of a soul - something with a will and agency, capable of making its own decisions and even casting spells.</desc>
-        <relatedEntries/>
+        <desc>A fragment of a soul of a living being.  Can only be acquired by forcefully separating it from one's soul, such an act can only be done by killing with the dismembering modifier, this process can only be done on entities known as possessing a soul such as villagers or other players . In return, one will gain a fragment of a soul - something with a will and agency, capable of making its own decisions and even casting spells.</desc>
+        <relatedEntries>DISMEMBERING</relatedEntries>
       </subitem>
       <relatedEntries>calefactor</relatedEntries>
     </item>

@@ -167,7 +167,7 @@ public class AMEventHandler{
 				event.entity.registerExtendedProperties(AffinityData.identifier, new AffinityData());
 				event.entity.registerExtendedProperties(SkillData.identifier, new SkillData((EntityPlayer)event.entity));
 			}
-		}else if (event.entity instanceof EntityItemFrame){
+		}else if (event.entity instanceof EntityItemFrame && !event.entity.worldObj.isRemote){
 			AMCore.proxy.itemFrameWatcher.startWatchingFrame((EntityItemFrame)event.entity);
 		}
 	}
@@ -297,50 +297,6 @@ public class AMEventHandler{
 			soonToBeDead.removePotionEffect(BuffList.temporalAnchor.id);
 		}
 	}
-
-//	@SubscribeEvent(priority = EventPriority.HIGHEST)
-//	public void onEntityDeathHighPriority(LivingDeathEvent event){
-//
-//		EntityLivingBase soonToBeDead = event.entityLiving;
-//
-//		if (soonToBeDead instanceof EntityPlayer) {
-//			// soul fragments: die with at least 5 rare items
-//			if (soonToBeDead.isPotionActive(BuffList.psychedelic)){
-//				if (soonToBeDead.worldObj.provider.dimensionId == 1 && soonToBeDead.getActivePotionEffect(BuffList.psychedelic).getAmplifier() == 1) {
-//					EntityPlayer player = (EntityPlayer)soonToBeDead;
-//					int slotCount = 0;
-//					int rareCount = 0;
-//					for (ItemStack stack : player.inventory.mainInventory){
-//						if (stack != null) {
-//							if (stack.getRarity() != EnumRarity.common) {
-//								player.inventory.setInventorySlotContents(slotCount, null);
-//								rareCount++;
-//							}
-//						}
-//						slotCount++;
-//					}
-//					slotCount = 0;
-//					for (ItemStack stack : player.inventory.armorInventory){
-//						if (stack != null) {
-//							if (stack.getRarity() != EnumRarity.common) {
-//								player.inventory.setInventorySlotContents(slotCount + player.inventory.mainInventory.length, null);
-//								rareCount++;
-//							}
-//						}
-//						slotCount++;
-//					}
-//					if (rareCount >= 5) {
-//						EntityItem fragment = new EntityItem(player.worldObj);
-//						ItemStack stack = new ItemStack(ItemsCommonProxy.itemOre, 1, ItemOre.META_SOULFRAGMENT);
-//						fragment.setPosition(player.posX+rand.nextInt(5)-2, player.posY + 10, player.posZ+rand.nextInt(5)-2);
-//						fragment.setEntityItemStack(stack);
-//						player.worldObj.spawnEntityInWorld(fragment);
-//						player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder",2F, 2F);
-//					}
-//				}
-//			}
-//		}
-//	}
 
 	@SubscribeEvent
 	public void onAttack(AttackEntityEvent event) {
@@ -565,31 +521,6 @@ public class AMEventHandler{
 		}
 	}
 
-	@SubscribeEvent
-	public void disconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) { // fired at the client. this is to reset it to normal after disconnecting
-		MysteriumPatchesFixesMagicka.changeServerTickrate(MysteriumPatchesFixesMagicka.clienttickratedefault); // this is ok because it converts it to the server format anyway
-		MysteriumPatchesFixesMagicka.changeClientTickratePublic(null, MysteriumPatchesFixesMagicka.clienttickratedefault);
-	}
-
-	@SubscribeEvent
-	public void connect(FMLNetworkEvent.ClientConnectedToServerEvent event) { // fired at client when connects to server
-		if(event.isLocal) { // single player game
-			float tickrate = MysteriumPatchesFixesMagicka.clienttickratedefault;
-			MysteriumPatchesFixesMagicka.changeServerTickrate(tickrate); // this is ok because it converts it to the server format anyway
-			MysteriumPatchesFixesMagicka.changeClientTickratePublic(null, tickrate);
-		} else {
-			MysteriumPatchesFixesMagicka.changeClientTickratePublic(null, 20F); // it forces it serverside anyway
-		}
-	}
-
-	@SubscribeEvent
-	public void connect(PlayerEvent.PlayerLoggedInEvent event) {
-		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-			float tickrate = (float)1000L / MysteriumPatchesFixesMagicka.servertickrate; // 1000/50 = 20 ticks, etc
-			MysteriumPatchesFixesMagicka.changeClientTickratePublic(event.player, tickrate);
-		}
-	}
-
 	private static int tick = 0;
 
 	private static int[] getMinIndex(int[] array) {
@@ -623,7 +554,6 @@ public class AMEventHandler{
 	public void onEntityLiving(LivingUpdateEvent event){
 
 		EntityLivingBase ent = event.entityLiving;
-
 		if (!SkillTreeManager.instance.isSkillDisabled(SkillManager.instance.getSkill("DiluteTime"))) {
 			String UUID = ent.getUniqueID().toString();
 				Integer entity = slowedEntitiesUUIDs.get(UUID);
@@ -1554,8 +1484,10 @@ public class AMEventHandler{
 
 	@SubscribeEvent
 	public void onEntityInteract(EntityInteractEvent event){
-		if (!(event.entityLiving instanceof FakePlayer) && event.target instanceof EntityItemFrame)
+		if (!(event.entityLiving instanceof FakePlayer) && event.target instanceof EntityItemFrame && !event.entity.worldObj.isRemote){
 			AMCore.proxy.itemFrameWatcher.startWatchingFrame((EntityItemFrame)event.target);
+		}
+
 	}
 
 	@SubscribeEvent
